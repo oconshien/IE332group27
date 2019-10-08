@@ -10,3 +10,4 @@ sensorJ = new("Coor", x=1.0, y=2.0, z=-3.1)
 sensorJ
 str(sensorJ)
 sensorJ@z
+sensorJ@x
