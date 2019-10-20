@@ -26,6 +26,73 @@ create_random <- function(sensors, geoRadius=15000){
   sensor_sol <- cbind(sensor_sol,sensor_type)#This binds it all together to make a matrix that is (number of sensors)X3
 }
 
+budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.1,alpha = 0.05){
+  #install.packages("lpSolve")
+  #library("lpsolve")
+  
+  #Warning Messages
+  # make sure not null
+  if ( any(c(is.null(budget),is.null(repair_cost),is.null(opt_repair),is.null(risk),is.null(alpha))))
+    stop("ERROR: At least one input is null.")
+  
+  # make sure no NAs
+  if ( all(c(any(is.na(budget)),any(is.na(repair_cost)),any(is.na(opt_repair),any(is.na(risk)),any(is.na(alpha))))))
+    stop("ERROR: At least one NA value found.")
+  
+  # make sure all are numeric
+  if ( !all(c(is.numeric(budget),is.numeric(repair_cost),is.numeric(opt_repair),is.numeric(risk),is.numeric(alpha))) )
+    stop("ERROR: Not all inputs are numeric.")
+  
+  #make sure budget is bigger than 0
+  if(budget < 4000)
+    stop("ERROR: Budget is not bigger than $4,000")
+  
+  #make sure opt_repair is binary
+  if(opt_repair != 1 && opt_repair != 0)
+    stop("ERROR: opt_repairt is not binary.")
+  
+  #make sure alpha and risk are a probability
+  if(risk > 1 || alpha > 1)
+    stop("ERROR: risk and alpha are not a probability")
+  
+  #This program uses the lpsolve function
+  #objective function
+  #maximize value{x1:mobile sensors, x2:fixed sensors}
+  #max z = 7x1 + x2
+  f.obj<-c(7,1)
+  #subject to:
+  #Budget
+  #3500x1 + 500x2 <= budget-repair_cost*opt_repair
+  #Preliminary Risk
+  EV1= 4*risk
+  EV2 = risk
+  #Constrainst are inputed as matrices
+  f.con<-matrix(c(3500,500,EV1,EV2),nrow=2,byrow=TRUE)
+  f.rhs<-c(budget-repair_cost*opt_repair,10000)
+  f.dir<-c("<=","<=")
+  #the lpsolve function takes the linear program and finds the optimal solution 
+  #based on the constraints
+  solution = lp ("max", f.obj, f.con, f.dir, f.rhs,int.vec=1:2)$solution
+  
+  #After the first run, the risk will be taken into account and the number of mobile and fixed sensors will be
+  #adjusted based on the alpha. Solution[1] = mobile, solution[2] = fixed
+  fails = dbinom(as.integer((solution[1]+solution[2])*alpha), size = solution[1], prob = 4*risk)
+  
+  #At low budgets and really high budgets, the risk factor cannot be taken into consideration.
+  if(fails >= 0.5){
+    solution
+    stop
+  }
+  else{
+    while(fails > alpha){
+      solution[1] = solution[1] - 1
+      solution[2] = solution[2] + 1
+      fails = dbinom(as.integer((solution[1]+solution[2])*alpha), size = solution[1], prob = 4*risk)
+    }
+  }
+  solution
+}
+
 # Calculate the objective value of a valid candidate solution.
 mapPoints <- function(centers, r=50, geoRadius = 15000){
   #Function takes in centers of various 
@@ -57,7 +124,7 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
 
 #Simulated Annealing. DO NOT EDIT THIS FUNCTION.
 #Initial solution(IS),  Temperature, maximum iteration #, cooling schedule
-SA <- function(numSensors, geoRadius=15000, r=50, temperature=3000, maxit=100, cooling=0.95, just_values=TRUE) {
+SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=100, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
   # task_data: data.frame of task processing time
   # temperature: initial temperature
@@ -65,6 +132,7 @@ SA <- function(numSensors, geoRadius=15000, r=50, temperature=3000, maxit=100, c
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   
+  numSensors <- budgetConstraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
   best  <- s_sol                                             # track the best solution found so far
