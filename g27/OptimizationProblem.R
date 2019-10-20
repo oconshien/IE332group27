@@ -1,47 +1,63 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # FUNCTIONS
 
-
+create_random <- function(sensors, geoRadius=15000){
+  #sensors: vector of length two that indicates number of fixed sensors [1], and number of mobile sensors [2]
+  #geoRadius: radius of area to be tracked, as indicated by client
+  sensor_sol <- matrix(data = rep(0,2 * sum(sensors)), nrow = sum(sensors), ncol = 2)
+  i = 0
+  #sensor_sol is a matrix of the centers of radius of the sensors, and the type of sensors (0=fixed,1=mobile)
+  while (i < sum(sensors)){
+    i = i + 1
+    sensor_sol[i,1] <- runif(1,-geoRadius,geoRadius)
+    sensor_sol[i,2] <- runif(1,-geoRadius,geoRadius)
+    if (sqrt(sensor_sol[i,1]^2+sensor_sol[i,2]^2) > geoRadius)
+      i = i-1
+  }# This while loop creates a random uniform distribution of 2 columns x and y
+  ## The rows correspond with the number of sensors
+  ## The x,y coordinate creates the location of the center of radius of the sensors range
+  sensor_type <- c(rep(0,sensors[1]),rep(1,sensors[2]))
+  for (n in (sum(sensors)/2):sample((sum(sensors)/2):sum(sensors),1)){
+    random <- replicate(2,sample(1:sum(sensors),1))
+    hold <- sensor_type[random[1]]
+    sensor_type[random[1]] <- sensor_type[random[2]]
+    sensor_type[random[2]] <- hold
+  }## The sensor type is rearranged and created correspond with the (x,y) coordinate that names the sensor's location
+  sensor_sol <- cbind(sensor_sol,sensor_type)#This binds it all together to make a matrix that is (number of sensors)X3
+}
 
 # Calculate the objective value of a valid candidate solution.
-calculate_objVal <- function(centerVec, numSensors, M) { 
-for(n in seq(1,length(centerVec), by = 2)){
-  xPt <- centerVec[n]
-  yPt <-centerVec[n+1]
-  M <- mapPoint(c(xPt,yPt),M)
-}
-  return(-sum(M))
-}
-
-mapPoint <- function(center, M){
-  g = expand.grid(1:nrow(M),1:ncol(M))
-  g$d2 = sqrt((g$Var1-center[1])^2+ (g$Var2-center[2])^2)
-  g$inside = g$d2 <= 50
-  which(g$inside)
-  xVec = g$Var1[which(g$inside)]
-  yVec = g$Var2[which(g$inside)]
-  for(j in 1:length(xVec)){
-    M[xVec[j],yVec[j]] <- 1
+mapPoints <- function(centers, r=50, geoRadius = 15000){
+  #Function takes in centers of various 
+  area <- pi*(r^2)*length(centers[,1])
+  spaceReduct <- 0
+  for (i in 1:(length(centers[,1]))){
+    j=i+1
+    while(j<=length(centers[,1])){
+      if(sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2) < (r*2)){
+        d <- sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2)
+        spaceReduct <- spaceReduct + 2*r^2*acos(d/(2*r))-d/2*sqrt(r^2-(d/2)^2)
+        #print(spaceReduct)
+      }
+      j = j+1
+    } 
   }
-  M 
-}
-
-# Create a valid candidate solution within the neighborhood of x by randomly swaping tasks between two different cores.
-neighbor <- function(x) {
-  # x is current solution
-  
-  for(n in 1:sample(1:length(x),1)){  #Swapping function. Swaps two indexes next to each other a random number of times.
-    random <- replicate(2,sample(1:length(x),1))
-    hold <- x[random[1]]
-    x[random[1]] <- x[random[2]]
-    x[random[2]] <- hold
+  edgeReduct <- 0
+  for (i in 1:(length(centers[,1]))){
+    distance <- sqrt((centers[i,1])^2+(centers[i,2])^2)
+    if(distance>geoRadius-r){
+      d1 <- (geoRadius^2-r^2 + distance^2)/(2*distance)
+      d2 <- distance - d1
+      edgeReduct <- edgeReduct + pi * r^2 - geoRadius^2*acos(d1/geoRadius) + d1 * sqrt(geoRadius^2-d1^2) - r^2 * acos(d2/r) + d2 * sqrt(r^2-d2^2)
+      #print(edgeReduct)
+    }
   }
-  return(x) #New Solution
+  return(area - spaceReduct - edgeReduct)
 }
 
 #Simulated Annealing. DO NOT EDIT THIS FUNCTION.
 #Initial solution(IS),  Temperature, maximum iteration #, cooling schedule
-SA <- function(core_number, task_data, temperature=3000, maxit=10, cooling=0.95, just_values=TRUE) {
+SA <- function(numSensors, geoRadius=15000, r=50, temperature=3000, maxit=100, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
   # task_data: data.frame of task processing time
   # temperature: initial temperature
@@ -49,10 +65,9 @@ SA <- function(core_number, task_data, temperature=3000, maxit=10, cooling=0.95,
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   
-  s_sol <- create_initial(sensorNum,geoDataLength) # generate a valid initial solution
-  M <- matrix(rep(0,geoDataLength^2),geoDataLength, geoDataLength)
-  s_obj <- calculate_objVal(s_sol,numSensors, M)     # evaluate initial solution
-  best  <- s_sol                                              # track the best solution found so far
+  s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
+  s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
+  best  <- s_sol                                             # track the best solution found so far
   best_obj <- s_obj                                           # track the best objective value found so far
   
   # to keep best objective values through the algorithm
@@ -61,49 +76,26 @@ SA <- function(core_number, task_data, temperature=3000, maxit=10, cooling=0.95,
   
   # run Simulated Annealing
   for(i in 1:maxit) {
-    neigh <- neighbor(c_sol)                                      # generate a neighbor solution
-    neigh_obj <- calculate_objVal(neigh,core_number, task_data)   # calculate the objective value of the new solution
-    if ( neigh_obj <= best_obj ) {                                # keep neigh if it is the new global best solution
-      c_sol <- neigh
-      c_obj <- neigh_obj
+    neigh <- create_random(numSensors,geoRadius)              # generate a neighbor solution
+    neigh_obj <- mapPoints(neigh, r, geoRadius)   # calculate the objective value of the new solution
+    if ( neigh_obj >= best_obj ) {                                # keep neigh if it is the new global best solution
+      s_sol <- neigh
+      s_obj <- neigh_obj
       best <- neigh
       best_obj <- neigh_obj
-    } else if ( runif(1) <= exp(-(neigh_obj-c_obj)/temperature) ) {    # otherwise, probabilistically accept 
-      c_sol <- neigh
-      c_obj <- neigh_obj
+    } else if ( runif(1) <= exp((neigh_obj-s_obj)/temperature) ) {    # otherwise, probabilistically accept 
+      s_sol <- neigh
+      s_obj <- neigh_obj
       cnt <- cnt +1
     }
     temperature <- temperature * cooling                          # update cooling
     obj_vals <- c(obj_vals, best_obj)                             # maintain list of best found so far
   }
-  
+  library(berryFunctions)
+  plot(best[,1],best[,2], xlim = c(-geoRadius,geoRadius), ylim = c(-geoRadius,geoRadius), pch = 20, xlab = "X", ylab = "Y")
+  points(best[,1][which(best[,3]==1)],best[,2][which(best[,3]==1)], col = "green",pch = 20)
+  legend("topleft", legend = c("Fixed", "Mobile"), col = c("Black","Green"), pch = c(20,20), cex = 0.5)
+  title("Default Sensor Locations")
+  circle(0,0,geoRadius)
   ifelse(just_values, return(obj_vals), return(list(best=best, best_obj=best_obj, values=obj_vals)))
 }
-
-#-----------------------------------------------------------------------------------------------------------------------
-# MAIN CODE
-
-
-cores <- 4
-trials <- 5
-tasks <- read.csv('Q3.csv', header=TRUE, sep = ';')
-
-results <- matrix(replicate(trials, SA(cores, tasks)), nrow = 1001, ncol= trials) #Trial formulation.
-
-# MISSING CODE. Complete the lines, no additional lines of code!
-trial_best_objs <- tail(results,1)
-best_trial <- which(trial_best_objs == min(trial_best_objs))
-trial_best_objs <- trial_best_objs[,c(best_trial,which(1:5 != best_trial))]
-results <- results[,c(best_trial,which(1:5 != best_trial))]
-overall_best <- best_trial
-median_obj <- median(trial_best_objs)
-max_obj <- max(trial_best_objs)
-
-#Create plot of trials.
-plot(1:1001, results[,2], type = "b", col = "grey", ylim = c(min(results),max(results)), xlab = "Iteration Number", ylab = "Objective Value", lty = "dashed", cex =0.8)
-points(1:1001, results[,3], type = "b", col = "grey", lty = "dashed", cex = 0.8)
-points(1:1001, results[,4], type = "b", col = "grey", lty = "dashed", cex = 0.8)
-points(1:1001, results[,5], type = "b", col = "grey", lty = "dashed", cex = 0.8)
-points(1:1001, results[,1], type = "l", col = "red", lwd = 2)
-title(paste("median=", median_obj," min=", results[length(results[,1]),1], " max=", max_obj))
-legend("topright", legend = c("Best Result", "Other Results"), cex = 0.7, fill = c("red", "grey"))
