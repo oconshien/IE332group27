@@ -100,7 +100,7 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
     j=i+1
     while(j<=length(centers[,1])){
       dist <- sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2)
-      distFactor <- distFactor + dist * 1
+      distFactor <- distFactor + dist * 0.005
       if( dist < (r*2)){
         spaceReduct <- spaceReduct + 2*r^2*acos(dist/(2*r))-dist/2*sqrt(r^2-(dist/2)^2)
         #print(spaceReduct)
@@ -131,7 +131,7 @@ SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooli
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   require(lpSolve)
-  
+  set.seed(1)
   numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
