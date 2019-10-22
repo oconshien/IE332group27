@@ -16,8 +16,8 @@ create_random <- function(sensors, geoRadius=15000){
   }# This while loop creates a random uniform distribution of 2 columns x and y
   ## The rows correspond with the number of sensors
   ## The x,y coordinate creates the location of the center of radius of the sensors range
-  sensor_type <- c(rep(0,sensors[1]),rep(1,sensors[2]))
-  for (n in (sum(sensors)/2):sample((sum(sensors)/2):sum(sensors),1)){
+  sensor_type <- c(rep(0,sensors[2]),rep(1,sensors[1]))
+  for (n in 1:sum(sensors)){
     random <- replicate(2,sample(1:sum(sensors),1))
     hold <- sensor_type[random[1]]
     sensor_type[random[1]] <- sensor_type[random[2]]
@@ -26,10 +26,7 @@ create_random <- function(sensors, geoRadius=15000){
   sensor_sol <- cbind(sensor_sol,sensor_type)#This binds it all together to make a matrix that is (number of sensors)X3
 }
 
-budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.1,alpha = 0.05){
-  #install.packages("lpSolve")
-  #library("lpsolve")
-  
+budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.01,alpha = 0.05){
   #Warning Messages
   # make sure not null
   if ( any(c(is.null(budget),is.null(repair_cost),is.null(opt_repair),is.null(risk),is.null(alpha))))
@@ -72,7 +69,7 @@ budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.1,alp
   f.dir<-c("<=","<=")
   #the lpsolve function takes the linear program and finds the optimal solution 
   #based on the constraints
-  solution = lp ("max", f.obj, f.con, f.dir, f.rhs,int.vec=1:2)$solution
+  solution = lp("max", f.obj, f.con, f.dir, f.rhs,int.vec=1:2)$solution
   
   #After the first run, the risk will be taken into account and the number of mobile and fixed sensors will be
   #adjusted based on the alpha. Solution[1] = mobile, solution[2] = fixed
@@ -90,7 +87,7 @@ budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.1,alp
       fails = dbinom(as.integer((solution[1]+solution[2])*alpha), size = solution[1], prob = 4*risk)
     }
   }
-  solution
+  return(solution)
 }
 
 # Calculate the objective value of a valid candidate solution.
@@ -98,12 +95,14 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
   #Function takes in centers of various 
   area <- pi*(r^2)*length(centers[,1])
   spaceReduct <- 0
+  distFactor <- 0
   for (i in 1:(length(centers[,1]))){
     j=i+1
     while(j<=length(centers[,1])){
-      if(sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2) < (r*2)){
-        d <- sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2)
-        spaceReduct <- spaceReduct + 2*r^2*acos(d/(2*r))-d/2*sqrt(r^2-(d/2)^2)
+      dist <- sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2)
+      distFactor <- distFactor + dist * 1
+      if( dist < (r*2)){
+        spaceReduct <- spaceReduct + 2*r^2*acos(dist/(2*r))-dist/2*sqrt(r^2-(dist/2)^2)
         #print(spaceReduct)
       }
       j = j+1
@@ -119,20 +118,21 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
       #print(edgeReduct)
     }
   }
-  return(area - spaceReduct - edgeReduct)
+  return(area + distFactor - spaceReduct - edgeReduct)
 }
 
 #Simulated Annealing. DO NOT EDIT THIS FUNCTION.
 #Initial solution(IS),  Temperature, maximum iteration #, cooling schedule
-SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=100, cooling=0.95, just_values=TRUE) {
+SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
   # task_data: data.frame of task processing time
   # temperature: initial temperature
   # maxit: maximum number of iterations to execute for
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
+  require(lpSolve)
   
-  numSensors <- budgetConstraint(budget)
+  numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
   best  <- s_sol                                             # track the best solution found so far
