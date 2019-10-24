@@ -30,6 +30,21 @@ mar.noname = data.frame(
   pm025 = mar.med$X3_pm25,
   pm100 = mar.med$X3_pm10
 )
+next3rep = function(df.noname, df.med){
+  col=4
+  while(col <= length(df.med)-2) {
+    df.next3 = df.med[col:(col+2)]
+    names(df.next3) = c("pm010", "pm025", "pm100")
+    df.noname = rbind(df.noname, df.next3)
+    col = col+3
+  }
+  return(df.noname)
+}
+mar.noname = next3rep(mar.noname, mar.med)  # fill rest of march
+mar.noname = na.omit(mar.noname)  # eventually omit NA
 
-#eventually omit NA
-nona.df = na.omit(raw.df)
+mean.pm010 = mean(mar.noname$pm010)
+mean.pm025 = mean(mar.noname$pm025)
+mean.pm100 = mean(mar.noname$pm100)
+# p.label <- as.factor(ifelse(unique.pa$overall_rating >= mean.rating, 1, 0))
+# final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
