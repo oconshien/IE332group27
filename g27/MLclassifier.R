@@ -13,43 +13,71 @@ require(stringr) #more data wrangling
 require(ggridges) #plotting density ridges
 require(tibble) #as_tibble, easy to use
 
+january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
+february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
 march = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/march-2017.csv"))
 april = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/april-2017.csv"))
 may = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/may-2017.csv"))
+june = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/june-2017.csv"))
+july = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/july-2017.csv"))
+august = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/august-2017.csv"))
+september = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/september-2017.csv"))
+october = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/october-2017.csv"))
+november = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/november-2017.csv"))
+december = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/december-2017.csv"))
 
 Sys.setenv(TZ='Poland') #we're looking at data from Poland, to avoid erors we'll use this command. If this is not given a timezone error will appear.
+
+january$`UTC time` = as_datetime(january$`UTC time`)
+february$`UTC time` = as_datetime(february$`UTC time`)
 march$`UTC time` = as_datetime(march$`UTC time`)
 april$`UTC time` = as_datetime(april$`UTC time`)
 may$`UTC time` = as_datetime(may$`UTC time`)
+june$`UTC time` = as_datetime(june$`UTC time`)
+july$`UTC time` = as_datetime(july$`UTC time`)
+august$`UTC time` = as_datetime(august$`UTC time`)
+september$`UTC time` = as_datetime(september$`UTC time`)
+october$`UTC time` = as_datetime(october$`UTC time`)
+november$`UTC time` = as_datetime(november$`UTC time`)
+december$`UTC time` = as_datetime(december$`UTC time`)
+
+jan.test = january %>% select(contains("pm"))
+feb.test = february %>% select(contains("pm"))
 mar.test = march %>% select(contains("pm"))
 apr.test = april %>% select(contains("pm"))
 may.test = may %>% select(contains("pm"))
+jun.test = june %>% select(contains("pm"))
+jul.test = july %>% select(contains("pm"))
+aug.test = august %>% select(contains("pm"))
+sep.test = september %>% select(contains("pm"))
+oct.test = october %>% select(contains("pm"))
+nov.test = november %>% select(contains("pm"))
+dec.test = december %>% select(contains("pm"))
 # create a function to replace NA values with the median
 medrep = function(i){
   i[is.na(i)] = median(i, na.rm=TRUE) 
   as.numeric(i)
 }
+jan.med = data.frame(apply(jan.test,2,medrep))
+feb.med = data.frame(apply(feb.test,2,medrep))
 mar.med = data.frame(apply(mar.test,2,medrep))
 apr.med = data.frame(apply(apr.test,2,medrep))
 may.med = data.frame(apply(may.test,2,medrep))
+jun.med = data.frame(apply(jun.test,2,medrep))
+jul.med = data.frame(apply(jul.test,2,medrep))
+aug.med = data.frame(apply(aug.test,2,medrep))
+sep.med = data.frame(apply(sep.test,2,medrep))
+oct.med = data.frame(apply(oct.test,2,medrep))
+nov.med = data.frame(apply(nov.test,2,medrep))
+dec.med = data.frame(apply(dec.test,2,medrep))
 
-mar.noname = data.frame(
-  pm010 = mar.med$X3_pm1,
-  pm025 = mar.med$X3_pm25,
-  pm100 = mar.med$X3_pm10
+yr.noname = data.frame(   # to store 3 cols of all sensor data from all months
+  pm010 = jan.med$X3_pm1,
+  pm025 = jan.med$X3_pm25,
+  pm100 = jan.med$X3_pm10
 )
-apr.noname = data.frame(
-  pm010 = apr.med$X3_pm1,
-  pm025 = apr.med$X3_pm25,
-  pm100 = apr.med$X3_pm10
-)
-may.noname = data.frame(
-  pm010 = may.med$X3_pm1,
-  pm025 = may.med$X3_pm25,
-  pm100 = may.med$X3_pm10
-)
-next3rep = function(df.noname, df.med){
-  col=4
+
+next3rep = function(df.noname, df.med, col = 1){
   while(col <= length(df.med)-2) {
     df.next3 = df.med[col:(col+2)]
     names(df.next3) = c("pm010", "pm025", "pm100")
@@ -58,12 +86,22 @@ next3rep = function(df.noname, df.med){
   }
   return(df.noname)
 }
-mar.noname = next3rep(mar.noname, mar.med)  # fill rest of march
-apr.noname = next3rep(apr.noname, apr.med)  # fill rest of april
-may.noname = next3rep(may.noname, may.med)  # fill rest of may
-mar.noname = na.omit(mar.noname)  # eventually omit NA
-apr.noname = na.omit(apr.noname)  # eventually omit NA
-may.noname = na.omit(may.noname)  # eventually omit NA
+yr.noname = next3rep(yr.noname, jan.med, col = 4)  # fill rest of jan
+yr.noname = next3rep(yr.noname, feb.med)  # fill with feb
+yr.noname = next3rep(yr.noname, mar.med)  # fill with mar
+yr.noname = next3rep(yr.noname, apr.med)  # fill with apr
+yr.noname = next3rep(yr.noname, may.med)  # fill with may
+yr.noname = next3rep(yr.noname, jun.med)  # fill with jun
+yr.noname = next3rep(yr.noname, jul.med)  # fill with jul
+yr.noname = next3rep(yr.noname, aug.med)  # fill with aug
+yr.noname = next3rep(yr.noname, sep.med)  # fill with sep
+yr.noname = next3rep(yr.noname, oct.med)  # fill with oct
+yr.noname = next3rep(yr.noname, nov.med)  # fill with nov
+yr.noname = next3rep(yr.noname, dec.med)  # fill with dec
+yr.noname = na.omit(yr.noname)  # eventually omit NA
+
+# we need to take out interquartile
+# boxplots.stats
 
 mar.avg_pm010 = mean(mar.noname$pm010)
 mar.avg_pm025 = mean(mar.noname$pm025)
@@ -74,5 +112,10 @@ apr.avg_pm100 = mean(apr.noname$pm100)
 may.avg_pm010 = mean(may.noname$pm010)
 may.avg_pm025 = mean(may.noname$pm025)
 may.avg_pm100 = mean(may.noname$pm100)
-p.label = as.factor(ifelse(unique.pa$overall_rating >= mean.rating, 1, 0))
+yr.avg_pm010 = mean(yr.noname$pm010)
+yr.avg_pm025 = mean(yr.noname$pm025)
+yr.avg_pm100 = mean(yr.noname$pm100)
+pm010.label = as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0))  # we need to take out interquartile
+pm025.label = as.factor(ifelse(yr.noname$pm025 >= yr.avg_pm025, 1, 0))
+pm100.label = as.factor(ifelse(yr.noname$pm100 >= yr.avg_pm100, 1, 0))
 # final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
