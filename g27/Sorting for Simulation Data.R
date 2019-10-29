@@ -31,6 +31,9 @@
     i = i+1
     }
 #Or While Months  
+    
+    
+    #Inputs that are available : x y coordinate, timeInput, 
   #some kind of formula to convert months to inputted time format
   jan <- 
   feb <-
@@ -45,6 +48,13 @@
   nov <- 
   dec <-
   # is referenced by industrial, residential, and rural, so assign the sensors to the proper variable name
+#f time > feb{ #January
+  #  while fit$x[i] != inputTime{
+   #   i = i+1
+    ## if (region == 0){
+      #  sample(rural)
+       # }
+
   if time > feb{ #January
     while fit$x[i] != inputTime{
       i = i+1
