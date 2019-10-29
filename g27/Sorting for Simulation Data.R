@@ -44,7 +44,7 @@
   oct <-
   nov <- 
   dec <-
-  
+  # is referenced by industrial, residential, and rural, so assign the sensors to the proper variable name
   if time > feb{ #January
     while fit$x[i] != inputTime{
       i = i+1
