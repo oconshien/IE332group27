@@ -100,6 +100,14 @@ yr.noname = next3rep(yr.noname, nov.med)  # fill with nov
 yr.noname = next3rep(yr.noname, dec.med)  # fill with dec
 yr.noname = na.omit(yr.noname)  # eventually omit NA
 
+outliers1 <- boxplot.stats(yr.noname[,1],coef = 3)$out
+outliers2 <- boxplot.stats(yr.noname[,2],coef = 3)$out
+outliers3 <- boxplot.stats(yr.noname[,3],coef = 3)$out
+yr.nout <- yr.noname[-which(yr.noname[,1] %in% outliers1),]
+yr.nout <- yr.noname[-which(yr.noname[,2] %in% outliers2),]
+yr.nout <- yr.noname[-which(yr.noname[,3] %in% outliers3),]
+
+
 # we need to take out interquartile
 # boxplots.stats
 
