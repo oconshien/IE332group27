@@ -1,17 +1,18 @@
 require(readr) #input/output
-require(dplyr) #data wrangling
-require(lubridate) #date/time
-require(knitr) #quite fond of the kable function for making tables.
-require(ggplot2) #plotting
-require(ggthemes) #plotting
-require(gridExtra) #extra space for plots
-require(leaflet) #mapping
-require(leaflet.extras) #mapping
-require(data.table) #data manipulation 
-require(RColorBrewer) #plotting
-require(stringr) #more data wrangling
-require(ggridges) #plotting density ridges
 require(tibble) #as_tibble, easy to use
+require(dplyr) #data wrangling
+require(plyr)
+require(stringr) #more data wrangling
+require(lubridate) #date/time
+require(data.table) #data manipulation
+require(ggplot2) #plotting
+# require(knitr) #quite fond of the kable function for making tables.
+# require(ggthemes) #plotting
+# require(gridExtra) #extra space for plots
+# require(leaflet) #mapping
+# require(leaflet.extras) #mapping
+# require(RColorBrewer) #plotting
+# require(ggridges) #plotting density ridges
 
 january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
 february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
@@ -100,6 +101,7 @@ yr.noname = next3rep(yr.noname, nov.med)  # fill with nov
 yr.noname = next3rep(yr.noname, dec.med)  # fill with dec
 yr.noname = na.omit(yr.noname)  # eventually omit NA
 
+# we need to take out interquartile
 outliers1 <- boxplot.stats(yr.noname[,1],coef = 3)$out
 outliers2 <- boxplot.stats(yr.noname[,2],coef = 3)$out
 outliers3 <- boxplot.stats(yr.noname[,3],coef = 3)$out
@@ -107,23 +109,15 @@ yr.nout <- yr.noname[-which(yr.noname[,1] %in% outliers1),]
 yr.nout <- yr.noname[-which(yr.noname[,2] %in% outliers2),]
 yr.nout <- yr.noname[-which(yr.noname[,3] %in% outliers3),]
 
-
-# we need to take out interquartile
-# boxplots.stats
-
-mar.avg_pm010 = mean(mar.noname$pm010)
-mar.avg_pm025 = mean(mar.noname$pm025)
-mar.avg_pm100 = mean(mar.noname$pm100)
-apr.avg_pm010 = mean(apr.noname$pm010)
-apr.avg_pm025 = mean(apr.noname$pm025)
-apr.avg_pm100 = mean(apr.noname$pm100)
-may.avg_pm010 = mean(may.noname$pm010)
-may.avg_pm025 = mean(may.noname$pm025)
-may.avg_pm100 = mean(may.noname$pm100)
+# statistics
 yr.avg_pm010 = mean(yr.noname$pm010)
 yr.avg_pm025 = mean(yr.noname$pm025)
 yr.avg_pm100 = mean(yr.noname$pm100)
-pm010.label = as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0))  # we need to take out interquartile
+yr.2avg_pm010 = mean(yr.nout$pm010)
+yr.2avg_pm025 = mean(yr.nout$pm025)
+yr.2avg_pm100 = mean(yr.nout$pm100)
+
+pm010.label = as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0))
 pm025.label = as.factor(ifelse(yr.noname$pm025 >= yr.avg_pm025, 1, 0))
 pm100.label = as.factor(ifelse(yr.noname$pm100 >= yr.avg_pm100, 1, 0))
 # final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
