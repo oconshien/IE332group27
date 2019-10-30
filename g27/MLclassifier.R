@@ -13,6 +13,8 @@ require(ggplot2) #plotting
  require(leaflet.extras) #mapping
  require(RColorBrewer) #plotting
  require(ggridges) #plotting density ridges
+require(caret)
+require(e1071)
 
 january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
 february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
@@ -125,5 +127,11 @@ pms.andlabels <- cbind(yr.nout, "pm010label" = pm010.label, "pm025label" = pm025
 pms.andlabels <- cbind(pms.andlabels, "count" = rowSums(pms.andlabels[,c("pm010label", "pm025label", "pm100label")]))
 pms.andlabels$count <- factor(pms.andlabels$count, levels = c(0,1,2,3), labels = c("Very Good", "Good", "OK", "Bad"))
 
+trainIndex <- createDataPartition(pms.andlabels$count, p=0.75)$Resample1
+train <- pms.andlabels[trainIndex, ]
+test <- pms.andlabels[-trainIndex, ]
+x <- pms.andlabels[, c("pm010", "pm025", "pm100")]
+y <- pms.andlabels[,"count"]
+NBclassfier=naiveBayes(x, y)
 
 # final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
