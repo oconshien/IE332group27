@@ -1,15 +1,17 @@
-require(readr) #input/output
+require(readr)  #input/output
 require(tibble) #as_tibble, easy to use
-require(dplyr) #data wrangling
+require(dplyr)  #data wrangling
 require(plyr)
-require(stringr) #more data wrangling
-require(lubridate) #date/time
+require(stringr)  #more data wrangling
+require(lubridate)  #date/time
 require(data.table) #data manipulation
-require(ggplot2) #plotting
-# require(knitr) #quite fond of the kable function for making tables.
+require(ggplot2)  #plotting
+require(caret)  #createDataPartition
+require(e1071)  #naiveBayes
+# require(knitr)  #quite fond of the kable function for making tables.
 # require(ggthemes) #plotting
-# require(gridExtra) #extra space for plots
-# require(leaflet) #mapping
+# require(gridExtra)  #extra space for plots
+# require(leaflet)  #mapping
 # require(leaflet.extras) #mapping
 # require(RColorBrewer) #plotting
 # require(ggridges) #plotting density ridges
@@ -99,44 +101,60 @@ yr.noname = next3rep(yr.noname, sep.test)  # fill with sep
 yr.noname = next3rep(yr.noname, oct.test)  # fill with oct
 yr.noname = next3rep(yr.noname, nov.test)  # fill with nov
 yr.noname = next3rep(yr.noname, dec.test)  # fill with dec
+yr.noname[yr.noname < 0] = NA   # mark negative values NA
 yr.noname = na.omit(yr.noname)  # eventually omit NA
 
 # we need to remove outliers using interquartile range
-outliers1 <- boxplot.stats(yr.noname[,1],coef = 3)$out
-outliers2 <- boxplot.stats(yr.noname[,2],coef = 3)$out
-outliers3 <- boxplot.stats(yr.noname[,3],coef = 3)$out
-yr.nout <- yr.noname[-which(yr.noname[,1] %in% outliers1),]
-yr.nout <- yr.noname[-which(yr.noname[,2] %in% outliers2),]
-yr.nout <- yr.noname[-which(yr.noname[,3] %in% outliers3),]
+outliers1 = boxplot.stats(yr.noname[ ,1],coef = 3)$out
+outliers2 = boxplot.stats(yr.noname[ ,2],coef = 3)$out
+outliers3 = boxplot.stats(yr.noname[ ,3],coef = 3)$out
+yr.nout = yr.noname[-which(yr.noname[ ,1] %in% outliers1), ]
+yr.nout = yr.noname[-which(yr.noname[ ,2] %in% outliers2), ]
+yr.nout = yr.noname[-which(yr.noname[ ,3] %in% outliers3), ]
+rownames(yr.nout) = NULL
 
+# can delete, comparing frequencies removing outliers
+par(mfrow=c(2,1))
 plot(count(yr.noname$pm010))
 plot(count(yr.nout$pm010))
 plot(count(yr.noname$pm025))
 plot(count(yr.nout$pm025))
 plot(count(yr.noname$pm100))
 plot(count(yr.nout$pm100))
+hist(yr.noname$pm100)
+hist(yr.nout$pm100)
 
 # statistics
-yr.avg_pm010 = mean(yr.noname$pm010)
-yr.avg_pm025 = mean(yr.noname$pm025)
-yr.avg_pm100 = mean(yr.noname$pm100)
-yr.2avg_pm010 = mean(yr.nout$pm010)
-yr.2avg_pm025 = mean(yr.nout$pm025)
-yr.2avg_pm100 = mean(yr.nout$pm100)
+# yr.avg_pm010 = mean(yr.noname$pm010)
+# yr.avg_pm025 = mean(yr.noname$pm025)
+# yr.avg_pm100 = mean(yr.noname$pm100)
+yr.avg_pm010 = mean(yr.nout$pm010)
+yr.avg_pm025 = mean(yr.nout$pm025)
+yr.avg_pm100 = mean(yr.nout$pm100)
 
-count(yr.noname$pm010)
-count(yr.noname$pm025)
-count(yr.noname$pm100)
-
+# can delete, comparing frequencies
 count(as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0)))
 count(as.factor(ifelse(yr.noname$pm025 >= yr.avg_pm025, 1, 0)))
 count(as.factor(ifelse(yr.noname$pm100 >= yr.avg_pm100, 1, 0)))
-count(as.factor(ifelse(yr.nout$pm010 >= yr.2avg_pm010, 1, 0)))
-count(as.factor(ifelse(yr.nout$pm025 >= yr.2avg_pm025, 1, 0)))
-count(as.factor(ifelse(yr.nout$pm100 >= yr.2avg_pm100, 1, 0)))
+count(as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0)))
+count(as.factor(ifelse(yr.nout$pm025 >= yr.avg_pm025, 1, 0)))
+count(as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0)))
 
-pm010.label = as.factor(ifelse(yr.nout$pm010 >= yr.2avg_pm010, 1, 0))
-pm025.label = as.factor(ifelse(yr.nout$pm025 >= yr.2avg_pm025, 1, 0))
-pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.2avg_pm100, 1, 0))
-# final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
+# preparing factors for training based on means after outliers removed, per pm level
+yr.nout$pm010.label = as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0))
+yr.nout$pm025.label = as.factor(ifelse(yr.nout$pm025 >= yr.avg_pm025, 1, 0))
+yr.nout$pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0))
+yr.nout$rating = as.numeric(as.character(yr.nout[,4])) + as.numeric(as.character(yr.nout[,5])) + as.numeric(as.character(yr.nout[,6]))  # row-sum of pm factors
+yr.nout$rating = factor(yr.nout$rating) # back to factor with Levels: {0, 1, 2, 3} in order of 'best' to 'worst'
 
+set.seed(1030)
+trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
+train = yr.nout[trainIndex, ]
+test = yr.nout[-trainIndex, ]
+# x = yr.nout[, c("pm010", "pm025", "pm100")]
+# yr.nB = naiveBayes(x, yr.nout$rating)
+yr.nB = naiveBayes(rating ~ pm010 + pm025 + pm100, data=train) # uses *.label cols
+yr.trainPred = predict(yr.nB, newdata = train)
+yr.trainTable = table(train$rating, yr.trainPred)
+yr.testPred = predict(yr.nB, newdata = test)
+yr.testTable = table(test$rating, yr.testPred)
