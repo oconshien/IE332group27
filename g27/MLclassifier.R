@@ -1,20 +1,20 @@
-require(readr) #input/output
+require(readr)  #input/output
 require(tibble) #as_tibble, easy to use
-require(dplyr) #data wrangling
+require(dplyr)  #data wrangling
 require(plyr)
-require(stringr) #more data wrangling
-require(lubridate) #date/time
+require(stringr)  #more data wrangling
+require(lubridate)  #date/time
 require(data.table) #data manipulation
-require(ggplot2) #plotting
- require(knitr) #quite fond of the kable function for making tables.
- require(ggthemes) #plotting
- require(gridExtra) #extra space for plots
- require(leaflet) #mapping
- require(leaflet.extras) #mapping
- require(RColorBrewer) #plotting
- require(ggridges) #plotting density ridges
-require(caret)
-require(e1071)
+require(ggplot2)  #plotting
+require(caret)  #createDataPartition
+require(e1071)  #naiveBayes
+# require(knitr)  #quite fond of the kable function for making tables.
+# require(ggthemes) #plotting
+# require(gridExtra)  #extra space for plots
+# require(leaflet)  #mapping
+# require(leaflet.extras) #mapping
+# require(RColorBrewer) #plotting
+# require(ggridges) #plotting density ridges
 
 january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
 february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
@@ -57,81 +57,104 @@ oct.test = october %>% select(contains("pm"))
 nov.test = november %>% select(contains("pm"))
 dec.test = december %>% select(contains("pm"))
 # create a function to replace NA values with the median
-medrep = function(i){
-  i[is.na(i)] = median(i, na.rm=TRUE) 
-  as.numeric(i)
-}
-jan.med = data.frame(apply(jan.test,2,medrep))
-feb.med = data.frame(apply(feb.test,2,medrep))
-mar.med = data.frame(apply(mar.test,2,medrep))
-apr.med = data.frame(apply(apr.test,2,medrep))
-may.med = data.frame(apply(may.test,2,medrep))
-jun.med = data.frame(apply(jun.test,2,medrep))
-jul.med = data.frame(apply(jul.test,2,medrep))
-aug.med = data.frame(apply(aug.test,2,medrep))
-sep.med = data.frame(apply(sep.test,2,medrep))
-oct.med = data.frame(apply(oct.test,2,medrep))
-nov.med = data.frame(apply(nov.test,2,medrep))
-dec.med = data.frame(apply(dec.test,2,medrep))
+# medrep = function(i){
+#   i[is.na(i)] = median(i, na.rm=TRUE) 
+#   as.numeric(i)
+# }
+# jan.med = data.frame(apply(jan.test,2,medrep))
+# feb.med = data.frame(apply(feb.test,2,medrep))
+# mar.med = data.frame(apply(mar.test,2,medrep))
+# apr.med = data.frame(apply(apr.test,2,medrep))
+# may.med = data.frame(apply(may.test,2,medrep))
+# jun.med = data.frame(apply(jun.test,2,medrep))
+# jul.med = data.frame(apply(jul.test,2,medrep))
+# aug.med = data.frame(apply(aug.test,2,medrep))
+# sep.med = data.frame(apply(sep.test,2,medrep))
+# oct.med = data.frame(apply(oct.test,2,medrep))
+# nov.med = data.frame(apply(nov.test,2,medrep))
+# dec.med = data.frame(apply(dec.test,2,medrep))
 
 yr.noname = data.frame(   # to store 3 cols of all sensor data from all months
-  pm010 = jan.med$X3_pm1,
-  pm025 = jan.med$X3_pm25,
-  pm100 = jan.med$X3_pm10
+  pm010 = jan.test$`3_pm1`,
+  pm025 = jan.test$`3_pm25`,
+  pm100 = jan.test$`3_pm10`
 )
 
-next3rep = function(df.noname, df.med, col = 1){
-  while(col <= length(df.med)-2) {
-    df.next3 = df.med[col:(col+2)]
+next3rep = function(df.noname, df.test, col = 1){
+  while(col <= length(df.test)-2) {
+    df.next3 = df.test[col:(col+2)]
     names(df.next3) = c("pm010", "pm025", "pm100")
     df.noname = rbind(df.noname, df.next3)
     col = col+3
   }
   return(df.noname)
 }
-yr.noname = next3rep(yr.noname, jan.med, col = 4)  # fill rest of jan
-yr.noname = next3rep(yr.noname, feb.med)  # fill with feb
-yr.noname = next3rep(yr.noname, mar.med)  # fill with mar
-yr.noname = next3rep(yr.noname, apr.med)  # fill with apr
-yr.noname = next3rep(yr.noname, may.med)  # fill with may
-yr.noname = next3rep(yr.noname, jun.med)  # fill with jun
-yr.noname = next3rep(yr.noname, jul.med)  # fill with jul
-yr.noname = next3rep(yr.noname, aug.med)  # fill with aug
-yr.noname = next3rep(yr.noname, sep.med)  # fill with sep
-yr.noname = next3rep(yr.noname, oct.med)  # fill with oct
-yr.noname = next3rep(yr.noname, nov.med)  # fill with nov
-yr.noname = next3rep(yr.noname, dec.med)  # fill with dec
+yr.noname = next3rep(yr.noname, jan.test, col = 4)  # fill rest of jan
+yr.noname = next3rep(yr.noname, feb.test)  # fill with feb
+yr.noname = next3rep(yr.noname, mar.test)  # fill with mar
+yr.noname = next3rep(yr.noname, apr.test)  # fill with apr
+yr.noname = next3rep(yr.noname, may.test)  # fill with may
+yr.noname = next3rep(yr.noname, jun.test)  # fill with jun
+yr.noname = next3rep(yr.noname, jul.test)  # fill with jul
+yr.noname = next3rep(yr.noname, aug.test)  # fill with aug
+yr.noname = next3rep(yr.noname, sep.test)  # fill with sep
+yr.noname = next3rep(yr.noname, oct.test)  # fill with oct
+yr.noname = next3rep(yr.noname, nov.test)  # fill with nov
+yr.noname = next3rep(yr.noname, dec.test)  # fill with dec
+yr.noname[yr.noname < 0] = NA   # mark negative values NA
 yr.noname = na.omit(yr.noname)  # eventually omit NA
 
-# we need to take out interquartile
-outliers1 <- boxplot.stats(yr.noname[,1],coef = 3)$out
-outliers2 <- boxplot.stats(yr.noname[,2],coef = 3)$out
-outliers3 <- boxplot.stats(yr.noname[,3],coef = 3)$out
-yr.nout <- yr.noname[-which(yr.noname[,1] %in% outliers1),]
-yr.nout <- yr.noname[-which(yr.noname[,2] %in% outliers2),]
-yr.nout <- yr.noname[-which(yr.noname[,3] %in% outliers3),]
+# we need to remove outliers using interquartile range
+outliers1 = boxplot.stats(yr.noname[ ,1],coef = 3)$out
+outliers2 = boxplot.stats(yr.noname[ ,2],coef = 3)$out
+outliers3 = boxplot.stats(yr.noname[ ,3],coef = 3)$out
+yr.nout = yr.noname[-which(yr.noname[ ,1] %in% outliers1), ]
+yr.nout = yr.noname[-which(yr.noname[ ,2] %in% outliers2), ]
+yr.nout = yr.noname[-which(yr.noname[ ,3] %in% outliers3), ]
+rownames(yr.nout) = NULL
+
+# can delete, comparing frequencies removing outliers
+par(mfrow=c(2,1))
+plot(count(yr.noname$pm010))
+plot(count(yr.nout$pm010))
+plot(count(yr.noname$pm025))
+plot(count(yr.nout$pm025))
+plot(count(yr.noname$pm100))
+plot(count(yr.nout$pm100))
+hist(yr.noname$pm100)
+hist(yr.nout$pm100)
 
 # statistics
-yr.avg_pm010 = mean(yr.noname$pm010)
-yr.avg_pm025 = mean(yr.noname$pm025)
-yr.avg_pm100 = mean(yr.noname$pm100)
-yr.2avg_pm010 = mean(yr.nout$pm010)
-yr.2avg_pm025 = mean(yr.nout$pm025)
-yr.2avg_pm100 = mean(yr.nout$pm100)
+# yr.avg_pm010 = mean(yr.noname$pm010)
+# yr.avg_pm025 = mean(yr.noname$pm025)
+# yr.avg_pm100 = mean(yr.noname$pm100)
+yr.avg_pm010 = mean(yr.nout$pm010)
+yr.avg_pm025 = mean(yr.nout$pm025)
+yr.avg_pm100 = mean(yr.nout$pm100)
 
-pm010.label = as.numeric(ifelse(yr.nout$pm010 >= yr.2avg_pm010, 1, 0))
-pm025.label = as.numeric(ifelse(yr.nout$pm025 >= yr.2avg_pm025, 1, 0))
-pm100.label = as.numeric(ifelse(yr.nout$pm100 >= yr.2avg_pm100, 1, 0))
+# can delete, comparing frequencies
+count(as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0)))
+count(as.factor(ifelse(yr.noname$pm025 >= yr.avg_pm025, 1, 0)))
+count(as.factor(ifelse(yr.noname$pm100 >= yr.avg_pm100, 1, 0)))
+count(as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0)))
+count(as.factor(ifelse(yr.nout$pm025 >= yr.avg_pm025, 1, 0)))
+count(as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0)))
 
-pms.andlabels <- cbind(yr.nout, "pm010label" = pm010.label, "pm025label" = pm025.label, "pm100label" = pm100.label)
-pms.andlabels <- cbind(pms.andlabels, "count" = rowSums(pms.andlabels[,c("pm010label", "pm025label", "pm100label")]))
-pms.andlabels$count <- factor(pms.andlabels$count, levels = c(0,1,2,3), labels = c("Very Good", "Good", "OK", "Bad"))
+# preparing factors for training based on means after outliers removed, per pm level
+yr.nout$pm010.label = as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0))
+yr.nout$pm025.label = as.factor(ifelse(yr.nout$pm025 >= yr.avg_pm025, 1, 0))
+yr.nout$pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0))
+yr.nout$rating = as.numeric(as.character(yr.nout[,4])) + as.numeric(as.character(yr.nout[,5])) + as.numeric(as.character(yr.nout[,6]))  # row-sum of pm factors
+yr.nout$rating = factor(yr.nout$rating) # back to factor with Levels: {0, 1, 2, 3} in order of 'best' to 'worst'
 
-trainIndex <- createDataPartition(pms.andlabels$count, p=0.75)$Resample1
-train <- pms.andlabels[trainIndex, ]
-test <- pms.andlabels[-trainIndex, ]
-x <- pms.andlabels[, c("pm010", "pm025", "pm100")]
-y <- pms.andlabels[,"count"]
-NBclassfier=naiveBayes(x, y)
-
-# final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
+set.seed(1030)
+trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
+train = yr.nout[trainIndex, ]
+test = yr.nout[-trainIndex, ]
+# x = yr.nout[, c("pm010", "pm025", "pm100")]
+# yr.nB = naiveBayes(x, yr.nout$rating)
+yr.nB = naiveBayes(rating ~ pm010 + pm025 + pm100, data=train) # uses *.label cols
+yr.trainPred = predict(yr.nB, newdata = train)
+yr.trainTable = table(train$rating, yr.trainPred)
+yr.testPred = predict(yr.nB, newdata = test)
+yr.testTable = table(test$rating, yr.testPred)
