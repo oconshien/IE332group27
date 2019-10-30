@@ -6,13 +6,13 @@ require(stringr) #more data wrangling
 require(lubridate) #date/time
 require(data.table) #data manipulation
 require(ggplot2) #plotting
-# require(knitr) #quite fond of the kable function for making tables.
-# require(ggthemes) #plotting
-# require(gridExtra) #extra space for plots
-# require(leaflet) #mapping
-# require(leaflet.extras) #mapping
-# require(RColorBrewer) #plotting
-# require(ggridges) #plotting density ridges
+ require(knitr) #quite fond of the kable function for making tables.
+ require(ggthemes) #plotting
+ require(gridExtra) #extra space for plots
+ require(leaflet) #mapping
+ require(leaflet.extras) #mapping
+ require(RColorBrewer) #plotting
+ require(ggridges) #plotting density ridges
 
 january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
 february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
@@ -117,7 +117,13 @@ yr.2avg_pm010 = mean(yr.nout$pm010)
 yr.2avg_pm025 = mean(yr.nout$pm025)
 yr.2avg_pm100 = mean(yr.nout$pm100)
 
-pm010.label = as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0))
-pm025.label = as.factor(ifelse(yr.noname$pm025 >= yr.avg_pm025, 1, 0))
-pm100.label = as.factor(ifelse(yr.noname$pm100 >= yr.avg_pm100, 1, 0))
+pm010.label = as.numeric(ifelse(yr.nout$pm010 >= yr.2avg_pm010, 1, 0))
+pm025.label = as.numeric(ifelse(yr.nout$pm025 >= yr.2avg_pm025, 1, 0))
+pm100.label = as.numeric(ifelse(yr.nout$pm100 >= yr.2avg_pm100, 1, 0))
+
+pms.andlabels <- cbind(yr.nout, "pm010label" = pm010.label, "pm025label" = pm025.label, "pm100label" = pm100.label)
+pms.andlabels <- cbind(pms.andlabels, "count" = rowSums(pms.andlabels[,c("pm010label", "pm025label", "pm100label")]))
+pms.andlabels$count <- factor(pms.andlabels$count, levels = c(0,1,2,3), labels = c("Very Good", "Good", "OK", "Bad"))
+
+
 # final.data <- cbind(unique.pa[,!names(unique.pa) %in%c("overall_rating","player_api_id")],p.label)
