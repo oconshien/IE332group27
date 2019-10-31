@@ -151,10 +151,14 @@ set.seed(1030)
 trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
 train = yr.nout[trainIndex, ]
 test = yr.nout[-trainIndex, ]
-# x = yr.nout[, c("pm010", "pm025", "pm100")]
-# yr.nB = naiveBayes(x, yr.nout$rating)
+#x = train[, c("pm010", "pm025", "pm100")]
+#yr.nB = naiveBayes(x, train$rating)
 yr.nB = naiveBayes(rating ~ pm010 + pm025 + pm100, data=train) # uses *.label cols
 yr.trainPred = predict(yr.nB, newdata = train)
 yr.trainTable = table(train$rating, yr.trainPred)
 yr.testPred = predict(yr.nB, newdata = test)
 yr.testTable = table(test$rating, yr.testPred)
+confusionMatrix(yr.testPred, test$rating)
+
+#After running the confusion matrix our predicter has 87.37% accuracy!
+#We can now just input generated pm values and get labels automatically
