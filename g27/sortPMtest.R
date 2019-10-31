@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-sortPM <- function(input_time, region){
+sortPM <- function(input_time, region){}
   month <- month(input_time, label = TRUE, abbr = FALSE)
   print(month)
     if (region == 0){
@@ -41,5 +40,4 @@ while (month$x[i] != inputDate){
   }
   i = i+1
 }
->>>>>>> 212d38be06cd81d5c2bea99abdd11c5ca334ca63
 }
