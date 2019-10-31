@@ -147,7 +147,7 @@ yr.nout$pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0))
 yr.nout$rating = as.numeric(as.character(yr.nout[,4])) + as.numeric(as.character(yr.nout[,5])) + as.numeric(as.character(yr.nout[,6]))  # row-sum of pm factors
 yr.nout$rating = factor(yr.nout$rating) # back to factor with Levels: {0, 1, 2, 3} in order of 'best' to 'worst'
 
-set.seed(1030)
+#set.seed(1030)
 trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
 train = yr.nout[trainIndex, ]
 test = yr.nout[-trainIndex, ]
@@ -158,7 +158,15 @@ yr.trainPred = predict(yr.nB, newdata = train)
 yr.trainTable = table(train$rating, yr.trainPred)
 yr.testPred = predict(yr.nB, newdata = test)
 yr.testTable = table(test$rating, yr.testPred)
-confusionMatrix(yr.testPred, test$rating)
+confusionMatrix(yr.testPred, test$rating)$overall['Accuracy']
 
 #After running the confusion matrix our predicter has 87.37% accuracy!
 #We can now just input generated pm values and get labels automatically
+
+data_label <- function(pm_data, nB){
+  testdata = predict(nB, newdata = pm_data)
+  combined= cbind(pm_data, testdata)
+  return(combined)
+}
+  
+}
