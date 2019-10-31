@@ -147,7 +147,7 @@ yr.nout$pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0))
 yr.nout$rating = as.numeric(as.character(yr.nout[,4])) + as.numeric(as.character(yr.nout[,5])) + as.numeric(as.character(yr.nout[,6]))  # row-sum of pm factors
 yr.nout$rating = factor(yr.nout$rating) # back to factor with Levels: {0, 1, 2, 3} in order of 'best' to 'worst'
 
-#set.seed(1030)
+set.seed(1030)
 trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
 train = yr.nout[trainIndex, ]
 test = yr.nout[-trainIndex, ]
