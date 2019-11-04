@@ -6,7 +6,7 @@ create_random <- function(sensors, geoRadius=15000){
   #geoRadius: radius of area to be tracked, as indicated by client
   sensor_sol <- matrix(data = rep(0,2 * sum(sensors)), nrow = sum(sensors), ncol = 2)
   i = 0
-  #sensor_sol is a matrix of the centers of radius of the sensors, and the type of sensors (0=fixed,1=mobile)
+  #sensor_sol is a matrix of the centers of radius of the sensors, and the type of sensors (1=fixed,0=mobile)
   while (i < sum(sensors)){
     i = i + 1
     sensor_sol[i,1] <- runif(1,-geoRadius,geoRadius)
@@ -115,9 +115,16 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
       d1 <- (geoRadius^2-r^2 + distance^2)/(2*distance)
       d2 <- distance - d1
       edgeReduct <- edgeReduct + pi * r^2 - geoRadius^2*acos(d1/geoRadius) + d1 * sqrt(geoRadius^2-d1^2) - r^2 * acos(d2/r) + d2 * sqrt(r^2-d2^2)
-      #print(edgeReduct)
     }
   }
+  region_factor <- 0
+  for (i in 1:(length(centers[,1]))){
+    if(cityGrid[trunc(centers[i,1]/20) + 750, trunc(centers[i,2]/20) + 750] == 2 & centers[i,3] == 0)
+      region_factor <- region_factor + 10000
+    if(cityGrid[trunc(centers[i,1]/20) + 750, trunc(centers[i,2]/20) + 750] == 1 & centers[i,3] == 1)
+      region_factor <- region_factor + 10000
+  }
+  
   return(area + distFactor - spaceReduct - edgeReduct)
 }
 
@@ -131,7 +138,7 @@ SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooli
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   require(lpSolve)
-  set.seed(1)
+  set.seed(2)
   numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
