@@ -1,5 +1,5 @@
 sortPM <- function(input_time, region){
-  month <- month(input_time, label = TRUE, abbr = FALSE)
+  month <- lubridate::month(input_time, label = TRUE, abbr = FALSE)
   input_time <- round(input_time, "hour")
   time_since <- as.numeric(input_time) - as.numeric(as.POSIXct("2019-1-1 0:00"))  + as.numeric(as.POSIXct("2017-1-1 0:00"))
   pm_df <- data.frame(PM = rep(0,3), row.names = c(1,2.5,10))
