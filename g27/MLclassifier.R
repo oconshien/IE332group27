@@ -168,5 +168,3 @@ data_label <- function(pm_data, nB){
   combined= cbind(pm_data, testdata)
   return(combined)
 }
-  
-}
