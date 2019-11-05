@@ -120,12 +120,12 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
   region_factor <- 0
   for (i in 1:(length(centers[,1]))){
     if(cityGrid[trunc(centers[i,1]/20) + 750, trunc(centers[i,2]/20) + 750] == 2 & centers[i,3] == 0)
-      region_factor <- region_factor + 10000
+      region_factor <- region_factor + 50000 #IDEA: take a percentage of the edge or space reducts for factor weight
     if(cityGrid[trunc(centers[i,1]/20) + 750, trunc(centers[i,2]/20) + 750] == 1 & centers[i,3] == 1)
-      region_factor <- region_factor + 10000
+      region_factor <- region_factor + 50000 
   }
   
-  return(area + distFactor - spaceReduct - edgeReduct)
+  return(area + distFactor + region_factor - spaceReduct - edgeReduct)
 }
 
 #Simulated Annealing. DO NOT EDIT THIS FUNCTION.
@@ -138,7 +138,7 @@ SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooli
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   require(lpSolve)
-  set.seed(2)
+  set.seed(12)
   numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
