@@ -24,5 +24,7 @@ sortPM <- function(input_time, region){
     pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since)
     pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since)
   }
+  pm_df <- transpose(pm_df)
+  colnames(pm_df) <- c("pm010", "pm025", "pm100")
   return(pm_df)
 }

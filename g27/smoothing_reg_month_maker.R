@@ -1,13 +1,13 @@
 smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since){
-  require(readr) #input/output
+  #require(readr) #input/output
   require(dplyr) #data wrangling
   require(lubridate) #date/time
   require(knitr) #quite fond of the kable function for making tables.
   require(ggplot2) #plotting
   require(ggthemes) #plotting
   require(gridExtra) #extra space for plots
-  require(leaflet) #mapping
-  require(leaflet.extras) #mapping
+  #require(leaflet) #mapping
+  #require(leaflet.extras) #mapping
   require(data.table) #data manipulation 
   require(RColorBrewer) #plotting
   require(stringr) #more data wrangling
@@ -15,9 +15,9 @@ smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since){
   
   
   #Geographic information contained in this csv file
-  sensor_locations <- read.csv("sensor_locations.csv")
+  sensor_locations <- read.csv("air-quality-data-from-extensive-network-of-sensors/sensor_locations.csv")
   #Monthly data contained in these csv files. 
-  gett_data<-paste("../monthData/",month,"-2017.csv",sep="")
+  gett_data<-paste("air-quality-data-from-extensive-network-of-sensors/",month,"-2017.csv",sep="")
   month_data <- as_tibble(fread(gett_data))
   
   Sys.setenv(TZ='Poland') #we're looking at data from Poland, to avoid erors we'll use this command. If this is not given a timezone error will appear.
