@@ -2,7 +2,7 @@
 
   
   #convert seconds to month in some way
-  if month >= 1 | month <= 3{
+  if(month >= 1 | month <= 3){
     if 
   }
   if (sensor = 169 | sensor = 219 | sensor = 225){
