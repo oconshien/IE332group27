@@ -1,3 +1,5 @@
+MlClassifier <- function(){
+
 require(readr)  #input/output
 require(tibble) #as_tibble, easy to use
 require(dplyr)  #data wrangling
@@ -125,12 +127,16 @@ hist(yr.noname$pm100)
 hist(yr.nout$pm100)
 
 # statistics
-# yr.avg_pm010 = mean(yr.noname$pm010)
-# yr.avg_pm025 = mean(yr.noname$pm025)
-# yr.avg_pm100 = mean(yr.noname$pm100)
+#yr.avg_pm010 = mean(yr.noname$pm010)
+#yr.avg_pm025 = mean(yr.noname$pm025)
+#yr.avg_pm100 = mean(yr.noname$pm100)
 yr.avg_pm010 = mean(yr.nout$pm010)
 yr.avg_pm025 = mean(yr.nout$pm025)
 yr.avg_pm100 = mean(yr.nout$pm100)
+yr.std_pm010 = sd(yr.nout$pm010)
+yr.std_pm025 = sd(yr.nout$pm025)
+yr.std_pm100 = sd(yr.nout$pm100)
+
 
 # can delete, comparing frequencies
 count(as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0)))
@@ -156,10 +162,14 @@ test = yr.nout[-trainIndex, ]
 yr.nB = naiveBayes(rating ~ pm010 + pm025 + pm100, data=train) # uses *.label cols
 yr.trainPred = predict(yr.nB, newdata = train)
 yr.trainTable = table(train$rating, yr.trainPred)
-yr.testPred = predict(yr.nB, newdata = test)
+yr.testPred = predict(yr.nB, newdata = test[1:3])
 yr.testTable = table(test$rating, yr.testPred)
 confusionMatrix(yr.testPred, test$rating)$overall['Accuracy']
 
+#testdata = predict(yr.nB, newdata = pm_data)
+#combined= cbind(pm_data, "label" = testdata)
+return(yr.nB)
+}
 #After running the confusion matrix our predicter has 87.37% accuracy!
 #We can now just input generated pm values and get labels automatically
 
