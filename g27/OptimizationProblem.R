@@ -138,7 +138,6 @@ SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   require(lpSolve)
-  set.seed(12)
   numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,cityGrid, r, geoRadius)     # evaluate initial solution
@@ -173,4 +172,5 @@ SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=
   title("Default Sensor Locations")
   circle(0,0,geoRadius)
   ifelse(just_values, return(obj_vals), return(list(best=best, best_obj=best_obj, values=obj_vals)))
+  return(best)
 }
