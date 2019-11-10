@@ -91,7 +91,7 @@ budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.01,al
 }
 
 # Calculate the objective value of a valid candidate solution.
-mapPoints <- function(centers, r=50, geoRadius = 15000){
+mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
   #Function takes in centers of various 
   area <- pi*(r^2)*length(centers[,1])
   spaceReduct <- 0
@@ -130,7 +130,7 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
 }
 
 #Initial solution(IS),  Temperature, maximum iteration #, cooling schedule
-SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooling=0.95, just_values=TRUE) {
+SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=500, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
   # task_data: data.frame of task processing time
   # temperature: initial temperature
@@ -138,10 +138,9 @@ SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooli
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   require(lpSolve)
-  set.seed(12)
   numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
-  s_obj <- mapPoints(s_sol,r, geoRadius)     # evaluate initial solution
+  s_obj <- mapPoints(s_sol,cityGrid, r, geoRadius)     # evaluate initial solution
   best  <- s_sol                                             # track the best solution found so far
   best_obj <- s_obj                                           # track the best objective value found so far
   
@@ -152,7 +151,7 @@ SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooli
   # run Simulated Annealing
   for(i in 1:maxit) {
     neigh <- create_random(numSensors,geoRadius)              # generate a neighbor solution
-    neigh_obj <- mapPoints(neigh, r, geoRadius)   # calculate the objective value of the new solution
+    neigh_obj <- mapPoints(neigh, cityGrid, r, geoRadius)   # calculate the objective value of the new solution
     if ( neigh_obj >= best_obj ) {                                # keep neigh if it is the new global best solution
       s_sol <- neigh
       s_obj <- neigh_obj
@@ -173,4 +172,5 @@ SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooli
   title("Default Sensor Locations")
   circle(0,0,geoRadius)
   ifelse(just_values, return(obj_vals), return(list(best=best, best_obj=best_obj, values=obj_vals)))
+  return(best)
 }

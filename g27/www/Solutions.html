@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>Project Website</title>
+    <title>Corporate 1</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -45,10 +45,10 @@
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active">
+                    <li>
                         <a href="https://web.ics.purdue.edu/~g1109699/index.html">Home</a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="https://web.ics.purdue.edu/~g1109699/Solutions.html">Solutions</a>
                     </li>
                     <li>
@@ -57,7 +57,6 @@
 					<li>
                         <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData.html">Historical Data</a>
                     </li>
-					
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
 						<ul class="dropdown-menu" aria-labelledby="about-us">
@@ -87,9 +86,7 @@
 
 	<div class="jumbotron feature">
 		<div class="container">
-			<h1><span class="glyphicon glyphicon-equalizer"></span> IE 332 GROUP 27</h1>
-			<p>Objectively innovate empowered manufactured products whereas parallel platforms.</p>
-			<p><a class="btn btn-default" href="#">Engage Now</a></p>
+			
 		</div>
 	</div>
 
@@ -98,21 +95,110 @@
 
         <!-- Heading -->
         <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Home
-                    <small>Visualize Quality</small>
+            <div  class="col-lg-12">
+                <h1 class="page-header">Client Info
+                    <small>Let us help you find the perfect solution</small>
                 </h1>
                 <p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>
             </div>
         </div>
         <!-- /.row -->
-
+		<p style="color:black;font-size:150%;"><u>Contact Information</u></p>
+		<div class="jumbotron feature" style="color:black">
+		
+			<form style="text-align:center;" name="ClientInfo" method="GET" action="PHP2SQL.php" onsubmit="return checkForm(this);">
+			<table>	
+				<tr>
+					<th>
+						<strong>First Name: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="FirstName" class="input" placeholder="First Name">
+					</th>
+				</tr>
+				<tr>
+					<th>
+						<strong>Last Name: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="LastName" class="input" placeholder="Last Name">
+					</th>
+				<tr>	
+				</tr>
+				<tr>	
+					<th>
+						<strong>Company: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="CompanyName" class="input" placeholder="Company">
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>Address: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="cAddress" class="input" placeholder="Address">
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>City: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="cCity" class="input" placeholder="City">
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>Postal Code: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="cPostalCode" class="input" placeholder="Postal Code">
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>Country: </strong>
+					</th>
+					<th>
+						<select type="text" name="cCountry" class="input" placeholder="Country">
+							<option value="" style="color:gray" selected>Select Country</option>
+							<option value="volvo">Volvo</option>
+							<option value="saab">Saab</option>
+							<option value="fiat">Fiat</option>
+							<option value="audi">Audi</option>
+						</select>
+					</th>
+				</tr>
+					<th>
+						<p style="color:black;font-size:150%;"><u>Account Information</u></p>
+					</th>
+				<tr>	
+					<th>
+						<strong>Email: </strong>
+					</th>
+					<th>
+						<input type="email" size="32" name="cEmail" class="input" placeholder="Email">
+					</th>
+				<tr>	
+					<th>
+						<strong>Password: </strong>
+					</th>
+					<th>
+						<input type="password" size="32" name="cPassword" class="input" placeholder="Password">
+					</th>
+				<!-- <tr>	 -->
+					<!-- <th> -->
+					<!-- </th> -->
+				<!-- </tr>	 -->
+			</table>	<br><br>
+						<input type="submit" style="color:black;" value="Create Account"></p>
+			</form>
+		</div>
         <!-- Feature Row -->
         <div class="row">
             <article class="col-md-4 article-intro">
-                <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
-                </a>
                 <h3>
                     <a href="#">Efficiently Unleash</a>
                 </h3>
@@ -144,7 +230,7 @@
     <!-- /.container -->
 	
 	<footer>
-		<div class="input">
+		<div class="footer-blurb">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-4 footer-blurb-item">
@@ -179,6 +265,68 @@
 	
     <!-- jQuery -->
     <script src="js/jquery-1.11.3.min.js"></script>
+
+	<script>
+
+	function checkForm(form)
+	{
+	
+		var FirstName = document.forms["ClientInfo"]["FirstName"]
+		var LastName = document.forms["ClientInfo"]["LastName"]
+		var CompanyName = document.forms["ClientInfo"]["CompanyName"]
+		var cEmail = document.forms["ClientInfo"]["cEmail"]
+		var cPassword = document.forms["ClientInfo"]["cPassword"]
+		var cAddress = document.forms["ClientInfo"]["cAddress"]
+		var cCity = document.forms["ClientInfo"]["cCity"]
+		var cPostalCode = document.forms["ClientInfo"]["cPostalCode"]
+		var cCountry = document.forms["ClientInfo"]["cCountry"]
+		
+		if(!isNaN(form.FirstName.value)) {
+			alert("Please input a valid first name.");
+			form.FirstName.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.LastName.value)) {
+			alert("Please input a valid last name.");
+			form.LastName.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.CompanyName.value)) {
+			alert("Please input a valid Company name.");
+			form.CompanyName.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.cAddress.value)) {
+			alert("Please input a valid address.");
+			form.cAddress.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.cCity.value)) {
+			alert("Please input a valid city.");
+			form.cCity.focus();
+			return false;
+		}
+		
+		if(isNaN(form.cPostalCode.value)) {
+			alert("Please input a valid postal code");
+			form.cPostalCode.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.cCountry.value)) {
+			alert("Please input a valid country name.");
+			form.cCountry.focus();
+			return false;
+		}
+		
+		
+	}
+
+	</script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
