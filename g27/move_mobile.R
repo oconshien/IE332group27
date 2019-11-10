@@ -10,7 +10,7 @@ nearest_sensor <- function(destination, sensors, quality){
     #good vs bad air quality choice
     nearest_sensor <- which(dist_vec == min(dist_vec[dist_vec!=min(dist_vec)]))
     near_sensor <- which(mobile_sensors[nearest_sensor,1] == sensors[,1] & mobile_sensors[nearest_sensor,2] == sensors[,2])
-    moved_sensor <- mobile_sensor(dist_vec[nearest_sensor],destination, sensors[near_sensor,])
+    moved_sensor <- mobile_sensor(dist_vec[nearest_sensor],destination[j,], sensors[near_sensor,])
     sensors[near_sensor,1] <- moved_sensor[1] + sensors[near_sensor,1]
     sensors[near_sensor,2] <- moved_sensor[2] + sensors[near_sensor,2]
   }
