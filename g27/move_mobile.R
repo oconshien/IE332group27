@@ -35,7 +35,7 @@ mobile_sensor <- function(distance, destination, near_sensor){
 }
 
 priority_destinations <- function(sensors, pm_data){
-  destination_sensors <- sample(which(pm_data[,4] == 3), 0.2 * length(pm_data[,4]==3))
+  destination_sensors <- sample(which(pm_data[,4] == 3), trunc(0.2 * length(pm_data[,4]==3)))
   destinations_x <- sensors[destination_sensors, 1]
   destinations_y <- sensors[destination_sensors,2]
   destinations <- data.frame("x_dest" = destinations_x,"y_dest" = destinations_y)
