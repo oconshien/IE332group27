@@ -100,10 +100,8 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
     j=i+1
     while(j<=length(centers[,1])){
       dist <- sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2)
-      distFactor <- distFactor + dist * 0.005
       if( dist < (r*2)){
         spaceReduct <- spaceReduct + 2*r^2*acos(dist/(2*r))-dist/2*sqrt(r^2-(dist/2)^2)
-        #print(spaceReduct)
       }
       j = j+1
     } 
@@ -117,18 +115,20 @@ mapPoints <- function(centers, r=50, geoRadius = 15000){
       edgeReduct <- edgeReduct + pi * r^2 - geoRadius^2*acos(d1/geoRadius) + d1 * sqrt(geoRadius^2-d1^2) - r^2 * acos(d2/r) + d2 * sqrt(r^2-d2^2)
     }
   }
+  edgeReduct <- edgeReduct / area
+  spaceReduct <- spaceReduct / area
+  reduct_avg <- (edgeReduct + spaceReduct) / 2
   region_factor <- 0
+  city_grid_radius <- geoRadius/20
   for (i in 1:(length(centers[,1]))){
-    if(cityGrid[trunc(centers[i,1]/20) + 750, trunc(centers[i,2]/20) + 750] == 2 & centers[i,3] == 0)
-      region_factor <- region_factor + 50000 #IDEA: take a percentage of the edge or space reducts for factor weight
-    if(cityGrid[trunc(centers[i,1]/20) + 750, trunc(centers[i,2]/20) + 750] == 1 & centers[i,3] == 1)
-      region_factor <- region_factor + 50000 
+    if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 2 & centers[i,3] == 0)
+      region_factor <- region_factor + reduct_avg/2
+    if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 1 & centers[i,3] == 1)
+      region_factor <- region_factor + reduct_avg/2 
   }
-  
-  return(area + distFactor + region_factor - spaceReduct - edgeReduct)
+  return(1 - spaceReduct - edgeReduct + region_factor)
 }
 
-#Simulated Annealing. DO NOT EDIT THIS FUNCTION.
 #Initial solution(IS),  Temperature, maximum iteration #, cooling schedule
 SA <- function(budget, geoRadius=15000, r=50, temperature=3000, maxit=500, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
