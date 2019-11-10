@@ -1,7 +1,7 @@
 nearest_sensor <- function(destination, sensors, quality){
   mobile_sensors <- sensors[which(sensors[,3]==1),]
   num_sensors <- dim(mobile_sensors)[1]
-  for(j in 1:length(destination[1,])){
+  for(j in 1:length(destination[,1])){
     dist_vec <- rep(0,num_sensors)
     for(i in 1:num_sensors){
       dist_vec[i] <- sqrt((mobile_sensors[i,1]-destination[j,1])^2+(mobile_sensors[i,2]-destination[j,2])^2)
