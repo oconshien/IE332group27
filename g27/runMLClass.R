@@ -23,4 +23,4 @@ test <- data.frame("pm010"=100, "pm025"=100, "pm100"=100)
 example <- MlClassifier()
 try <- data_label(points, example)
 z <- priority_destinations(locationSen, try)
-
+updates <- nearest_sensor(z, locationSen, 0)
