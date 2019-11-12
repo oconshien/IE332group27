@@ -9,8 +9,8 @@ create_random <- function(sensors, geoRadius=15000){
   #sensor_sol is a matrix of the centers of radius of the sensors, and the type of sensors (1=fixed,0=mobile)
   while (i < sum(sensors)){
     i = i + 1
-    sensor_sol[i,1] <- runif(1,-geoRadius,geoRadius)
-    sensor_sol[i,2] <- runif(1,-geoRadius,geoRadius)
+    sensor_sol[i,1] <- trunc(runif(1,-geoRadius,geoRadius))
+    sensor_sol[i,2] <- trunc(runif(1,-geoRadius,geoRadius))
     if (sqrt(sensor_sol[i,1]^2+sensor_sol[i,2]^2) > geoRadius)
       i = i-1
   }# This while loop creates a random uniform distribution of 2 columns x and y
