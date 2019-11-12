@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>Corporate 1</title>
+    <title>Project Website</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -37,7 +37,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.html#">
+                <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
                 	<span class="glyphicon glyphicon-grain"></span> 
                 	Group 27
                 </a>
@@ -46,37 +46,29 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/index.html">Home</a>
+                        <a href="https://web.ics.purdue.edu/~g1109699/index">Home</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions.html">Solutions</a>
+                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Technology.html">Technology</a>
+                        <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
                     </li>
 					<li class="active">
-                        <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData.html">Historical Data</a>
+                        <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData">Historical Data</a>
                     </li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
 						<ul class="dropdown-menu" aria-labelledby="about-us">
 							<li><a href="#">Will Hicks</a></li>
-							<li><a href="#">Jeff Finucane</a></li>
-							<li><a href="#">Laura Roach</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
 							<li><a href="#">Truman Boggs</a></li>
 							<li><a href="#">Jorge Valdez</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/index(2).html">Giovanni Harold</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
 						</ul>
 					</li>
                 </ul>
-
-				<!-- Search -->
-				<form class="navbar-form navbar-right" role="search">
-					<div class="form-group">
-						<input type="text" class="form-control">
-					</div>
-					<button type="submit" class="btn btn-default">Search</button>
-				</form>
 
             </div>
             <!-- /.navbar-collapse -->
@@ -106,29 +98,7 @@
 		
 		<form action="ClientNames.php">
 			<input type="submit" value="List Clients" />
-		</form>
-		
-		<table>
-			<thead>
-				<tr>
-					<th>This</th>
-					<th>That</th>
-					<th>The Other</th>
-				</tr>
-			</thead>
-			<tbody>
-			<!--Use a while loop to make a table row for every DB row-->
-			<?php include("ClientNames.php");?>
-			<?php while( $row = $sql->fetch()) : ?>
-					<tr>
-            <!--Each table column is echoed in to a td cell-->
-						<td><?php echo $row['C_ID']; ?></td>
-						<td><?php echo $row['That']; ?></td>
-						<td><?php echo $row['Other']; ?></td>
-					</tr>
-			<?php endwhile ?>
-			</tbody>
-		</table>
+		</form><br>
 		
 		</div>
         <!-- Feature Row -->
@@ -194,7 +164,7 @@
         
         <div class="small-print">
         	<div class="container">
-        		<p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="#">Contact</a></p>
+        		<p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="mailto:czarneckirya@gmail.com">Contact</a></p>
         		<p>Copyright &copy; Group 27 2019 </p>
         	</div>
         </div>

@@ -1,12 +1,42 @@
 body {
-	padding-top: 50px;
+	padding-top: 5px;
 	color: #959595;
 	}
 	
 h1, h2, h3, h4, h5, h6 {
 	color: black;
 	}
-	
+
+#a1 {
+	border: 6px solid #7AE1E6;
+	color: black;
+	font-family: georgia;
+	padding-top: 0px;
+	padding-bottom: 5px;
+	width: 60%;
+}
+
+#t1 {
+	color: black;
+	width: 100%;
+	font-size: 100%;
+}
+
+#tr1 {
+	border-bottom: 2px solid gray;
+}
+
+#th1 {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-right: 40px;
+}
+
+#p1 {
+	font-weight: 100;
+	line-height: 18px;
+}
+
 .feature {
 	background-color: #7ae2e6;
 	color: gray;
