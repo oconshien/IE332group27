@@ -13,12 +13,14 @@ point <- NULL
 dataframeForStates <- NULL
 bigData <- NULL
 datecnt <- 1
+OGmap <- locationSen 
 
 while(datecnt <= 24*timefromSQL){
   points <- NULL
   point <- NULL
-  dataframeForStates <- NULL
+  dataframeForStats <- NULL
   i = 1
+  print(datecnt)
   while (i <= dim(locationSen)[1]){
     #print(i)
     point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius, trunc(locationSen[i,2]/20) + city_grid_radius])
