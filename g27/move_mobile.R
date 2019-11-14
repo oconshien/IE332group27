@@ -22,15 +22,19 @@ mobile_sensor <- function(distance, destination, near_sensor){
   y <- c(destination[2], near_sensor[2])
   dist_line <- lm(y ~ x)
   
-  if (distance > 1000){
+  if (distance > 0){
     dest <- 1000
     x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
     y_dest <- dist_line$coeff[[2]] * x_dest
-  } else{
-    dest <- distance
+  } #else{
+    #dest <- distance
+    #x_dest <- destination[1]
+    #y_dest <- destination[2]
+    #set equal to destination
+  #}
+  if(sqrt(x_dest^2+y_dest^2) > 15000){
     x_dest <- destination[1]
     y_dest <- destination[2]
-    #set equal to destination
   }
 
   return(c(x_dest,y_dest))
