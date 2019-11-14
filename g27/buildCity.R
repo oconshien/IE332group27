@@ -242,6 +242,6 @@ buildCity <- function(num){
       }
     }
   }
-#image(cityGrid, col = c("black","green","blue", "yellow")) 
+image(cityGrid, col = c("black","green","blue", "yellow")) 
 return(cityGrid)
 }

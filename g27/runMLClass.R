@@ -1,6 +1,6 @@
 #initialization
 budget <- 300000
-cityGrid <- buildCity(1)
+cityGrid <- buildCity(3)
 city_grid_radius <- 750
 MappedNetwork<- SA(budget, cityGrid, just_values = F)
 example <- MlClassifier()
