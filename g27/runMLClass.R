@@ -15,6 +15,7 @@ bigData <- NULL
 datecnt <- 1
 OGmap <- locationSen 
 
+
 while(datecnt <= 24*timefromSQL){
   points <- NULL
   point <- NULL
