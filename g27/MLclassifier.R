@@ -18,6 +18,7 @@ require(e1071)  #naiveBayes
 # require(RColorBrewer) #plotting
 # require(ggridges) #plotting density ridges
 
+#Load in all Kaggle Data for machine learning
 january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
 february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
 march = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/march-2017.csv"))
@@ -33,6 +34,7 @@ december = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/d
 
 Sys.setenv(TZ='Poland') #we're looking at data from Poland, to avoid erors we'll use this command. If this is not given a timezone error will appear.
 
+#Convert time to a time that we can manipulate
 january$`UTC time` = as_datetime(january$`UTC time`)
 february$`UTC time` = as_datetime(february$`UTC time`)
 march$`UTC time` = as_datetime(march$`UTC time`)
@@ -82,6 +84,10 @@ yr.noname = data.frame(   # to store 3 cols of all sensor data from all months
   pm100 = jan.test$`3_pm10`
 )
 
+#function created to fill a data frame with all particulate data from Kaggle
+#df.noname = Data frame of all pm values with no dates 
+#df.test= data from the respective month to load into dataframe
+#col= the col that is desired to load into the matrix, default value is set to 1
 next3rep = function(df.noname, df.test, col = 1){
   while(col <= length(df.test)-2) {
     df.next3 = df.test[col:(col+2)]
@@ -115,36 +121,10 @@ yr.nout = yr.noname[-which(yr.noname[ ,2] %in% outliers2), ]
 yr.nout = yr.noname[-which(yr.noname[ ,3] %in% outliers3), ]
 rownames(yr.nout) = NULL
 
-# can delete, comparing frequencies removing outliers
-par(mfrow=c(2,1))
-plot(count(yr.noname$pm010))
-plot(count(yr.nout$pm010))
-plot(count(yr.noname$pm025))
-plot(count(yr.nout$pm025))
-plot(count(yr.noname$pm100))
-plot(count(yr.nout$pm100))
-hist(yr.noname$pm100)
-hist(yr.nout$pm100)
-
 # statistics
-#yr.avg_pm010 = mean(yr.noname$pm010)
-#yr.avg_pm025 = mean(yr.noname$pm025)
-#yr.avg_pm100 = mean(yr.noname$pm100)
 yr.avg_pm010 = mean(yr.nout$pm010)
 yr.avg_pm025 = mean(yr.nout$pm025)
 yr.avg_pm100 = mean(yr.nout$pm100)
-yr.std_pm010 = sd(yr.nout$pm010)
-yr.std_pm025 = sd(yr.nout$pm025)
-yr.std_pm100 = sd(yr.nout$pm100)
-
-
-# can delete, comparing frequencies
-count(as.factor(ifelse(yr.noname$pm010 >= yr.avg_pm010, 1, 0)))
-count(as.factor(ifelse(yr.noname$pm025 >= yr.avg_pm025, 1, 0)))
-count(as.factor(ifelse(yr.noname$pm100 >= yr.avg_pm100, 1, 0)))
-count(as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0)))
-count(as.factor(ifelse(yr.nout$pm025 >= yr.avg_pm025, 1, 0)))
-count(as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0)))
 
 # preparing factors for training based on means after outliers removed, per pm level
 yr.nout$pm010.label = as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0))
@@ -153,26 +133,25 @@ yr.nout$pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0))
 yr.nout$rating = as.numeric(as.character(yr.nout[,4])) + as.numeric(as.character(yr.nout[,5])) + as.numeric(as.character(yr.nout[,6]))  # row-sum of pm factors
 yr.nout$rating = factor(yr.nout$rating) # back to factor with Levels: {0, 1, 2, 3} in order of 'best' to 'worst'
 
-#set.seed(1030)
+#Do the classify procedure as labeled in A2
 trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
 train = yr.nout[trainIndex, ]
 test = yr.nout[-trainIndex, ]
-#x = train[, c("pm010", "pm025", "pm100")]
-#yr.nB = naiveBayes(x, train$rating)
 yr.nB = naiveBayes(rating ~ pm010 + pm025 + pm100, data=train) # uses *.label cols
 yr.trainPred = predict(yr.nB, newdata = train)
 yr.trainTable = table(train$rating, yr.trainPred)
 yr.testPred = predict(yr.nB, newdata = test[1:3])
 yr.testTable = table(test$rating, yr.testPred)
 confusionMatrix(yr.testPred, test$rating)$overall['Accuracy']
-
-#testdata = predict(yr.nB, newdata = pm_data)
-#combined= cbind(pm_data, "label" = testdata)
 return(yr.nB)
 }
 #After running the confusion matrix our predicter has 87.37% accuracy!
 #We can now just input generated pm values and get labels automatically
 
+
+#Function made to take in new data points that are able to classify simulated data
+#pm_data = generated partiulate matter dataframe
+#nB= inputed naive Bayes classifier generated from the Kaggle data using machine learning
 data_label <- function(pm_data, nB){
   testdata = predict(nB, newdata = pm_data)
   combined= cbind(pm_data, testdata)
