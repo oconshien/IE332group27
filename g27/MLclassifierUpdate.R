@@ -108,30 +108,22 @@ octyr.noname = next3rep(oct.test, "oct")  # fill with oct
 novyr.noname = next3rep(nov.test, "nov")  # fill with nov
 decyr.noname = next3rep(dec.test, "dec")  # fill with dec
 
+#finds the minimum number of days in the kaggle data for a given month
+n <- min(dim(janyr.noname)[1], dim(febyr.noname)[1], dim(maryr.noname)[1], dim(apryr.noname)[1], dim(mayyr.noname)[1], dim(junyr.noname)[1], dim(julyr.noname)[1], dim(augyr.noname)[1], dim(sepyr.noname)[1], dim(octyr.noname)[1], dim(novyr.noname)[1], dim(decyr.noname)[1])
+
+#randomly selects days for each month to then us for classifying the data
+yr.noname <- cbind(janyr.noname[sample(dim(janyr.noname)[1], n),], febyr.noname[sample(dim(febyr.noname)[1], n),], maryr.noname[sample(dim(maryr.noname)[1], n),], apryr.noname[sample(dim(apryr.noname)[1], n),], mayyr.noname[sample(dim(mayyr.noname)[1], n),], junyr.noname[sample(dim(junyr.noname)[1], n),], julyr.noname[sample(dim(julyr.noname)[1], n),], augyr.noname[sample(dim(augyr.noname)[1], n),], sepyr.noname[sample(dim(sepyr.noname)[1], n),], octyr.noname[sample(dim(octyr.noname)[1], n),], novyr.noname[sample(dim(novyr.noname)[1], n),], decyr.noname[sample(dim(decyr.noname)[1], n),])
+
 # we need to remove outliers using interquartile range
-outlierRemove <- function(yr.noname){
-outliers1 = boxplot.stats((yr.noname[ ,1]),coef = 3)$out
-outliers2 = boxplot.stats(yr.noname[ ,2],coef = 3)$out
-outliers3 = boxplot.stats(yr.noname[ ,3],coef = 3)$out
-yr.nout = yr.noname[-which(yr.noname[ ,1] %in% outliers1), ]
-yr.nout = yr.noname[-which(yr.noname[ ,2] %in% outliers2), ]
-yr.nout = yr.noname[-which(yr.noname[ ,3] %in% outliers3), ]
-rownames(yr.nout) = NULL
-return(yr.nout)
+for (cnt in 1:dim(yr.noname)[2]){
+outliers1 = boxplot.stats((yr.noname[ ,cnt]),coef = 3)$out
+yr.nout = yr.noname[-which(yr.noname[ ,cnt] %in% outliers1), ]
 }
+rownames(yr.nout) = NULL
 
-jan.nout <- outlierRemove(janyr.noname)
-
-
-
-
-
-
-yr.nout = data.frame
-
-
-
-# statistics
+nBbymonth <- function(yr.nout){
+colnames(yr.nout) = c("pm010", "pm025", "pm100")  
+  
 yr.avg_pm010 = mean(yr.nout$pm010)
 yr.avg_pm025 = mean(yr.nout$pm025)
 yr.avg_pm100 = mean(yr.nout$pm100)
@@ -152,9 +144,27 @@ yr.trainPred = predict(yr.nB, newdata = train)
 yr.trainTable = table(train$rating, yr.trainPred)
 yr.testPred = predict(yr.nB, newdata = test[1:3])
 yr.testTable = table(test$rating, yr.testPred)
-confusionMatrix(yr.testPred, test$rating)$overall['Accuracy']
+#(confusionMatrix(yr.testPred, test$rating)$overall['Accuracy'])
 return(yr.nB)
 }
+
+jan.nB =nBbymonth(yr.nout %>% select(contains("jan")))
+feb.nB =nBbymonth(yr.nout %>% select(contains("feb")))
+mar.nB =nBbymonth(yr.nout %>% select(contains("mar")))
+apr.nB =nBbymonth(yr.nout %>% select(contains("apr")))
+may.nB =nBbymonth(yr.nout %>% select(contains("may")))
+jun.nB =nBbymonth(yr.nout %>% select(contains("jun")))
+jul.nB =nBbymonth(yr.nout %>% select(contains("jul")))
+aug.nB =nBbymonth(yr.nout %>% select(contains("aug")))
+sep.nB =nBbymonth(yr.nout %>% select(contains("sep")))
+oct.nB =nBbymonth(yr.nout %>% select(contains("oct")))
+nov.nB =nBbymonth(yr.nout %>% select(contains("nov")))
+dec.nB =nBbymonth(yr.nout %>% select(contains("dec")))
+
+all.nBs = list("January" = jan.nB, "February" = feb.nB, "March" = mar.nB, "April"=apr.nB, "May"=may.nB, "June"=jun.nB, "July"=jul.nB, "August"=aug.nB, "September"=sep.nB, "October"=oct.nB, "November"=nov.nB, "December" =dec.nB)
+return(all.nBs)
+}
+
 #After running the confusion matrix our predicter has 87.37% accuracy!
 #We can now just input generated pm values and get labels automatically
 
@@ -164,6 +174,6 @@ return(yr.nB)
 #nB= inputed naive Bayes classifier generated from the Kaggle data using machine learning
 data_label <- function(pm_data, nB){
   testdata = predict(nB, newdata = pm_data)
-  combined= cbind(pm_data, testdata)
+  combined= cbind(pm_data, "class"=testdata)
   return(combined)
 }

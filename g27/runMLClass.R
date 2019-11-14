@@ -8,6 +8,7 @@ example <- MlClassifier()
 locationSen <- MappedNetwork$best
 timefromSQL <- 1
 datefromSQL <- as.POSIXlt("2019-05-06 20:51:50 CET")
+montht <- format(datefromSQL,"%B")
 points <- NULL
 point <- NULL
 dataframeForStates <- NULL
@@ -30,7 +31,7 @@ while(datecnt <= 24*timefromSQL){
   }
   #data_tester <- cbind(locationSen, points)
   #Run MlClassifier Once then will be able to predict for any pm values
-  try <- data_label(points, example)
+  try <- data_label(points, example[month])
   z <- priority_destinations(locationSen, try)
   dataframeForStats <- data.frame(try, "x"=locationSen[,1], "y"=locationSen[,2])
   bigData <- rbind(bigData, dataframeForStats)
