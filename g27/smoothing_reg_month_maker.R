@@ -1,4 +1,4 @@
-smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since){
+smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since, storm_time){
   #require(readr) #input/output
   require(dplyr) #data wrangling
   require(lubridate) #date/time
@@ -42,5 +42,5 @@ smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since){
   fit<-smooth.spline(Date,S_PM,df=32)
   index <- match(time_since, fit$x)
  
-  return(random_collect(fit$y[index])) 
+  return(random_collect(fit$y[index],storm_time)) 
 }
