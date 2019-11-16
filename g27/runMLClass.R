@@ -1,8 +1,9 @@
 #initialization
 budget <- 300000
 cityGrid <- buildCity(3)
-city_grid_radius <- 750
-MappedNetwork<- SA(budget, cityGrid, just_values = F)
+geoRadius <- 15000
+city_grid_radius <- geoRadius / 20
+MappedNetwork<- SA(budget, cityGrid, geoRadius = 15000, just_values = F)
 example <- MlClassifier()
 #Generated Pm Values
 locationSen <- MappedNetwork$best
@@ -31,11 +32,11 @@ while(datecnt <= 24*timefromSQL){
   }
   #data_tester <- cbind(locationSen, points)
   #Run MlClassifier Once then will be able to predict for any pm values
-  try <- data_label(points, example[month])
+  try <- data_label(points, example[montht])
   z <- priority_destinations(locationSen, try)
   dataframeForStats <- data.frame(try, "x"=locationSen[,1], "y"=locationSen[,2])
   bigData <- rbind(bigData, dataframeForStats)
-  updates <- nearest_sensor(z, locationSen, 0)
+  updates <- nearest_sensor_finder(z, locationSen, 0, try)
   locationSen <- updates
   datefromSQL <- datefromSQL + 60*60
   datecnt <- datecnt + 1
