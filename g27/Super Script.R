@@ -595,7 +595,7 @@ data_label <- function(pm_data, nB){
 ##--Simulation--##
 
 #Call function
-sortPM <- function(input_time, region){
+sortPM <- function(input_time, region, storm_time){
   month <- lubridate::month(input_time, label = TRUE, abbr = FALSE)
   monthnum <- lubridate::month(input_time)
   input_time <- round(input_time, "hour")
@@ -608,23 +608,23 @@ sortPM <- function(input_time, region){
   
   if (region == 0){
     sensor_num <- sample(c(169, 225), 1)  
-    pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since)
-    pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since)
-    pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since)
+    pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since, storm_time)
+    pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since, storm_time)
+    pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since, storm_time)
   }
   if (region == 1){
     sensor_num <- sample(c(204, 194, 210), 1)  
     
-    pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since)
-    pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since)
-    pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since)
+    pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since, storm_time)
+    pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since, storm_time)
+    pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since, storm_time)
   }
   
   if (region == 2){
     sensor_num <- sample(c(185, 182, 219), 1)
-    pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since)
-    pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since)
-    pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since)
+    pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since, storm_time)
+    pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since, storm_time)
+    pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since, storm_time)
   }
   pm_df <- transpose(pm_df)
   colnames(pm_df) <- c("pm010", "pm025", "pm100")
@@ -632,7 +632,22 @@ sortPM <- function(input_time, region){
 }
 
 #Generate random data point 
-smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since){
+smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since, storm_time){
+  #require(readr) #input/output
+  require(dplyr) #data wrangling
+  require(lubridate) #date/time
+  require(knitr) #quite fond of the kable function for making tables.
+  require(ggplot2) #plotting
+  require(ggthemes) #plotting
+  require(gridExtra) #extra space for plots
+  #require(leaflet) #mapping
+  #require(leaflet.extras) #mapping
+  require(data.table) #data manipulation 
+  require(RColorBrewer) #plotting
+  require(stringr) #more data wrangling
+  require(ggridges) #plotting density ridges
+  
+  
   #Geographic information contained in this csv file
   sensor_locations <- read.csv("air-quality-data-from-extensive-network-of-sensors/sensor_locations.csv")
   #Monthly data contained in these csv files. 
@@ -661,23 +676,29 @@ smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since){
   fit<-smooth.spline(Date,S_PM,df=32)
   index <- match(time_since, fit$x)
   
-  return(random_collect(fit$y[index])) 
+  return(random_collect(fit$y[index],storm_time)) 
 }
 
 #Random number generator
-random_collect <- function(x){
+random_collect <- function(x, storm_time){
   #x: randomized number from regression to be "collected" by sensor.
+  require(truncnorm)
+  error_rate <- 0.01
+  std_dev <- sqrt(x)
+  if(storm_time){
+    error_rate <- 0.1
+    std_dev <- 2 * sqrt(x)
+  }
   
   #Chances of erroneous reading by sensor is 1%.
-  if (!sample(c(0,1), 1, prob = c(0.99,0.01))) #Normal reading result.
-    return(rtruncnorm(1, a = 0, mean = x, sd = 1)) #how to handle sd, can we calc it from the data?
-  
+  if (!sample(c(0,1), 1, prob = c(1-error_rate,error_rate))) #Normal reading result.
+    return(rtruncnorm(1, a = 0, mean = x, sd = std_dev)) #how to handle sd, can we calc it from the data?
   else{ #Erroneous reading result.
     #Randomizes if the erroneous reading is unusually high or low.
     if(sample(c(0,1), 1))
-      return(rtruncnorm(1, a = x * 1.95, mean = x, sd = 1))
+      return(rtruncnorm(1, a = x * 1.95, mean = x, sd = std_dev))
     else
-      return(rtruncnorm(1, a = 0, b = x * 0.05, mean = x, sd = 1))
+      return(rtruncnorm(1, a = 0, b = x * 0.05, mean = x, sd = std_dev))
   }
 }
 
@@ -740,6 +761,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
         }
       }
       loop_iterate <- loop_iterate - 1
+      
     }
   }
  return(sensors)
@@ -751,14 +773,15 @@ move_sensor <- function(distance, destination, near_sensor){
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
-  if(sqrt((x[1]-x[2])^2+(y[1]-y[2])^2)>=1000){
+  if(distance>=1000){
     dest <- 1000
     x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
     y_dest <- dist_line$coeff[[2]] * x_dest
     still_moving <- 1
   }else{
-    x_dest <- destination[1]
-    y_dest <- destination[2]
+    x_minus_fifty <- sqrt(50^2/(dist_line$coeff[[2]]^2+1))
+    x_dest <- destination[1] - x_minus_fifty
+    y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
     still_moving <- 0
   }
   
