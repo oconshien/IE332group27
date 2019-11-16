@@ -724,7 +724,10 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
     if(loop_iterate == 1){
       print(dist_vec)
       movement <- move_sensor(dist_vec[near_mobile_index], destination, sensors[near_index,])
-      print(movement)
+      movement <- unlist(movement)
+      if(movement[3]){
+        sensors[near_index,4] <- 1
+      }
       sensors[near_index,1] <- movement[1] + sensors[near_index,1]
       sensors[near_index,2] <- movement[2] + sensors[near_index, 2]
       if(!movement[3]){
@@ -733,7 +736,6 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
     }
     loop_iterate <- loop_iterate - 1
   }
-  sensors[near_index,4] <- 1
   return(sensors)
 }
 
@@ -744,20 +746,20 @@ move_sensor <- function(distance, destination, near_sensor){
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
-  dest <- 1000
-  x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
-  y_dest <- dist_line$coeff[[2]] * x_dest
-  still_moving <- 1
-  #else{
-  #dest <- distance
-  #x_dest <- destination[1]
-  #y_dest <- destination[2]
-  #set equal to destination
-  #}
-  if(sqrt(x_dest^2+y_dest^2) > 15000){
+  if(sqrt((x[1]-x[2])^2+(y[1]-y[2])^2)>=1000){
+    dest <- 1000
+    x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
+    y_dest <- dist_line$coeff[[2]] * x_dest
+    still_moving <- 1
+  }else{
     x_dest <- destination[1]
     y_dest <- destination[2]
     still_moving <- 0
+  }
+  
+  if(sqrt(x_dest^2+y_dest^2) > 15000){
+    x_dest <- destination[1]
+    y_dest <- destination[2]
   }
   
   return(c(x_dest,y_dest, still_moving))
