@@ -752,7 +752,7 @@ move_sensor <- function(distance, destination, near_sensor){
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
-  if(sqrt((x[1]-x[2])^2+(y[1]-y[2])^2)>=1000){
+  if(distance>=1000){
     dest <- 1000
     x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
     y_dest <- dist_line$coeff[[2]] * x_dest
