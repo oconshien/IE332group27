@@ -719,7 +719,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
         loop_iterate <- 2
         k <- k + 1
       }
-      if(pm_data[near_index, 4] == quality_desired){
+      if(pm_class[near_index, 4] == quality_desired){
         loop_iterate <- 2
         k <- k + 1
       }
