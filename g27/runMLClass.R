@@ -9,7 +9,7 @@ example <- MlClassifier()
 locationSen <- MappedNetwork$best
 locationSen <- cbind(locationSen, "moving"= rep(0, length(locationSen[,1])))
 timefromSQL <- 1
-datefromSQL <- as.POSIXlt("2019-05-06 20:51:50 CET")
+datefromSQL <- as.POSIXlt("2019-09-06 20:51:50 CET")
 montht <- format(datefromSQL,"%B")
 points <- NULL
 point <- NULL
