@@ -698,45 +698,48 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
   #sensors: data frame of all sensors in the network
   #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
   #pm_data: the classification of the particulate matter collected by each sensor 
-  mobile_sensors <- sensors[which(sensors[,3]==1),]
-  num_mobiles <- length(mobile_sensors[,1])
-  dist_vec <- vector(length = num_mobiles)
-  for(i in 1:num_mobiles){
-    dist_vec[i] <- sqrt((destination[1] - mobile_sensors[i,1]) ^ 2 + (destination[2] - mobile_sensors[i,2]) ^ 2)
-  }
-  dist_vec <- unlist(dist_vec)
-  dist_vec[which(dist_vec == 0)] <- 15001
-  loop_iterate <- 1
-  nth_term <- 1
-  while(loop_iterate){
+  for(k in 1:length(destination[,1])){
+    mobile_sensors <- sensors[which(sensors[,3]==1),]
+    num_mobiles <- length(mobile_sensors[,1])
+    dist_vec <- vector(length = num_mobiles)
+    for(i in 1:num_mobiles){
+      dist_vec[i] <- sqrt((destination[k,1] - mobile_sensors[i,1]) ^ 2 + (destination[k,2] - mobile_sensors[i,2]) ^ 2)
+    }
+    dist_vec <- unlist(dist_vec)
+    dist_vec[which(dist_vec == 0)] <- 15001
     loop_iterate <- 1
-    near_mobile_index <- which(dist_vec == dist_vec[order(dist_vec)][nth_term])
-    near_mobile <- mobile_sensors[near_mobile_index,]
-    near_index <- which(sensors[,1] == near_mobile[1] & sensors[,2] == near_mobile[2])
-    if(near_mobile[4] == 1){
-      loop_iterate <- 2
-      k <- k + 1
-    }
-    if(pm_data[near_index, 4] == quality_desired){
-      loop_iterate <- 2
-      k <- k + 1
-    }
-    if(loop_iterate == 1){
-      print(dist_vec)
-      movement <- move_sensor(dist_vec[near_mobile_index], destination, sensors[near_index,])
-      print(movement)
-      sensors[near_index,1] <- movement[1] + sensors[near_index,1]
-      sensors[near_index,2] <- movement[2] + sensors[near_index, 2]
-      if(!movement[3]){
-        sensors[near_index,4] == 0
+    nth_term <- 1
+    while(loop_iterate){
+      loop_iterate <- 1
+      near_mobile_index <- which(dist_vec == dist_vec[order(dist_vec)][nth_term])
+      near_mobile <- mobile_sensors[near_mobile_index,]
+      near_index <- which(sensors[,1] == near_mobile[1] & sensors[,2] == near_mobile[2])
+      if(near_mobile[4] == 1){
+        loop_iterate <- 2
+        k <- k + 1
       }
+      if(pm_data[near_index, 4] == quality_desired){
+        loop_iterate <- 2
+        k <- k + 1
+      }
+      if(loop_iterate == 1){
+        print(dist_vec)
+        movement <- move_sensor(dist_vec[near_mobile_index], destination, sensors[near_index,])
+        movement <- unlist(movement)
+        if(movement[3]){
+          sensors[near_index,4] <- 1
+        }
+        sensors[near_index,1] <- movement[1] + sensors[near_index,1]
+        sensors[near_index,2] <- movement[2] + sensors[near_index, 2]
+        if(!movement[3]){
+          sensors[near_index,4] == 0
+        }
+      }
+      loop_iterate <- loop_iterate - 1
     }
-    loop_iterate <- loop_iterate - 1
   }
-  sensors[near_index,4] <- 1
   return(sensors)
 }
-
 #Moves sensor to new location
 move_sensor <- function(distance, destination, near_sensor){
   x <- c(destination[1], near_sensor[1])
@@ -744,20 +747,20 @@ move_sensor <- function(distance, destination, near_sensor){
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
-  dest <- 1000
-  x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
-  y_dest <- dist_line$coeff[[2]] * x_dest
-  still_moving <- 1
-  #else{
-  #dest <- distance
-  #x_dest <- destination[1]
-  #y_dest <- destination[2]
-  #set equal to destination
-  #}
-  if(sqrt(x_dest^2+y_dest^2) > 15000){
+  if(sqrt((x[1]-x[2])^2+(y[1]-y[2])^2)>=1000){
+    dest <- 1000
+    x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
+    y_dest <- dist_line$coeff[[2]] * x_dest
+    still_moving <- 1
+  }else{
     x_dest <- destination[1]
     y_dest <- destination[2]
     still_moving <- 0
+  }
+  
+  if(sqrt(x_dest^2+y_dest^2) > 15000){
+    x_dest <- destination[1]
+    y_dest <- destination[2]
   }
   
   return(c(x_dest,y_dest, still_moving))
