@@ -760,7 +760,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
         k <- k + 1
       }
       if(loop_iterate == 1){
-        movement <- move_sensor(dist_vec[near_mobile_index], destination, sensors[near_index,])
+        movement <- move_sensor(dist_vec[near_mobile_index], destination[k,], sensors[near_index,])
         movement <- unlist(movement)
         if(movement[3]){
           sensors[near_index,4] <- 1
