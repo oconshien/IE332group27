@@ -685,8 +685,8 @@ random_collect <- function(x){
 ##--Mobile Sensor Movement--##
 
 #Generate destinations of sensors
-priority_destinations <- function(sensors, pm_data){
-  destination_sensors <- sample(which(pm_data[,4] == 3), trunc(length(which(pm_data[,4]==3))))
+priority_destinations <- function(sensors, pm_data, quality_desired){
+  destination_sensors <- sample(which(pm_data[,4] == quality_desired), trunc(length(which(pm_data[,4] == quality_desired))))
   destinations_x <- sensors[destination_sensors, 1]
   destinations_y <- sensors[destination_sensors,2]
   destinations <- data.frame("x_dest" = destinations_x,"y_dest" = destinations_y)
