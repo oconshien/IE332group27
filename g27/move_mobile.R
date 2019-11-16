@@ -71,11 +71,12 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
   #sensors: data frame of all sensors in the network
   #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
   #pm_data: the classification of the particulate matter collected by each sensor 
+  for(k in 1:length(destination[,1])){
   mobile_sensors <- sensors[which(sensors[,3]==1),]
   num_mobiles <- length(mobile_sensors[,1])
   dist_vec <- vector(length = num_mobiles)
   for(i in 1:num_mobiles){
-    dist_vec[i] <- sqrt((destination[1] - mobile_sensors[i,1]) ^ 2 + (destination[2] - mobile_sensors[i,2]) ^ 2)
+    dist_vec[i] <- sqrt((destination[k,1] - mobile_sensors[i,1]) ^ 2 + (destination[k,2] - mobile_sensors[i,2]) ^ 2)
   }
   dist_vec <- unlist(dist_vec)
   dist_vec[which(dist_vec == 0)] <- 15001
@@ -108,6 +109,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
       }
     }
     loop_iterate <- loop_iterate - 1
+  }
   }
   return(sensors)
 }
