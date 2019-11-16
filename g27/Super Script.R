@@ -492,68 +492,72 @@ MlClassifier <- function(){
   oct.test = october %>% select(contains("pm"))
   nov.test = november %>% select(contains("pm"))
   dec.test = december %>% select(contains("pm"))
-  # create a function to replace NA values with the median
-  # medrep = function(i){
-  #   i[is.na(i)] = median(i, na.rm=TRUE) 
-  #   as.numeric(i)
-  # }
-  # jan.med = data.frame(apply(jan.test,2,medrep))
-  # feb.med = data.frame(apply(feb.test,2,medrep))
-  # mar.med = data.frame(apply(mar.test,2,medrep))
-  # apr.med = data.frame(apply(apr.test,2,medrep))
-  # may.med = data.frame(apply(may.test,2,medrep))
-  # jun.med = data.frame(apply(jun.test,2,medrep))
-  # jul.med = data.frame(apply(jul.test,2,medrep))
-  # aug.med = data.frame(apply(aug.test,2,medrep))
-  # sep.med = data.frame(apply(sep.test,2,medrep))
-  # oct.med = data.frame(apply(oct.test,2,medrep))
-  # nov.med = data.frame(apply(nov.test,2,medrep))
-  # dec.med = data.frame(apply(dec.test,2,medrep))
-  
-  yr.noname = data.frame(   # to store 3 cols of all sensor data from all months
-    pm010 = jan.test$`3_pm1`,
-    pm025 = jan.test$`3_pm25`,
-    pm100 = jan.test$`3_pm10`
-  )
-  
+ 
   #function created to fill a data frame with all particulate data from Kaggle
   #df.noname = Data frame of all pm values with no dates 
   #df.test= data from the respective month to load into dataframe
   #col= the col that is desired to load into the matrix, default value is set to 1
-  next3rep = function(df.noname, df.test, col = 1){
-    while(col <= length(df.test)-2) {
-      df.next3 = df.test[col:(col+2)]
-      names(df.next3) = c("pm010", "pm025", "pm100")
-      df.noname = rbind(df.noname, df.next3)
-      col = col+3
-    }
-    return(df.noname)
-  }
-  yr.noname = next3rep(yr.noname, jan.test, col = 4)  # fill rest of jan
-  yr.noname = next3rep(yr.noname, feb.test)  # fill with feb
-  yr.noname = next3rep(yr.noname, mar.test)  # fill with mar
-  yr.noname = next3rep(yr.noname, apr.test)  # fill with apr
-  yr.noname = next3rep(yr.noname, may.test)  # fill with may
-  yr.noname = next3rep(yr.noname, jun.test)  # fill with jun
-  yr.noname = next3rep(yr.noname, jul.test)  # fill with jul
-  yr.noname = next3rep(yr.noname, aug.test)  # fill with aug
-  yr.noname = next3rep(yr.noname, sep.test)  # fill with sep
-  yr.noname = next3rep(yr.noname, oct.test)  # fill with oct
-  yr.noname = next3rep(yr.noname, nov.test)  # fill with nov
-  yr.noname = next3rep(yr.noname, dec.test)  # fill with dec
-  yr.noname[yr.noname < 0] = NA   # mark negative values NA
-  yr.noname = na.omit(yr.noname)  # eventually omit NA
+  janyr.noname = next3rep(jan.test, "jan")  # fill rest of jan
+  febyr.noname = next3rep(feb.test, "feb")  # fill with feb
+  maryr.noname = next3rep(mar.test, "mar")  # fill with mar
+  apryr.noname = next3rep(apr.test, "apr")  # fill with apr
+  mayyr.noname = next3rep(may.test, "may")  # fill with may
+  junyr.noname = next3rep(jun.test, "jun")  # fill with jun
+  julyr.noname = next3rep(jul.test, "jul")  # fill with jul
+  augyr.noname = next3rep(aug.test, "aug")  # fill with aug
+  sepyr.noname = next3rep(sep.test, "sep")  # fill with sep
+  octyr.noname = next3rep(oct.test, "oct")  # fill with oct
+  novyr.noname = next3rep(nov.test, "nov")  # fill with nov
+  decyr.noname = next3rep(dec.test, "dec")  # fill with dec
+  
+  #finds the minimum number of days in the kaggle data for a given month
+  n <- min(dim(janyr.noname)[1], dim(febyr.noname)[1], dim(maryr.noname)[1], dim(apryr.noname)[1], dim(mayyr.noname)[1], dim(junyr.noname)[1], dim(julyr.noname)[1], dim(augyr.noname)[1], dim(sepyr.noname)[1], dim(octyr.noname)[1], dim(novyr.noname)[1], dim(decyr.noname)[1])
+  
+  #randomly selects days for each month to then us for classifying the data
+  yr.noname <- cbind(janyr.noname[sample(dim(janyr.noname)[1], n),], febyr.noname[sample(dim(febyr.noname)[1], n),], maryr.noname[sample(dim(maryr.noname)[1], n),], apryr.noname[sample(dim(apryr.noname)[1], n),], mayyr.noname[sample(dim(mayyr.noname)[1], n),], junyr.noname[sample(dim(junyr.noname)[1], n),], julyr.noname[sample(dim(julyr.noname)[1], n),], augyr.noname[sample(dim(augyr.noname)[1], n),], sepyr.noname[sample(dim(sepyr.noname)[1], n),], octyr.noname[sample(dim(octyr.noname)[1], n),], novyr.noname[sample(dim(novyr.noname)[1], n),], decyr.noname[sample(dim(decyr.noname)[1], n),])
   
   # we need to remove outliers using interquartile range
-  outliers1 = boxplot.stats(yr.noname[ ,1],coef = 3)$out
-  outliers2 = boxplot.stats(yr.noname[ ,2],coef = 3)$out
-  outliers3 = boxplot.stats(yr.noname[ ,3],coef = 3)$out
-  yr.nout = yr.noname[-which(yr.noname[ ,1] %in% outliers1), ]
-  yr.nout = yr.noname[-which(yr.noname[ ,2] %in% outliers2), ]
-  yr.nout = yr.noname[-which(yr.noname[ ,3] %in% outliers3), ]
+  for (cnt in 1:dim(yr.noname)[2]){
+    outliers1 = boxplot.stats((yr.noname[ ,cnt]),coef = 3)$out
+    yr.nout = yr.noname[-which(yr.noname[ ,cnt] %in% outliers1), ]
+  }
   rownames(yr.nout) = NULL
   
-  # statistics
+
+  jan.nB =nBbymonth(yr.nout %>% select(contains("jan")))
+  feb.nB =nBbymonth(yr.nout %>% select(contains("feb")))
+  mar.nB =nBbymonth(yr.nout %>% select(contains("mar")))
+  apr.nB =nBbymonth(yr.nout %>% select(contains("apr")))
+  may.nB =nBbymonth(yr.nout %>% select(contains("may")))
+  jun.nB =nBbymonth(yr.nout %>% select(contains("jun")))
+  jul.nB =nBbymonth(yr.nout %>% select(contains("jul")))
+  aug.nB =nBbymonth(yr.nout %>% select(contains("aug")))
+  sep.nB =nBbymonth(yr.nout %>% select(contains("sep")))
+  oct.nB =nBbymonth(yr.nout %>% select(contains("oct")))
+  nov.nB =nBbymonth(yr.nout %>% select(contains("nov")))
+  dec.nB =nBbymonth(yr.nout %>% select(contains("dec")))
+  
+  all.nBs = list("January" = jan.nB, "February" = feb.nB, "March" = mar.nB, "April"=apr.nB, "May"=may.nB, "June"=jun.nB, "July"=jul.nB, "August"=aug.nB, "September"=sep.nB, "October"=oct.nB, "November"=nov.nB, "December" =dec.nB)
+  return(all.nBs)
+}
+next3rep = function(df.test, month){
+  col = 1
+  df.noname = NULL
+  while(col <= length(df.test)-2) {
+    df.next3 = df.test[col:(col+2)]
+    names(df.next3) = c(paste0("pm010",month), paste0("pm025",month), paste0("pm100",month))
+    df.noname = rbind(df.noname, df.next3)
+    col = col+3
+  }
+  df.noname[df.noname < 0] = NA   # mark negative values NA
+  df.noname = na.omit(df.noname)  # eventually omit NA
+  return(df.noname)
+}
+#After running the confusion matrix our predicter has 87.37% accuracy!
+#We can now just input generated pm values and get labels automatically
+nBbymonth <- function(yr.nout){
+  colnames(yr.nout) = c("pm010", "pm025", "pm100")  
+  
   yr.avg_pm010 = mean(yr.nout$pm010)
   yr.avg_pm025 = mean(yr.nout$pm025)
   yr.avg_pm100 = mean(yr.nout$pm100)
@@ -574,12 +578,9 @@ MlClassifier <- function(){
   yr.trainTable = table(train$rating, yr.trainPred)
   yr.testPred = predict(yr.nB, newdata = test[1:3])
   yr.testTable = table(test$rating, yr.testPred)
-  confusionMatrix(yr.testPred, test$rating)$overall['Accuracy']
+  #(confusionMatrix(yr.testPred, test$rating)$overall['Accuracy'])
   return(yr.nB)
 }
-#After running the confusion matrix our predicter has 87.37% accuracy!
-#We can now just input generated pm values and get labels automatically
-
 
 #Function made to take in new data points that are able to classify simulated data
 #pm_data = generated partiulate matter dataframe
