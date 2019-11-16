@@ -712,6 +712,10 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
     nth_term <- 1
     while(loop_iterate){
       loop_iterate <- 1
+      nth_term <- nth_term + 1
+      if(nth_term > length(dist_vec)){
+        break
+      }
       near_mobile_index <- which(dist_vec == dist_vec[order(dist_vec)][nth_term])
       near_mobile <- mobile_sensors[near_mobile_index,]
       near_index <- which(sensors[,1] == near_mobile[1] & sensors[,2] == near_mobile[2])
@@ -724,7 +728,6 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
         k <- k + 1
       }
       if(loop_iterate == 1){
-        print(dist_vec)
         movement <- move_sensor(dist_vec[near_mobile_index], destination, sensors[near_index,])
         movement <- unlist(movement)
         if(movement[3]){
@@ -739,7 +742,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
       loop_iterate <- loop_iterate - 1
     }
   }
-  return(sensors)
+ return(sensors)
 }
 #Moves sensor to new location
 move_sensor <- function(distance, destination, near_sensor){

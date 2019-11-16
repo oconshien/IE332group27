@@ -7,6 +7,7 @@ MappedNetwork<- SA(budget, cityGrid, geoRadius = 15000, just_values = F)
 example <- MlClassifier()
 #Generated Pm Values
 locationSen <- MappedNetwork$best
+locationSen <- cbind(locationSen, "moving"= rep(0, length(locationSen[,1])))
 timefromSQL <- 1
 datefromSQL <- as.POSIXlt("2019-05-06 20:51:50 CET")
 montht <- format(datefromSQL,"%B")
@@ -33,7 +34,7 @@ while(datecnt <= 24*timefromSQL){
   #data_tester <- cbind(locationSen, points)
   #Run MlClassifier Once then will be able to predict for any pm values
   try <- data_label(points, example[montht])
-  z <- priority_destinations(locationSen, try)
+  z <- priority_destinations(locationSen, try, 0)
   dataframeForStats <- data.frame(try, "x"=locationSen[,1], "y"=locationSen[,2])
   bigData <- rbind(bigData, dataframeForStats)
   updates <- nearest_sensor_finder(z, locationSen, 0, try)
