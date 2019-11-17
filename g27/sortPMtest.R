@@ -6,7 +6,9 @@ sortPM <- function(input_time, region, storm_time){
   day <- sample(c(1:30), 1)
   hour <- sample(c(0:23), 1)
   input_time <- as.POSIXct(paste0(yearnum,"-",monthnum,"-",day," ",hour,":00:00 CET"))
-  time_since <- as.numeric(input_time) - as.numeric(as.POSIXct("2019-1-1 0:00"))  + as.numeric(as.POSIXct("2017-1-1 0:00"))
+  ##just take current data and put it into 2017
+  year(input_time) <- 2017
+  time_since <- as.numeric(input_time)
   pm_df <- data.frame(PM = rep(0,3), row.names = c(1,2.5,10))
   
   if (region == 0){
