@@ -119,14 +119,18 @@ mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
   spaceReduct <- spaceReduct / area
   reduct_avg <- (edgeReduct + spaceReduct) / 2
   region_factor <- 0
+  mobile_factor <- 0
   city_grid_radius <- geoRadius/20
   for (i in 1:(length(centers[,1]))){
     if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 2 & centers[i,3] == 0)
       region_factor <- region_factor + reduct_avg/2
     if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 1 & centers[i,3] == 1)
       region_factor <- region_factor + reduct_avg/2 
+    if(centers[i,3] == 1){
+      mobile_factor <- mobile_factor + (-sqrt(centers[i,1]^2 + centers[i,2]^2) + geoRadius) * 1 / (geoRadius * length(sensors[,3]))
+    }
   }
-  return(1 - spaceReduct - edgeReduct + region_factor)
+  return(1 - spaceReduct - edgeReduct + region_factor + mobile_factor)
 }
 
 #Initial solution(IS),  Temperature, maximum iteration #, cooling schedule
@@ -138,6 +142,7 @@ SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=
   # cooling: rate of cooling
   # just_values: only return a list of best objective value at each iteration
   require(lpSolve)
+  set.seed(1)
   numSensors <- budget_constraint(budget)
   s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
   s_obj <- mapPoints(s_sol,cityGrid, r, geoRadius)     # evaluate initial solution
@@ -160,7 +165,7 @@ SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=
     } else if ( runif(1) <= exp((neigh_obj-s_obj)/temperature) ) {    # otherwise, probabilistically accept 
       s_sol <- neigh
       s_obj <- neigh_obj
-      cnt <- cnt +1
+      cnt <- cnt + 1
     }
     temperature <- temperature * cooling                          # update cooling
     obj_vals <- c(obj_vals, best_obj)                             # maintain list of best found so far

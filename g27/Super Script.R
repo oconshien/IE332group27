@@ -403,14 +403,18 @@ mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
   spaceReduct <- spaceReduct / area
   reduct_avg <- (edgeReduct + spaceReduct) / 2
   region_factor <- 0
+  mobile_factor <- 0
   city_grid_radius <- geoRadius/20
   for (i in 1:(length(centers[,1]))){
     if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 2 & centers[i,3] == 0)
       region_factor <- region_factor + reduct_avg/2
     if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 1 & centers[i,3] == 1)
       region_factor <- region_factor + reduct_avg/2 
+    if(centers[i,3] == 1){
+      mobile_factor <- mobile_factor + (-sqrt(centers[i,1]^2 + centers[i,2]^2) + geoRadius) * 1 / (geoRadius * length(sensors[,3]))
+    }
   }
-  return(1 - spaceReduct - edgeReduct + region_factor)
+  return(1 - spaceReduct - edgeReduct + region_factor + mobile_factor)
 }
 
 #Simulated Annealing
