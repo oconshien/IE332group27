@@ -632,7 +632,9 @@ sortPM <- function(input_time, region, storm_time){
   day <- sample(c(1:30), 1)
   hour <- sample(c(0:23), 1)
   input_time <- as.POSIXct(paste0(yearnum,"-",monthnum,"-",day," ",hour,":00:00 CET"))
-  time_since <- as.numeric(input_time) - as.numeric(as.POSIXct("2019-1-1 0:00"))  + as.numeric(as.POSIXct("2017-1-1 0:00"))
+  ##just take current data and put it into 2017
+  year(input_time) <- 2017
+  time_since <- as.numeric(input_time)
   pm_df <- data.frame(PM = rep(0,3), row.names = c(1,2.5,10))
   
   if (region == 0){
@@ -662,21 +664,6 @@ sortPM <- function(input_time, region, storm_time){
 
 #Generate random data point 
 smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since, storm_time){
-  #require(readr) #input/output
-  require(dplyr) #data wrangling
-  require(lubridate) #date/time
-  require(knitr) #quite fond of the kable function for making tables.
-  require(ggplot2) #plotting
-  require(ggthemes) #plotting
-  require(gridExtra) #extra space for plots
-  #require(leaflet) #mapping
-  #require(leaflet.extras) #mapping
-  require(data.table) #data manipulation 
-  require(RColorBrewer) #plotting
-  require(stringr) #more data wrangling
-  require(ggridges) #plotting density ridges
-  
-  
   #Geographic information contained in this csv file
   sensor_locations <- read.csv("air-quality-data-from-extensive-network-of-sensors/sensor_locations.csv")
   #Monthly data contained in these csv files. 
