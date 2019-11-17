@@ -17,6 +17,8 @@ dataframeForStates <- NULL
 bigData <- NULL
 datecnt <- 1
 OGmap <- locationSen 
+airPref <- 0
+
 storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
 
 while(datecnt <= 24*timefromSQL){
@@ -34,10 +36,10 @@ while(datecnt <= 24*timefromSQL){
   #data_tester <- cbind(locationSen, points)
   #Run MlClassifier Once then will be able to predict for any pm values
   try <- data_label(points, example[montht])
-  z <- priority_destinations(locationSen, try, 0)
+  z <- priority_destinations(locationSen, try, airPref)
   dataframeForStats <- data.frame(try, "x"=locationSen[,1], "y"=locationSen[,2])
   bigData <- rbind(bigData, dataframeForStats)
-  updates <- nearest_sensor_finder(z, locationSen, 0, try)
+  updates <- nearest_sensor_finder(z, locationSen, airPref, try)
   locationSen <- updates
   datefromSQL <- datefromSQL + 60*60
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))

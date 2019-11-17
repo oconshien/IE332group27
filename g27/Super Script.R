@@ -19,17 +19,31 @@ require(lpSolve)
 require(RMySQL)
 
 ##--USER INPUTS--##
- # myDB <- dbConnect(MySQL(), user='g110699', password='TwentySeven27', dbname='g110699', host='mydb.itap.purdue.edu')
-  #on.exit(dbDisconnect(mydb))
+  myDB <- dbConnect(MySQL(), user='g110699', password='TwentySeven27', dbname='g110699', host='mydb.itap.purdue.edu')
+  on.exit(dbDisconnect(mydb))
   #Get C_ID from server
-  #budget_call <- paste0("SELECT budget FROM Quote WHERE C_ID ==",C_ID) 
-  #dbSendQuery(myDB, budget_call)
+  budget_call <- paste0("SELECT budget FROM Quote WHERE Q_ID ==",Q_ID, ";") 
+  bquery <- dbSendQuery(myDB, budget_call)
+  budget <- dbFetch(myDB, bduget_call)
   #geoRadius
+  geo_call <- paste0("SELECT geoRadius FROM Quote WHERE Q_ID ==",Q_ID, ";")
+  geoRadius <- dbFetch(myDB, geo_call)
   #Simulation Start Date
+  date_call <- paste0("SELECT date FROM Quote WHERE Q_ID ==",Q_ID, ";")
+  datefromSQL <- dbFetch(myDB, date_call)
   #Length of simulation
+  time_call <- paste0("SELECT time FROM Quote WHERE Q_ID ==",Q_ID, ";")
+  timefromSQL <- dbFetch(myDB, time_call)
   #Air Quality Focus
+  AirPref_call <- paste0("SELECT AirPref FROM Quote WHERE Q_ID ==",Q_ID, ";")
+  AirPref <- dbFetch(myDB, AirPref_call)
+  if(AirPref == "good"){
+    AirPref <- 0
+  }else
+    AirPref <- 3
   #City Number
-  
+  cityType_call <- paste0("SELECT cityType FROM Quote WHERE Q_ID ==",Q_ID, ";")
+  cityType_call <- dbFetch(myDB, cityType_call)
   
 ##--City Options--##
 buildCity <- function(num){
