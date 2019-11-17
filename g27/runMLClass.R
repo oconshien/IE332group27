@@ -1,6 +1,6 @@
 #initialization
 budget <- 300000
-cityGrid <- buildCity(3)
+cityGrid <- buildCity(cityType)
 geoRadius <- 15000
 city_grid_radius <- geoRadius / 20
 MappedNetwork<- SA(budget, cityGrid, geoRadius = 15000, just_values = F)
