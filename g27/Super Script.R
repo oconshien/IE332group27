@@ -19,11 +19,11 @@ require(lpSolve)
 require(RMySQL)
 
 ##--USER INPUTS--##
-  myDB <- dbConnect(MySQL(), user='g110699', password='TwentySeven27', dbname='g110699', host='mydb.itap.purdue.edu')
-  on.exit(dbDisconnect(mydb))
+ # myDB <- dbConnect(MySQL(), user='g110699', password='TwentySeven27', dbname='g110699', host='mydb.itap.purdue.edu')
+  #on.exit(dbDisconnect(mydb))
   #Get C_ID from server
-  budget_call <- paste0("SELECT budget FROM Quote WHERE C_ID ==",C_ID) 
-  dbSendQuery(myDB, budget_call)
+  #budget_call <- paste0("SELECT budget FROM Quote WHERE C_ID ==",C_ID) 
+  #dbSendQuery(myDB, budget_call)
   #geoRadius
   #Simulation Start Date
   #Length of simulation

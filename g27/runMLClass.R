@@ -17,7 +17,7 @@ dataframeForStates <- NULL
 bigData <- NULL
 datecnt <- 1
 OGmap <- locationSen 
-
+storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
 
 while(datecnt <= 24*timefromSQL){
   points <- NULL
@@ -27,7 +27,7 @@ while(datecnt <= 24*timefromSQL){
   print(datecnt)
   while (i <= dim(locationSen)[1]){
     #print(i)
-    point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius, trunc(locationSen[i,2]/20) + city_grid_radius])
+    point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius, trunc(locationSen[i,2]/20) + city_grid_radius], storm_time)
     points <- rbind(points, point)
     i <- i + 1
   }
@@ -40,5 +40,6 @@ while(datecnt <= 24*timefromSQL){
   updates <- nearest_sensor_finder(z, locationSen, 0, try)
   locationSen <- updates
   datefromSQL <- datefromSQL + 60*60
+  storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
   datecnt <- datecnt + 1
 }
