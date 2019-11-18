@@ -807,3 +807,55 @@ move_sensor <- function(distance, destination, near_sensor){
   
   return(c(x_dest,y_dest, still_moving))
 }
+
+data_analytics<-function(bigData){
+  distinct_locations<-distinct(bigData,x,y)
+  i=1
+  while(i <= nrow(distinct_locations)){
+    print(i)
+    indexesX<-which(bigData[,5] == distinct_locations[i,1])
+    indexesboth<-which(bigData[indexesX,6] == distinct_locations[i,2])
+    listofboth<-bigData[indexesX[indexesboth],]
+    location<-listofboth[1,5:6]
+    numberofinstances<-c(1:nrow(listofboth))
+    #Data Analytics for the location
+    #Data Analytics for PM010
+    averagePM010<-mean(listofboth[,1])
+    minPM010<-min(listofboth[,1])
+    maxPM010<-max(listofboth[,1])
+    if(length(numberofinstances)>1){
+      lmPM010<-lm(numberofinstances~listofboth[,1])
+      coefPM010<-coefficients(lmPM010)
+      nextPredictedPM010<-as.numeric(coefPM010[1])+as.numeric(coefPM010[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
+      print(nextPredictedPM010)
+    }
+    #Data Analytics for PM025
+    averagePM025<-mean(listofboth[,2])
+    minPM025<-min(listofboth[,2])
+    maxPM025<-max(listofboth[,2])
+    if(length(numberofinstances)>1){
+      lmPM025<-lm(numberofinstances~listofboth[,2])
+      coefPM025<-coefficients(lmPM025)
+      nextPredictedPM025<-as.numeric(coefPM025[1])+as.numeric(coefPM025[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
+      print(nextPredictedPM025)
+    }
+    #Data Analytics for PM100
+    averagePM100<-mean(listofboth[,3])
+    minPM100<-min(listofboth[,3])
+    maxPM100<-max(listofboth[,3])
+    if(length(numberofinstances)>1){
+      lmPM100<-lm(numberofinstances~listofboth[,3])
+      coefPM100<-coefficients(lmPM100)
+      nextPredictedPM100<-as.numeric(coefPM100[1])+as.numeric(coefPM100[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
+      print(nextPredictedPM100)
+    }
+    #Compute a Score
+    pmdata<-c(averagePM010,averagePM025,averagePM100)
+    #data_label function will need to reference the previous ML Classifier output
+    #classification<-data_label(pmdata,example[montht])
+    
+    #score<-(.50(classification[1,2])+.35(classification[2,2])+.15(classification[3,2]))/3
+    i<-i+1
+    return(pmdata)
+  }
+}
