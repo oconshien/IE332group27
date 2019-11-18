@@ -1,5 +1,6 @@
 #initialization
 budget <- 300000
+cityType <- 1
 cityGrid <- buildCity(cityType)
 geoRadius <- 15000
 city_grid_radius <- geoRadius / 20
