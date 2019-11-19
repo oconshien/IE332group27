@@ -436,7 +436,7 @@ mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
 }
 
 #Simulated Annealing
-SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=500, cooling=0.95, just_values=TRUE) {
+SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=1000, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
   # task_data: data.frame of task processing time
   # temperature: initial temperature
@@ -799,16 +799,32 @@ move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
   }
   if(distance>=1000){
     dest <- 1000
-    x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
-    y_dest <- dist_line$coeff[[2]] * x_dest
+    if(x[1] > x[2]){
+      x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
+    } else{
+      x_dest <- -sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
+    }
+    if(y[1] > y[2]){
+      y_dest <- abs(dist_line$coeff[[2]] * x_dest)
+    } else{
+      y_dest <- -abs(dist_line$coeff[[2]] * x_dest)
+    }
   }else{
     x_minus_fifty <- sqrt(50^2/(dist_line$coeff[[2]]^2+1))
-    x_dest <- destination[1] - x_minus_fifty
-    y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
+    if(x[1] > x[2]){
+      x_dest <- destination[1] - x_minus_fifty
+    } else{
+      x_dest <- destination[1] + x_minus_fifty
+    }
+    if(y[1] > y[2]){
+      y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
+    } else{
+      y_dest <- destination[2] + dist_line$coeff[[2]] * x_minus_fifty
+    }
   }
-  if(sqrt(x_dest^2 + y_dest^2) > geoRadius){
-    x_dest <- destination[1]
-    y_dest <- destination[2]
+  if(sqrt((x_dest+near_sensor[1]) ^ 2 + (y_dest + near_sensor[2])^2) > geoRadius){
+    x_dest <- near_sensor[1]
+    y_dest <- near_sensor[2]
   }
   
   return(c(x_dest,y_dest, 1))
