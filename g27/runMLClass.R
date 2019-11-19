@@ -11,6 +11,7 @@ locationSen <- MappedNetwork$best
 locationSen <- cbind(locationSen, "moving"= rep(0, length(locationSen[,1])))
 timefromSQL <- 1
 datefromSQL <- as.POSIXlt("2019-09-06 20:51:50 CET")
+datefromSQL <- as.POSIXlt(datefromSQL)
 montht <- format(datefromSQL,"%B")
 points <- NULL
 point <- NULL
@@ -46,3 +47,5 @@ while(datecnt <= 24*timefromSQL){
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
   datecnt <- datecnt + 1
 }
+
+test <- data_analytics(bigData)

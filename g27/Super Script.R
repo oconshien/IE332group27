@@ -808,8 +808,9 @@ move_sensor <- function(distance, destination, near_sensor){
   return(c(x_dest,y_dest, still_moving))
 }
 
-data_analytics<-function(bigData){
+data_analytics<-function(bigData, montht){
   distinct_locations<-distinct(bigData,x,y)
+  results <- NULL
   i=1
   while(i <= nrow(distinct_locations)){
     print(i)
@@ -850,12 +851,15 @@ data_analytics<-function(bigData){
       print(nextPredictedPM100)
     }
     #Compute a Score
-    pmdata<-c(averagePM010,averagePM025,averagePM100)
+    pmdata<-c("pm010"=averagePM010,"pm025"=averagePM025,"pm100"=averagePM100)
     #data_label function will need to reference the previous ML Classifier output
     #classification<-data_label(pmdata,example[montht])
-    
     #score<-(.50(classification[1,2])+.35(classification[2,2])+.15(classification[3,2]))/3
-    i<-i+1
-    return(pmdata)
+    result <- cbind("x" = distinct_locations[i,1],"y" = distinct_locations[i,2], averagePM010, minPM010, maxPM010, averagePM025, minPM025, maxPM025, averagePM100, minPM100, maxPM100)
+    results <- rbind(results, result)
+    i <- i+1
   }
+  class <- data.frame("pm010"=results[,"averagePM010"], "pm025"=results[,"averagePM025"], "pm100"=results[,"averagePM100"])
+  classification<- data_label(class,example[montht])
+  final <- cbind(results, "quality score"= classification[,4])
 }
