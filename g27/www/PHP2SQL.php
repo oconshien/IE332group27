@@ -1,8 +1,6 @@
 <?php
-$servername = "mydb.itap.purdue.edu";
-$username = "g1109699";
-$password = "MySQL27";
-$dbname = "g1109699";
+
+require('SQLConn.php');
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
