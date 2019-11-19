@@ -19,35 +19,37 @@ require(lpSolve)                          #use
 require(RMySQL)                           #use
 
 ##--USER INPUTS--##
-  #Q_ID <- 6
-  #myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
-  #on.exit(dbDisconnect(myDB))
+  Q_ID <- 2
+  myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
+  on.exit(dbDisconnect(myDB))
   #Get C_ID from server
-  #quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
-  #input_query <- dbSendQuery(myDB, quote_call)
-  #inputs <- dbFetch(input_query)
+  quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
+  input_query <- dbSendQuery(myDB, quote_call)
+  inputs <- dbFetch(input_query)
   
   #budget
-  #budget <- inputs[1, "budget"]
+  budget <- inputs[1, "budget"]
   
   #geoRadius
-  #geoRadius <- inputs[1, "geoRadius"]
+  geoRadius <- inputs[1, "geoRadius"]
   #Simulation Start Date
-  #datefromSQL <- inputs[1, "date"]
+  datefromSQL <- inputs[1, "date"]
   #Length of simulation
   
-  #timefromSQL <- inputs[1, "numDays"]
+  timefromSQL <- inputs[1, "numDays"]
   #Air Quality Focus
-  #AirPref <- inputs[1, "AirPref"]
-  #if(AirPref == "good"){
-   # AirPref <- 0
-  #}else{
-   # AirPref <- 3
-  #}
+  airPref <- inputs[1, "airPref"]
+  if(airPref == "good"){
+   airPref <- 0
+  }else{
+    airPref <- 3
+  }
   #City Number
-  #cityType <- inputs[1, "cityType"]
+  CityLat <- inputs[1, "citylat"]
+  CityLong <- inputs[1, "citylon"]
   
-  #dbClearResult(dbListResults(myDB)[[1]])
+  
+  dbClearResult(dbListResults(myDB)[[1]])
   
 ##--City Options--##
 
@@ -869,3 +871,5 @@ data_analytics<-function(bigData, montht){
   classification<- data_label(class,example[montht])
   final <- cbind(results, "quality score"= classification[,4])
 }
+
+
