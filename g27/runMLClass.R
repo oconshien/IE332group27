@@ -30,7 +30,6 @@ while(datecnt <= 24*timefromSQL){
   i = 1
   print(datecnt)
   while (i <= dim(locationSen)[1]){
-    print(i)
     point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius, trunc(locationSen[i,2]/20) + city_grid_radius], storm_time)
     points <- rbind(points, point)
     i <- i + 1
@@ -41,7 +40,7 @@ while(datecnt <= 24*timefromSQL){
   z <- priority_destinations(locationSen, try, airPref)
   dataframeForStats <- data.frame(try, "x"=locationSen[,1], "y"=locationSen[,2])
   bigData <- rbind(bigData, dataframeForStats)
-  updates <- nearest_sensor_finder(z, locationSen, airPref, try)
+  updates <- nearest_sensor_finder(z, locationSen, airPref, try, geoRadius)
   locationSen <- updates
   datefromSQL <- datefromSQL + 60*60
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
