@@ -704,10 +704,10 @@ random_collect <- function(x, storm_time){
   #x: randomized number from regression to be "collected" by sensor.
   require(truncnorm)
   error_rate <- 0.01
-  std_dev <- sqrt(x)
+  std_dev <- sqrt(abs(x))
   if(storm_time){
     error_rate <- 0.1
-    std_dev <- 2 * sqrt(x)
+    std_dev <- 2 * sqrt(abs(x))
   }
   
   #Chances of erroneous reading by sensor is 1%.
@@ -820,7 +820,6 @@ data_analytics<-function(bigData, montht){
   results <- NULL
   i=1
   while(i <= nrow(distinct_locations)){
-    print(i)
     indexesX<-which(bigData[,5] == distinct_locations[i,1])
     indexesboth<-which(bigData[indexesX,6] == distinct_locations[i,2])
     listofboth<-bigData[indexesX[indexesboth],]
