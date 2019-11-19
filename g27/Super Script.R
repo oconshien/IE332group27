@@ -735,7 +735,7 @@ priority_destinations <- function(sensors, pm_data, quality_desired){
 }
 
 #Find sensor nearest to destination
-nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class){
+nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class, geoRadius = 15000){
   #destination: final destination for sensor to move to
   #sensors: data frame of all sensors in the network
   #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
@@ -762,13 +762,14 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
       near_index <- which(sensors[,1] == near_mobile[1] & sensors[,2] == near_mobile[2])
       if(near_mobile[4] == 1){
         loop_iterate <- 2
-        k <- k + 1
+        nth_term <- nth_term + 1
+        already_indexed <- 1
       } else if(pm_class[near_index, 4] == quality_desired){
         loop_iterate <- 2
-        k <- k + 1
+        nth_term <- nth_term + 1
       }
       if(loop_iterate == 1){
-        movement <- move_sensor(dist_vec[near_mobile_index], destination[k,], sensors[near_index,])
+        movement <- move_sensor(dist_vec[near_mobile_index], destination[k,], sensors[near_index,], geoRadius)
         movement <- unlist(movement)
         if(movement[3]){
           sensors[near_index,4] <- 1
@@ -786,12 +787,15 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
  return(sensors)
 }
 #Moves sensor to new location
-move_sensor <- function(distance, destination, near_sensor){
+move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
   x <- c(destination[1], near_sensor[1])
   y <- c(destination[2], near_sensor[2])
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
+  if(is.na(dist_line$coefficients[2])){
+    return(c(x[1],y[1],0))
+  }
   if(distance>=1000){
     dest <- 1000
     x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
@@ -803,8 +807,7 @@ move_sensor <- function(distance, destination, near_sensor){
     y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
     still_moving <- 0
   }
-  
-  if(sqrt(x_dest^2+y_dest^2) > 15000){
+  if(sqrt(x_dest^2 + y_dest^2) > geoRadius){
     x_dest <- destination[1]
     y_dest <- destination[2]
   }
