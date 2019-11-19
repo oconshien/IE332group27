@@ -65,11 +65,11 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
 						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="#">Will Hicks</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
 							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
 							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
-							<li><a href="#">Truman Boggs</a></li>
-							<li><a href="#">Jorge Valdez</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/tboggsPage">Truman Boggs</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/jvaldezPage">Jorge Valdez</a></li>
 							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
 						</ul>
 					</li>
@@ -103,11 +103,12 @@
         </div>
         <!-- /.row -->
 		
-		<div class="jumbotron feature" style="color:black">
+	<div>
+		<div class="jumbotron feature" style="color:black;">
 			<p style="color:black;font-size:150%;text-align:center;"><u>Contact Information</u></p>
 		
-			<form style="text-align:center;" name="ClientInfo" method="GET" action="PHP2SQL.php" onsubmit="return checkForm(this);">
-			<table align=center>	
+			<form style="text-align:center;color:black;" name="ClientInfo" method="GET" action="PHP2SQL.php" onsubmit="return checkForm(this);">
+			<table style="color:black;" align=center>	
 				<tr>
 					<th>
 						<strong>First Name: </strong>
@@ -417,10 +418,12 @@
 					</th>
 				</tr>
 				</table>
+				
+				
 					
 				<p style="color:black;font-size:150%;text-align:center;"><u>Account Information</u></p>
 					
-				<table align=center>
+				<table style="color:black;" align=center>
 				<tr>	
 					<th>
 						<strong>Email: </strong>
@@ -441,6 +444,87 @@
 		</div>
         <!-- Feature Row -->
         
+		<div class="jumbotron feature" style="color:black;">
+			<p style="color:black;font-size:150%;text-align:center;"><u>Network Requirements</u></p>
+		
+			<form style="text-align:center;color:black;" name="netReq" method="GET" action="messInt.php" onsubmit="return checkReq(this);">
+			<table style="color:black;" align=center>	
+				<tr>
+					<th>
+						<strong>Budget: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="budget" class="input">
+					</th>
+				</tr>
+				<tr>
+					<th>
+						<strong>Radius of Network: </strong><br>(meters)
+					</th>
+					<th>
+						<input type="text" size="32" name="geoRadius" class="input">
+					</th>
+				<tr>	
+				</tr>
+				<tr>	
+					<th>
+						<strong>Simulation Start Date: </strong>
+					</th>
+					<th>
+						<input style="color:gray;" type="datetime-local" size="32" name="date" class="input">
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>Length of Simulation </strong><br>(days)
+					</th>
+					<th>
+						<input type="text" size="32" name="numDays" class="input">
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>Air Quality Focus: </strong>
+					</th>
+					<th>
+						<input type="radio" size="32" name="AirPref" value="good" class="input">Good</input>
+						<input type="radio" size="32" name="AirPref" value="bad" class="input">Bad</input>
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>City Map: </strong>
+					</th>
+					<th>
+						<br><input type="radio" size="32" name="cityType" value="1" class="input">
+							<img id="img1" src="City1.png" alt="City 1">
+						</input>
+						<input type="radio" size="32" name="cityType" value="2" class="input">
+							<img id="img1" src="City2.png" alt="City 2">
+						</input><br><br>
+						<input type="radio" size="32" name="cityType" value="3" class="input">
+							<img id="img1" src="City3.png" alt="City 3">
+						</input>
+						<input type="radio" size="32" name="cityType" value="4" class="input">
+							<img id="img1" src="City4.png" alt="City 4">
+						</input>
+					</th>
+				</tr>
+				<tr>	
+					<th>
+						<strong>Legend: </strong>
+					</th>
+					<th>
+						<img style="width:85%;" src="Legend1" alt="Legend">
+					</th>
+				</tr>
+				
+				</table>	<br><br>
+						<input type="submit" style="color:black;" value="Submit"></p>
+			</form>
+		</div>
+	</div>
+		
         <!-- /.row -->
 
     </div>
@@ -501,6 +585,61 @@
 		if(!isNaN(form.FirstName.value)) {
 			alert("Please input a valid first name.");
 			form.FirstName.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.LastName.value)) {
+			alert("Please input a valid last name.");
+			form.LastName.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.CompanyName.value)) {
+			alert("Please input a valid Company name.");
+			form.CompanyName.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.cAddress.value)) {
+			alert("Please input a valid address.");
+			form.cAddress.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.cCity.value)) {
+			alert("Please input a valid city.");
+			form.cCity.focus();
+			return false;
+		}
+		
+		if(isNaN(form.cPostalCode.value)) {
+			alert("Please input a valid postal code");
+			form.cPostalCode.focus();
+			return false;
+		}
+		
+		if(!isNaN(form.cCountry.value)) {
+			alert("Please input a valid country name.");
+			form.cCountry.focus();
+			return false;
+		}
+		
+		
+	}
+	
+	function checkReq(form)
+	{
+	
+		var budget = document.forms["netReq"]["budget"]
+		var geoRadius = document.forms["netReq"]["geoRadius"]
+		var date = document.forms["netReq"]["date"]
+		var numDays = document.forms["netReq"]["numDays"]
+		var AirPref = document.forms["netReq"]["AirPref"]
+		var cityType = document.forms["netReq"]["cityType"]
+
+		if(isNaN(form.budget.value)) {
+			alert("Please input a valid budget.");
+			form.budget.focus();
 			return false;
 		}
 		
