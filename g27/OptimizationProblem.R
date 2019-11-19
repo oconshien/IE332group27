@@ -87,6 +87,9 @@ budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.01,al
       fails = dbinom(as.integer((solution[1]+solution[2])*alpha), size = solution[1], prob = 4*risk)
     }
   }
+  solution_hold <- solution[1]
+  solution[1] <- solution[2]
+  solution[2] <- solution_hold
   return(solution)
 }
 
