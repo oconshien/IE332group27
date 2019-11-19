@@ -45,6 +45,24 @@ while(datecnt <= 24*timefromSQL){
   datefromSQL <- datefromSQL + 60*60
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
   datecnt <- datecnt + 1
+locationSen <- as.data.frame(locationSen)
+
+locationSen[,1] <- locationSen[,1]/111111 + CityLat
+locationSen[,2] <- locationSen[,2]/(111111*(cos(locationSen[,1]))) + CityLong
+locationSen[,3] <- ifelse(locationSen[,3]==1, "fixed", "mobile")
+names(locationSen) <- c("lat", "lon", "type")
+
+myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
+on.exit(dbDisconnect(myDB))
+
+dbWriteTable(myDB, "Sensor", data.frame("N_ID"=Q_ID, locationSen[,1:3]), append=TRUE, header=TRUE,row.names=FALSE)
+
+sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =",Q_ID, ";")
+sensor_query <- dbSendQuery(myDB, sensor_call)
+sensorIDs <- dbFetch(sensor_query)
+
+airData <- data.frame("time"=datefromSQL, sensorIDs, try[, 1:3])
+dbWriteTable(myDB, "Air_Quality", airData, append=TRUE, header=TRUE,row.names=FALSE)
 }
 
 test <- data_analytics(bigData)
