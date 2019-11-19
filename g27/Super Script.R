@@ -742,6 +742,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
   #sensors: data frame of all sensors in the network
   #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
   #pm_data: the classification of the particulate matter collected by each sensor 
+  sensors[,4] <- rep(0,length(sensors[,4]))
   for(k in 1:length(destination[,1])){
     mobile_sensors <- sensors[which(sensors[,3]==1),]
     num_mobiles <- length(mobile_sensors[,1])
@@ -802,19 +803,17 @@ move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
     dest <- 1000
     x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
     y_dest <- dist_line$coeff[[2]] * x_dest
-    still_moving <- 1
   }else{
     x_minus_fifty <- sqrt(50^2/(dist_line$coeff[[2]]^2+1))
     x_dest <- destination[1] - x_minus_fifty
     y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
-    still_moving <- 0
   }
   if(sqrt(x_dest^2 + y_dest^2) > geoRadius){
     x_dest <- destination[1]
     y_dest <- destination[2]
   }
   
-  return(c(x_dest,y_dest, still_moving))
+  return(c(x_dest,y_dest, 1))
 }
 
 data_analytics<-function(bigData, montht){
