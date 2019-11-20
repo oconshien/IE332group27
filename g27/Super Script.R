@@ -19,35 +19,37 @@ require(lpSolve)                          #use
 require(RMySQL)                           #use
 
 ##--USER INPUTS--##
-  #Q_ID <- 6
-  #myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
-  #on.exit(dbDisconnect(myDB))
+  Q_ID <- 2
+  myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
+  on.exit(dbDisconnect(myDB))
   #Get C_ID from server
-  #quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
-  #input_query <- dbSendQuery(myDB, quote_call)
-  #inputs <- dbFetch(input_query)
+  quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
+  input_query <- dbSendQuery(myDB, quote_call)
+  inputs <- dbFetch(input_query)
   
   #budget
-  #budget <- inputs[1, "budget"]
+  budget <- inputs[1, "budget"]
   
   #geoRadius
-  #geoRadius <- inputs[1, "geoRadius"]
+  geoRadius <- inputs[1, "geoRadius"]
   #Simulation Start Date
-  #datefromSQL <- inputs[1, "date"]
+  datefromSQL <- inputs[1, "date"]
   #Length of simulation
   
-  #timefromSQL <- inputs[1, "numDays"]
+  timefromSQL <- inputs[1, "numDays"]
   #Air Quality Focus
-  #AirPref <- inputs[1, "AirPref"]
-  #if(AirPref == "good"){
-   # AirPref <- 0
-  #}else{
-   # AirPref <- 3
-  #}
+  airPref <- inputs[1, "airPref"]
+  if(airPref == "good"){
+   airPref <- 0
+  }else{
+    airPref <- 3
+  }
   #City Number
-  #cityType <- inputs[1, "cityType"]
+  CityLat <- inputs[1, "citylat"]
+  CityLong <- inputs[1, "citylon"]
   
-  #dbClearResult(dbListResults(myDB)[[1]])
+  
+  dbClearResult(dbListResults(myDB)[[1]])
   
 ##--City Options--##
 
@@ -436,7 +438,7 @@ mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
 }
 
 #Simulated Annealing
-SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=500, cooling=0.95, just_values=TRUE) {
+SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=1000, cooling=0.95, just_values=TRUE) {
   # core_number: number of cores available
   # task_data: data.frame of task processing time
   # temperature: initial temperature
@@ -704,10 +706,10 @@ random_collect <- function(x, storm_time){
   #x: randomized number from regression to be "collected" by sensor.
   require(truncnorm)
   error_rate <- 0.01
-  std_dev <- sqrt(x)
+  std_dev <- sqrt(abs(x))
   if(storm_time){
     error_rate <- 0.1
-    std_dev <- 2 * sqrt(x)
+    std_dev <- 2 * sqrt(abs(x))
   }
   
   #Chances of erroneous reading by sensor is 1%.
@@ -740,6 +742,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
   #sensors: data frame of all sensors in the network
   #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
   #pm_data: the classification of the particulate matter collected by each sensor 
+  sensors[,4] <- rep(0,length(sensors[,4]))
   for(k in 1:length(destination[,1])){
     mobile_sensors <- sensors[which(sensors[,3]==1),]
     num_mobiles <- length(mobile_sensors[,1])
@@ -798,21 +801,35 @@ move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
   }
   if(distance>=1000){
     dest <- 1000
-    x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
-    y_dest <- dist_line$coeff[[2]] * x_dest
-    still_moving <- 1
+    if(x[1] > x[2]){
+      x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
+    } else{
+      x_dest <- -sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
+    }
+    if(y[1] > y[2]){
+      y_dest <- abs(dist_line$coeff[[2]] * x_dest)
+    } else{
+      y_dest <- -abs(dist_line$coeff[[2]] * x_dest)
+    }
   }else{
     x_minus_fifty <- sqrt(50^2/(dist_line$coeff[[2]]^2+1))
-    x_dest <- destination[1] - x_minus_fifty
-    y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
-    still_moving <- 0
+    if(x[1] > x[2]){
+      x_dest <- destination[1] - x_minus_fifty
+    } else{
+      x_dest <- destination[1] + x_minus_fifty
+    }
+    if(y[1] > y[2]){
+      y_dest <- destination[2] - dist_line$coeff[[2]] * x_minus_fifty
+    } else{
+      y_dest <- destination[2] + dist_line$coeff[[2]] * x_minus_fifty
+    }
   }
-  if(sqrt(x_dest^2 + y_dest^2) > geoRadius){
-    x_dest <- destination[1]
-    y_dest <- destination[2]
+  if(sqrt((x_dest+near_sensor[1]) ^ 2 + (y_dest + near_sensor[2])^2) > geoRadius){
+    x_dest <- near_sensor[1]
+    y_dest <- near_sensor[2]
   }
   
-  return(c(x_dest,y_dest, still_moving))
+  return(c(x_dest,y_dest, 1))
 }
 
 data_analytics<-function(bigData, montht){
@@ -820,7 +837,6 @@ data_analytics<-function(bigData, montht){
   results <- NULL
   i=1
   while(i <= nrow(distinct_locations)){
-    print(i)
     indexesX<-which(bigData[,5] == distinct_locations[i,1])
     indexesboth<-which(bigData[indexesX,6] == distinct_locations[i,2])
     listofboth<-bigData[indexesX[indexesboth],]
@@ -870,3 +886,5 @@ data_analytics<-function(bigData, montht){
   classification<- data_label(class,example[montht])
   final <- cbind(results, "quality score"= classification[,4])
 }
+
+

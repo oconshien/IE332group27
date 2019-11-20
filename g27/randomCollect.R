@@ -2,10 +2,10 @@ random_collect <- function(x, storm_time){
   #x: randomized number from regression to be "collected" by sensor.
   require(truncnorm)
   error_rate <- 0.01
-  std_dev <- sqrt(x)
+  std_dev <- sqrt(abs(x))
   if(storm_time){
     error_rate <- 0.1
-    std_dev <- 2 * sqrt(x)
+    std_dev <- 2 * sqrt(abs(x))
   }
   
   #Chances of erroneous reading by sensor is 1%.
