@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6 {
 	}
 
 #a1 {
-	border: 6px solid #7AE1E6;
+	border: 6px solid #71c8f4;
 	color: black;
 	font-family: georgia;
 	padding-top: 0px;
@@ -53,13 +53,13 @@ h1, h2, h3, h4, h5, h6 {
 
 #mapTable th {
 	padding: 5px;
-	background-color: #7AE1E6;
+	background-color: #71c8f4;
 	text-align: center;
 	vertical-align: middle;
 }
 
 .feature {
-	background-color: #7ae2e6;
+	background-color: #71c8f4;
 	color: gray;
 	}
 	
@@ -85,5 +85,5 @@ h1, h2, h3, h4, h5, h6 {
 .input {
 	color:black;
 	border:none;
-	border-bottom:2px solid #7ae2e6;
+	border-bottom:2px solid #71c8f4;
 	}

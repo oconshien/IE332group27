@@ -28,6 +28,30 @@
         margin: 20;
         padding: 0;
       }
+	th {
+		padding: 15px;
+		background-color: #7AE1E6;
+		color: white;
+		border-color: black;
+		}
+		
+	td {
+		color: black;
+		padding: 5px;
+	}
+	tr:nth-child(even) {background-color: #d2d2d2;}
+	/* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+		margin: 20px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 70%;
+        margin: 0;
+        padding: 0;
+      }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -52,7 +76,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
+                <a id="a2" class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
                 	<span class="glyphicon glyphicon-grain"></span> 
                 	Group 27
                 </a>
@@ -61,19 +85,19 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/index">Home</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/index">Home</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
                     </li>
 					<li class="active">
-                        <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData.php">Historical Data</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/HistoricalData.php">Historical Data</a>
                     </li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
+						<a id="a2" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
 						<ul class="dropdown-menu" aria-labelledby="about-us">
 							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
 							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
@@ -126,7 +150,7 @@
 				<p><a id="demo8" class="btn btn-default">Los Angeles</a></p>
 			</th>
 			<th>
-				<p><a id="demo9" class="btn btn-default">San Fransisco</a></p>
+				<p><a id="demo9" class="btn btn-default">West Lafayette</a></p>
 			</th>
 		</tr>
 	</table>
@@ -180,6 +204,7 @@
   infoWindow.open(map, marker);
 });
 
+//Sydney
 function initMap() {
 		var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(-33.863276, 151.207977),
@@ -222,7 +247,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump.php', function(data) {
           });
         }
 	
-// Initialize and add the map
+// Chicago Initialize and add the map
 function initMap1() {
 		var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(41.869361, -87.660712),
@@ -264,7 +289,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump1.php', function(data) 
             });
           });
         }
-		
+//London		
 function initMap2() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(51.507489, -0.127957),
@@ -306,7 +331,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump2.php', function(data) 
             });
           });
         }
-		
+//Tokyo	
 function initMap3() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(35.680553, 139.769253),
@@ -348,7 +373,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump3.php', function(data) 
             });
           });
         }
-
+//Paris
 function initMap4() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(48.8566, 2.3522),
@@ -390,7 +415,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump4.php', function(data) 
             });
           });
         }
-
+//Rome
 function initMap5() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(41.9028, 12.4964),
@@ -432,7 +457,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump5.php', function(data) 
             });
           });
         }
-
+//Dubai
 function initMap6() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(25.2048, 55.2708),
@@ -474,7 +499,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump6.php', function(data) 
             });
           });
         }
-
+//Cape Town
 function initMap7() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(-33.9249, 18.4241),
@@ -516,10 +541,10 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump7.php', function(data) 
             });
           });
         }
-
+//Los Angeles
 function initMap8() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(34.0522, 118.2437),
+          center: new google.maps.LatLng(34.0522, -118.2437),
           zoom: 12
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -558,10 +583,10 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump8.php', function(data) 
             });
           });
         }
-
+//West Lafayette
 function initMap9() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(37.7749, 122.4194),
+          center: new google.maps.LatLng(40.4259, -86.9081),
           zoom: 12
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -643,7 +668,51 @@ function doNothing() {}
 		<form action="ClientNames.php">
 			<input type="submit" value="List Clients" />
 		</form><br>
-		
+
+		<?php
+			$servername = "mydb.itap.purdue.edu";
+			$username = "g1109699";
+			$password = "MySQL27";
+			$dbname = "g1109699";
+
+			// Create connection
+			$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+			// Check connection
+			if ($conn-> connect_error) {
+				die("Connection failed: " . $conn->connect_error);
+			}
+
+			$sql = "SELECT S_ID, N_ID, type, lon, lat FROM Sensor";
+
+			$result = mysqli_query($conn, $sql);
+
+			echo "<table border='1'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Sensor Type</th>
+			<th>Longitude</th>
+			<th>Latitude</th>
+			</tr>";
+
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['type'] . "</td>";
+			echo "<td>" . $row['lon'] . "</td>";
+			echo "<td>" . $row['lat'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>" . "<br>";
+
+			$conn->close();
+
+		?>
+
+
 		</div>
 
     </div>
@@ -653,7 +722,7 @@ function doNothing() {}
         
         <div class="small-print">
         	<div class="container">
-        		<font color="#71c8f4"><p>Terms &amp; Conditions | Privacy Policy | <a href="https://twitter.com/cair_inc">Contact</a></p></font>
+        		<p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="mailto:czarneckirya@gmail.com">Contact</a></p>
         		<p>Copyright &copy; Group 27 2019 </p>
         	</div>
         </div>

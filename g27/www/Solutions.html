@@ -447,8 +447,16 @@
 		<div class="jumbotron feature" style="color:black;">
 			<p style="color:black;font-size:150%;text-align:center;"><u>Network Requirements</u></p>
 		
-			<form style="text-align:center;color:black;" name="netReq" method="GET" action="messInt.php" onsubmit="return checkReq(this);">
-			<table style="color:black;" align=center>	
+			<form style="text-align:center;color:black;" name="netReq" method="GET" action="netReqtoSQL.php" onsubmit="return checkReq(this);">
+			<table style="color:black;" align=center>
+				<tr>
+					<th>
+						<strong>Email: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="email" class="input">
+					</th>
+				</tr>			
 				<tr>
 					<th>
 						<strong>Budget: </strong>
@@ -493,34 +501,48 @@
 				</tr>
 				<tr>	
 					<th>
-						<strong>City Map: </strong>
+						<strong>City: </strong>
 					</th>
 					<th>
-						<br><input type="radio" size="32" name="cityType" value="1" class="input">
-							<img id="img1" src="City1.png" alt="City 1">
-						</input>
-						<input type="radio" size="32" name="cityType" value="2" class="input">
-							<img id="img1" src="City2.png" alt="City 2">
-						</input><br><br>
-						<input type="radio" size="32" name="cityType" value="3" class="input">
-							<img id="img1" src="City3.png" alt="City 3">
-						</input>
-						<input type="radio" size="32" name="cityType" value="4" class="input">
-							<img id="img1" src="City4.png" alt="City 4">
-						</input>
-					</th>
-				</tr>
-				<tr>	
-					<th>
-						<strong>Legend: </strong>
-					</th>
-					<th>
-						<img style="width:85%;" src="Legend1" alt="Legend">
+						<input type="text" size="32" name="city" class="input">
 					</th>
 				</tr>
 				
 				</table>	<br><br>
 						<input type="submit" style="color:black;" value="Submit"></p>
+			</form>
+		</div>
+		<div class="jumbotron feature" style="color:black;">
+			<p style="color:black;font-size:150%;text-align:center;"><u>rnorm(n, mean = 0, sd = 1)</u></p>
+		
+			<form style="text-align:center;color:black;" name="testR" action="testR.php" method="GET">
+			<!-- onsubmit="return checkReq(this);"> -->
+			<table style="color:black;" align=center>
+				<tr>
+					<th>
+						<strong>n: </strong>
+					</th>
+					<th>
+						<input type="text" size="32" name="n" class="input">
+					</th>
+				</tr>			
+				<tr>
+					<th>
+						<strong>mean: </strong><br>(default=0)
+					</th>
+					<th>
+						<input type="text" size="32" name="mean" class="input">
+					</th>
+				</tr>
+				<tr>
+					<th>
+						<strong>sd: </strong><br>(default=1)
+					</th>
+					<th>
+						<input type="text" size="32" name="sd" class="input">
+					</th>				
+				</table>	<br><br>
+						<input type="submit" style="color:black;" value="run R"></p>
 			</form>
 		</div>
 	</div>
@@ -531,33 +553,10 @@
     <!-- /.container -->
 	
 	<footer>
-		<div class="footer-blurb">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-fire"></span> Dynamically Procrastinate</h3>
-						<p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-						<p><a class="btn btn-default" href="#">Procrastinate</a></p>
-					</div>
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-cloud-upload"></span> Efficiently Unleash</h3>
-						<p>Dramatically maintain clicks-and-mortar solutions without functional solutions. Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. </p>
-						<p><a class="btn btn-default" href="#">Unleash</a></p>
-					</div>
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-leaf"></span> Completely Synergize</h3>
-						<p>Professionally cultivate one-to-one customer service with robust ideas. Completely synergize resource taxing relationships via premier niche markets. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>
-						<p><a class="btn btn-default" href="#">Synergize</a></p>
-					</div>
 
-				</div>
-				<!-- /.row -->	
-			</div>
-        </div>
-        
         <div class="small-print">
         	<div class="container">
-        		<p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="mailto:czarneckirya@gmail.com">Contact</a></p>
+        		<font color="#71c8f4"><p>Terms &amp; Conditions | Privacy Policy | <a href="https://twitter.com/cair_inc">Contact</a></p></font>
         		<p>Copyright &copy; Group 27 2019 </p>
         	</div>
         </div>
@@ -582,7 +581,7 @@
 		var cPostalCode = document.forms["ClientInfo"]["cPostalCode"]
 		var cCountry = document.forms["ClientInfo"]["cCountry"]
 		
-		if(!isNaN(form.FirstName.value)) {
+		if(!isNaN(FirstName.value)) {
 			alert("Please input a valid first name.");
 			form.FirstName.focus();
 			return false;
