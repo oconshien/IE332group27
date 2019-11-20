@@ -15,4 +15,4 @@ for(x in 650:850){
   }
 }
 
-image(cityGrid, col = c("blue", "yellow"))
+#image(cityGrid, col = c("blue", "yellow"))
