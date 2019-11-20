@@ -791,13 +791,16 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
 }
 #Moves sensor to new location
 move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
+  if(distance > 5000){
+    destination <- sample(-geoRadius:geoRadius, 2)
+  }
   x <- c(destination[1], near_sensor[1])
   y <- c(destination[2], near_sensor[2])
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
   if(is.na(dist_line$coefficients[2])){
-    return(c(x[1],y[1],0))
+    return(c(0,0,0))
   }
   if(distance>=1000){
     dest <- 1000
@@ -825,8 +828,8 @@ move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
     }
   }
   if(sqrt((x_dest+near_sensor[1]) ^ 2 + (y_dest + near_sensor[2])^2) > geoRadius){
-    x_dest <- near_sensor[1]
-    y_dest <- near_sensor[2]
+    x_dest <- 0
+    y_dest <- 0
   }
   
   return(c(x_dest,y_dest, 1))
