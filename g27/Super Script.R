@@ -791,7 +791,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
 }
 #Moves sensor to new location
 move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
-  if(distance > 2000){
+  if(distance > geoRadius/100){
     destination <- sample(-geoRadius:geoRadius, 2)
   }
   x <- c(destination[1], near_sensor[1])

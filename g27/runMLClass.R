@@ -34,6 +34,7 @@ while(datecnt <= 24*timefromSQL){
     points <- rbind(points, point)
     i <- i + 1
   }
+  test_data <- locationSen
   #data_tester <- cbind(locationSen, points)
   #Run MlClassifier Once then will be able to predict for any pm values
   try <- data_label(points, example[montht])
@@ -45,6 +46,7 @@ while(datecnt <= 24*timefromSQL){
   datefromSQL <- datefromSQL + 60*60
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
   datecnt <- datecnt + 1
+}
 locationSen <- as.data.frame(locationSen)
 
 locationSen[,1] <- locationSen[,1]/111111 + CityLat
@@ -63,6 +65,5 @@ sensorIDs <- dbFetch(sensor_query)
 
 airData <- data.frame("time"=datefromSQL, sensorIDs, try[, 1:3])
 dbWriteTable(myDB, "Air_Quality", airData, append=TRUE, header=TRUE,row.names=FALSE)
-}
 
 test <- data_analytics(bigData)
