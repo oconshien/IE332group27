@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5, h6 {
 	}
 
 #a1 {
-	border: 6px solid #71c8f4;
+	border: 6px solid #D5D8DB;
 	color: black;
 	font-family: georgia;
 	padding-top: 0px;
@@ -51,15 +51,34 @@ h1, h2, h3, h4, h5, h6 {
 	margin-right: 20px;
 }
 
+#mapTable2{
+	color: black;
+	width: 600px;
+	border: 2px solid black;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
 #mapTable th {
 	padding: 5px;
-	background-color: #71c8f4;
+	background-color: #D5D8DB;
 	text-align: center;
 	vertical-align: middle;
 }
 
+#mapTable2 th {
+	padding: 5px;
+	background-color: #D5D8DB;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#btn1{
+	color:black;
+}
+
 .feature {
-	background-color: #71c8f4;
+	background-color: #D5D8DB;
 	color: gray;
 	}
 	
@@ -85,5 +104,5 @@ h1, h2, h3, h4, h5, h6 {
 .input {
 	color:black;
 	border:none;
-	border-bottom:2px solid #71c8f4;
+	border-bottom:2px solid #D5D8DB;
 	}

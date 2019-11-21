@@ -15,48 +15,6 @@
     <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
     <link href="css/custom.css" rel="stylesheet">
 	
-	<!-- Many users already have downloaded jQuery from Google or Microsoft when visiting another site. As a result, it will be loaded from cache when they visit your site, which leads to faster loading time. Also, most CDN's will make sure that once a user requests a file from it, it will be served from the server closest to them, which also leads to faster loading time.
-	Google CDN:	-->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<!-- AJAX -->
-	<script>
-	$(document).ready(function()	{
-		$('.button').click(function()	{
-			alert("City: " + $(this).val());
-		$('.btn btn-default').click(function()	{
-			var clickBtnValue = $(this).val();
-			var ajaxurl = 'HistAjax.php',
-				data = {'action': clickBtnValue};
-			$.post(ajaxurl, data, function (response) {
-					alert("ajax worked");
-			});
-		});
-	};
-	</script>
-	<script>
-	function showUser(str) {
-		if(str == "") {
-			document.getElementById("txtHint").innerHTML = "";
-			return;
-		} else {
-			if (window.XMLHttpRequest) {
-				// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp = new XMLHttpRequest();
-			} else {
-				// code for IE6, IE5
-				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById("txtHint").innerHTML = this.responseText;
-				}
-			};
-			xmlhttp.open("GET","getuser.php?q="+str,true);
-			xmlhttp.send();
-		}
-	}
-	</script>
-	
 	<style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -105,7 +63,7 @@
 
 </head>
 
-<body style="background-color: #AADAFF">
+<body>
 
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -119,7 +77,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a id="a2" class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.php">
-                	<span class="glyphicon glyphicon-cloud"></span> 
+                	<span class="glyphicon glyphicon-grain"></span> 
                 	Group 27
                 </a>
             </div>
@@ -161,86 +119,55 @@
 		<div class="container">
 		</div>
 	</div>
-	
-	<button type="button" class="btn btn-default" value="cityname">TEST</button>
 
-	<form>
-		<select name="users" onchange="showUser(this.value)">
-			<option value="">Select a person:</option>
-			<option value="1">Peter Griffin</option>
-			<option value="2">Lois Griffin</option>
-			<option value="3">Joseph Swanson</option>
-			<option value="4">Glenn Quagmire</option>
-		</select>
-	</form>
-
-<br>
-<div id="txtHint"><b>Person info will be listed here...</b></div>
-
-	
 	<table id="mapTable">
 		<tr>
 			<th>
-				<!-- <p> -->
-				<a id="demo0" class="btn btn-default" value="sydney">Sydney</a>
-				<!-- </p> -->
+				<p><a id="demo0" class="btn btn-default">Sydney</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo1" class="btn btn-default" value="chicago">Chicago</a>
-				<!-- </p> -->
+				<p><a id="demo1" class="btn btn-default">Chicago</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo2" class="btn btn-default" value="london">London</a>
-				<!-- </p> -->
+				<p><a id="demo2" class="btn btn-default" onclick=>London</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo3" class="btn btn-default">Tokyo</a>
-				<!-- </p> -->
+				<p><a id="demo3" class="btn btn-default">Tokyo</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo4" class="btn btn-default">Paris</a>
-				<!-- </p> -->
+				<p><a id="demo4" class="btn btn-default">Paris</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo5" class="btn btn-default">Rome</a>
-				<!-- </p> -->
+				<p><a id="demo5" class="btn btn-default">Rome</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo6" class="btn btn-default">Dubai</a>
-				<!-- </p> -->
+				<p><a id="demo6" class="btn btn-default">Dubai</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo7" class="btn btn-default">Cape Town</a>
-				<!-- </p> -->
+				<p><a id="demo7" class="btn btn-default">Cape Town</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo8" class="btn btn-default">Los Angeles</a>
-				<!-- </p> -->
+				<p><a id="demo8" class="btn btn-default">Los Angeles</a></p>
 			</th>
 			<th>
-				<!-- <p> -->
-				<a id="demo9" class="btn btn-default">West Lafayette</a>
-				<!-- </p> -->
+				<p><a id="demo9" class="btn btn-default">West Lafayette</a></p>
 			</th>
 		</tr>
-		<!-- <tr>
-			<form action="HistoricalData.php" method="post">
-				<input type="submit" class="button" name="city" value="cityLondon">
-			</form>
-			</tr> -->
 	</table>
 	
 		<div id="map"></div>
 	
 	<script>
+	$(document).ready(function()	{
+		$('.button').click(function()	{
+			var clickBtnValue = $(this).val();
+			var ajaxurl = 'HistAjax.php',
+				data = {'action': clickBtnValue};
+			$.post(ajaxurl, data, function (response) {
+					alert("ajax worked");
+			});
+		});
+	};
 	
 	document.getElementById("demo0").onclick = function(){
 		initMap();
@@ -746,21 +673,13 @@ function doNothing() {}
             </div>
         </div>
         <!-- /.row -->
-		<div id="analydiv" class="row">
-			<table id="analytable" border='1'>
-				<tr id="analytr">
-					<th id="analyth">analytics...</th>
-				</tr>
-				<!-- ANALYTICS FROM SQL THRU PHP/AJAX SHOULD DISPLAY HERE -->
-			</table>	
-		</div>
 		<div>
 		
 		<form action="ClientNames.php">
 			<input type="submit" value="List Clients" />
 		</form><br>
 
-		<?php /*
+		<?php
 			$servername = "mydb.itap.purdue.edu";
 			$username = "g1109699";
 			$password = "MySQL27";
@@ -797,10 +716,20 @@ function doNothing() {}
 			echo "<td>" . $row['lat'] . "</td>";
 			echo "</tr>";
 			}
-			echo "</table>" . "<br>";			
+			echo "</table>" . "<br>";
+
+	
+			function showAnalytics($cityname) {
+				// switch($_POST[<someaction>]){}
+				$sqAnal = "SELECT AVG(pm010), AVG(pm025), AVG(pm100) FROM Air_Quality";
+				while($cityRow = mysqli_fetch_array(	mysqli_query($conn, $sqAnal))) {
+					echo "<br>AVG(pm010): " . $cityRow['AVG(pm010)'] . "<br>";
+				}
+			}
+			
 			
 			$conn->close();
-			*/
+
 		?>
 
 
