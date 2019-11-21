@@ -1,10 +1,11 @@
 #initialization
 budget <- 300000
 cityType <- 1
-cityGrid <- buildCity(cityType)
-geoRadius <- 15000
+cityGrid <- as_tibble(fread("sample cities/WestLafayette.csv"))
+  #buildCity(cityType)
+geoRadius <- 7500
 city_grid_radius <- geoRadius / 20
-MappedNetwork<- SA(budget, cityGrid, geoRadius = 15000, just_values = F)
+MappedNetwork<- SA(budget, cityGrid, geoRadius, just_values = F)
 example <- MlClassifier()
 #Generated Pm Values
 locationSen <- MappedNetwork$best
