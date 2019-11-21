@@ -1,11 +1,10 @@
-buildCity <- function(input){
+buildCity <- function(city){
   geoRadius <- 15000/20
-    cityGrid <- matrix(rep(-1,(2*geoRadius)^2), 2*geoRadius, 2*geoRadius)
     for(i in -geoRadius:geoRadius){
       for(j in -geoRadius:geoRadius){
-        dist <- sqrt(i^2+j^2)
-        if(dist<=geoRadius){
-          cityGrid[i+geoRadius,j+geoRadius] <- input[i, j]
+        dist <- sqrt((i - 750) ^ 2 + (j - 750) ^ 2)
+        if(dist>geoRadius){
+          city[i,j] <- -1
         }
       }
     }
