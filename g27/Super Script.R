@@ -19,7 +19,7 @@ require(lpSolve)                          #use
 require(RMySQL)                           #use
 
 ##--USER INPUTS--##
-  Q_ID <- 2
+  Q_ID <- 3
   myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
   on.exit(dbDisconnect(myDB))
   #Get C_ID from server
