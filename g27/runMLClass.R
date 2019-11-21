@@ -1,9 +1,10 @@
 #initialization
 budget <- 300000
 cityType <- 1
-cityGrid <- as_tibble(fread("sample cities/WestLafayette.csv"))
-  #buildCity(cityType)
-geoRadius <- 7500
+cityCSV <- as.matrix(read.csv("sample cities/WestLafayette.csv", header=F))
+#cityGrid <- as_tibble(fread("sample cities/WestLafayette.csv"))
+  cityGrid <- buildCity(cityCSV)
+geoRadius <- 15000
 city_grid_radius <- geoRadius / 20
 MappedNetwork<- SA(budget, cityGrid, geoRadius, just_values = F)
 example <- MlClassifier()
