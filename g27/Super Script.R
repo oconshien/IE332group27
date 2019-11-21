@@ -889,5 +889,3 @@ data_analytics<-function(bigData, montht){
   classification<- data_label(class,example[montht])
   final <- cbind(results, "quality score"= classification[,4])
 }
-
-
