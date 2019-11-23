@@ -1,9 +1,10 @@
 #initialization
 budget <- 300000
 cityType <- 1
+cityGrid <- as_tibble(fread("sample cities/WestLafayette.csv"))
 cityCSV <- as.matrix(read.csv("sample cities/WestLafayette.csv", header=F))
-#cityGrid <- as_tibble(fread("sample cities/WestLafayette.csv"))
-  cityGrid <- buildCity(cityCSV)
+buildCity(cityCSV)
+  #buildCity(cityType)
 geoRadius <- 15000
 city_grid_radius <- geoRadius / 20
 MappedNetwork<- SA(budget, cityGrid, geoRadius, just_values = F)
@@ -24,8 +25,9 @@ OGmap <- locationSen
 airPref <- 0
 
 storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
-
+k <- 0
 while(datecnt <= 24*timefromSQL){
+  k <- k + 1
   points <- NULL
   point <- NULL
   dataframeForStats <- NULL
@@ -48,12 +50,21 @@ while(datecnt <= 24*timefromSQL){
   datefromSQL <- datefromSQL + 60*60
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
   datecnt <- datecnt + 1
+  best <- locationSen
+  png(paste("Test",k,".png", sep = ""))  
+  par(bg=NA)
+  plot(best[,1],best[,2], xlim = c(-geoRadius,geoRadius), ylim = c(-geoRadius,geoRadius), pch = 20, xlab = "X", ylab = "Y")
+  points(best[,1][which(best[,3]==1)],best[,2][which(best[,3]==1)], col = "green",pch = 20)
+  legend("topleft", legend = c("Fixed", "Mobile"), col = c("Black","Green"), pch = c(20,20), cex = 0.5)
+  title("Default Sensor Locations")
+  circle(0,0,geoRadius)
+  dev.off()
 }
 locationSen <- as.data.frame(locationSen)
 
 locationSen[,1] <- locationSen[,1]/111111 + CityLat
 locationSen[,2] <- locationSen[,2]/(111111*(cos(locationSen[,1]))) + CityLong
-locationSen[,3] <- ifelse(locationSen[,3]==1, "fixed", "mobile")
+locationSen[,3] <- ifelse(locationSen[,3] == 1, "fixed", "mobile")
 names(locationSen) <- c("lat", "lon", "type")
 
 myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
