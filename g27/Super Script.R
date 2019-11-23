@@ -19,38 +19,105 @@ require(lpSolve)                          #use
 require(RMySQL)                           #use
 
 ##--USER INPUTS--##
-  Q_ID <- 3
-  myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
-  on.exit(dbDisconnect(myDB))
-  #Get C_ID from server
-  quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
-  input_query <- dbSendQuery(myDB, quote_call)
-  inputs <- dbFetch(input_query)
-  
-  #budget
-  budget <- inputs[1, "budget"]
-  
-  #geoRadius
-  geoRadius <- inputs[1, "geoRadius"]
-  #Simulation Start Date
-  datefromSQL <- inputs[1, "date"]
-  #Length of simulation
-  
-  timefromSQL <- inputs[1, "numDays"]
-  #Air Quality Focus
-  airPref <- inputs[1, "airPref"]
-  if(airPref == "good"){
-   airPref <- 0
-  }else{
-    airPref <- 3
+Useremail <- "'jfinucan@purdue.edu'"
+quoteChoice <- 5
+cityType <- "Tokyo"
+
+##--Intitalization--##
+#Get Quote Details
+myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
+on.exit(dbDisconnect(myDB))
+email_call <- paste0("SELECT Q_ID FROM Quote WHERE email =",Useremail,";")
+email_query <- dbSendQuery(myDB, email_call)
+quotes <- dbFetch(email_query)
+Q_ID <- quotes[quoteChoice, 1]
+dbClearResult(dbListResults(myDB)[[1]])
+
+quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
+input_query <- dbSendQuery(myDB, quote_call)
+inputs <- dbFetch(input_query)
+
+#budget
+budget <- inputs[1, "budget"]
+#geoRadius
+geoRadius <- inputs[1, "geoRadius"]
+#Simulation Start Date
+datefromSQL <- inputs[1, "date"]
+datefromSQL <- as.POSIXlt(datefromSQL)
+montht <- format(datefromSQL,"%B")
+#Length of simulation
+timefromSQL <- inputs[1, "numDays"]
+#Air Quality Focus
+airPref <- inputs[1, "airPref"]
+if(airPref == "good"){
+  airPref <- 0
+}else{
+  airPref <- 3
+}
+#City coordinates
+CityLat <- inputs[1, "citylat"]
+CityLong <- inputs[1, "citylon"]
+dbClearResult(dbListResults(myDB)[[1]])
+
+#Load in City CSV
+cityCSV <- as.matrix(read.csv(paste0("sample cities/",cityType, ".csv"), header=F))
+cityGrid <- buildCity(cityCSV)
+city_grid_radius <- geoRadius / 20
+
+#Create Null variables
+points <- NULL
+point <- NULL
+datecnt <- 1
+
+#Weather
+storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
+
+##--Run Code--##
+#create Naive Bayes Classifier
+example <- MlClassifier()
+
+#Initital Network
+MappedNetwork<- SA(budget, cityGrid, geoRadius, just_values = F)
+locationSen <- MappedNetwork$best
+locationSen <- cbind(locationSen, "moving"= rep(0, length(locationSen[,1])))
+
+#Run Loop
+while(datecnt <= 24*timefromSQL){
+  points <- NULL
+  point <- NULL
+  i = 1
+  print(datecnt)
+  while (i <= dim(locationSen)[1]){
+    point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius, trunc(locationSen[i,2]/20) + city_grid_radius], storm_time)
+    points <- rbind(points, point)
+    i <- i + 1
   }
-  #City Number
-  CityLat <- inputs[1, "citylat"]
-  CityLong <- inputs[1, "citylon"]
-  
-  
-  dbClearResult(dbListResults(myDB)[[1]])
-  
+  test_data <- locationSen
+  try <- data_label(points, example[montht])
+  z <- priority_destinations(locationSen, try, airPref)
+  updates <- nearest_sensor_finder(z, locationSen, airPref, try, geoRadius)
+  locationSen <- updates
+  datefromSQL <- datefromSQL + 60*60
+  storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
+  datecnt <- datecnt + 1
+}
+
+##--Send Info to Database--##
+#format Sensors
+locationSen <- as.data.frame(locationSen)
+locationSen[,1] <- locationSen[,1]/111111 + CityLat
+locationSen[,2] <- locationSen[,2]/(111111*(cos(locationSen[,1]))) + CityLong
+locationSen[,3] <- ifelse(locationSen[,3]==1, "fixed", "mobile")
+names(locationSen) <- c("lat", "lon", "type")
+
+#send
+dbWriteTable(myDB, "Sensor", data.frame("N_ID"=Q_ID, locationSen[,1:3]), append=TRUE, header=TRUE,row.names=FALSE)
+sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =",Q_ID, ";")
+sensor_query <- dbSendQuery(myDB, sensor_call)
+sensorIDs <- dbFetch(sensor_query)
+
+airData <- data.frame("time"=datefromSQL, sensorIDs, try[, 1:3])
+dbWriteTable(myDB, "Air_Quality", airData, append=TRUE, header=TRUE,row.names=FALSE)
 ##--City Options--##
 
 buildCity <- function(city){
@@ -200,7 +267,7 @@ mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
     if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 1 & centers[i,3] == 1)
       region_factor <- region_factor + reduct_avg/2 
     if(centers[i,3] == 1){
-      mobile_factor <- mobile_factor + (-sqrt(centers[i,1]^2 + centers[i,2]^2) + geoRadius) * 1 / (geoRadius * length(sensors[,3]))
+      mobile_factor <- mobile_factor + (-sqrt(centers[i,1]^2 + centers[i,2]^2) + geoRadius) * 1 / (geoRadius * length(centers[,3]))
     }
   }
   return(1 - spaceReduct - edgeReduct + region_factor + mobile_factor)
@@ -296,7 +363,7 @@ MlClassifier <- function(){
   oct.test = october %>% select(contains("pm"))
   nov.test = november %>% select(contains("pm"))
   dec.test = december %>% select(contains("pm"))
- 
+  
   #function created to fill a data frame with all particulate data from Kaggle
   #df.noname = Data frame of all pm values with no dates 
   #df.test= data from the respective month to load into dataframe
@@ -327,7 +394,7 @@ MlClassifier <- function(){
   }
   rownames(yr.nout) = NULL
   
-
+  
   jan.nB =nBbymonth(yr.nout %>% select(contains("jan")))
   feb.nB =nBbymonth(yr.nout %>% select(contains("feb")))
   mar.nB =nBbymonth(yr.nout %>% select(contains("mar")))
@@ -556,11 +623,11 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
       
     }
   }
- return(sensors)
+  return(sensors)
 }
 #Moves sensor to new location
 move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
-  if(distance > 3000){
+  if(distance > geoRadius/50){
     destination <- sample(-geoRadius:geoRadius, 2)
   }
   x <- c(destination[1], near_sensor[1])
