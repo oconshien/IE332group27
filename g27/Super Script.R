@@ -63,7 +63,7 @@ dbClearResult(dbListResults(myDB)[[1]])
 cityCSV <- as.matrix(read.csv(paste0("sample cities/",cityType, ".csv"), header=F))
 cityGrid <- buildCity(cityCSV)
 city_grid_radius <- geoRadius / 20
-geo_difference <- (15000- geoRadius) / 20
+geo_difference <- (15000 - geoRadius) / 20
 
 #Create Null variables
 points <- NULL
