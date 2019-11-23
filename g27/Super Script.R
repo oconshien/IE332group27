@@ -1,4 +1,4 @@
-##Packages required
+##--LOAD PACKAGES--##
 require(dplyr) #data wrangling    use
 require(lubridate) #date/time     use
 require(knitr) #quite fond of the kable function for making tables. use
@@ -18,311 +18,353 @@ require(truncnorm)                        #use
 require(lpSolve)                          #use
 require(RMySQL)                           #use
 
-##--USER INPUTS--##
-Useremail <- "'jfinucan@purdue.edu'"
-quoteChoice <- 5
-cityType <- "Tokyo"
+##--START CODE--##
 
-##--Intitalization--##
-#Get Quote Details
-myDB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
-on.exit(dbDisconnect(myDB))
-email_call <- paste0("SELECT Q_ID FROM Quote WHERE email =",Useremail,";")
-email_query <- dbSendQuery(myDB, email_call)
-quotes <- dbFetch(email_query)
-Q_ID <- quotes[quoteChoice, 1]
-dbClearResult(dbListResults(myDB)[[1]])
+start <- function(email, quote_num, city){
+  #email: string, email from the inputted quote.
+  #quote_num: int, the nth quote from the associated email (e.g. second quote for user = 2).
+  #city: string, the city being networked (should match name of the inputted city csv).
+  
+  #Intialize and load in database.
+  my_DB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
+  on.exit(dbDisconnect(my_DB))
+  email_call <- paste0("SELECT Q_ID FROM Quote WHERE email =",Useremail,";")
+  email_query <- dbSendQuery(my_DB, email_call)
+  quotes <- dbFetch(email_query)
+  Q_ID <- quotes[quoteChoice, 1]
+  dbClearResult(dbListResults(my_DB)[[1]])
+  
+  #Generate inputs from quote.
+  quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
+  input_query <- dbSendQuery(my_DB, quote_call)
+  inputs <- dbFetch(input_query)
 
-quote_call <- paste0("SELECT * FROM Quote WHERE Q_ID =",Q_ID, ";") 
-input_query <- dbSendQuery(myDB, quote_call)
-inputs <- dbFetch(input_query)
-
-#budget
-budget <- inputs[1, "budget"]
-#geoRadius
-geoRadius <- inputs[1, "geoRadius"]
-#Simulation Start Date
-datefromSQL <- inputs[1, "date"]
-datefromSQL <- as.POSIXlt(datefromSQL)
-montht <- format(datefromSQL,"%B")
-#Length of simulation
-timefromSQL <- inputs[1, "numDays"]
-#Air Quality Focus
-airPref <- inputs[1, "airPref"]
-if(airPref == "good"){
-  airPref <- 0
-}else{
-  airPref <- 3
-}
-#City coordinates
-CityLat <- inputs[1, "citylat"]
-CityLong <- inputs[1, "citylon"]
-dbClearResult(dbListResults(myDB)[[1]])
-
-#Load in City CSV
-cityCSV <- as.matrix(read.csv(paste0("sample cities/",cityType, ".csv"), header=F))
-cityGrid <- buildCity(cityCSV)
-city_grid_radius <- geoRadius / 20
-geo_difference <- (15000 - geoRadius) / 20
-
-#Create Null variables
-points <- NULL
-point <- NULL
-datecnt <- 1
-
-#Weather
-storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
-
-##--Run Code--##
-#create Naive Bayes Classifier
-example <- MlClassifier()
-
-#Initital Network
-MappedNetwork<- SA(budget, cityGrid, geoRadius, just_values = F)
-locationSen <- MappedNetwork$best
-locationSen <- cbind(locationSen, "moving"= rep(0, length(locationSen[,1])))
-
-#Run Loop
-while(datecnt <= 24*timefromSQL){
-  points <- NULL
-  point <- NULL
-  i = 1
-  print(datecnt)
-  while (i <= dim(locationSen)[1]){
-    point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius + geo_difference, trunc(locationSen[i,2]/20) + city_grid_radius + geo_difference], storm_time)
-    points <- rbind(points, point)
-    i <- i + 1
+  #Budget from the quote.
+  budget <- inputs[1, "budget"]
+  
+  #Geographic radius from the quote.
+  geo_radius <- inputs[1, "geoRadius"]
+  
+  #Simulation start date from the quote (with formatting).
+  date_from_SQL <- inputs[1, "date"]
+  date_from_SQL <- as.POSIXlt(date_from_SQL)
+  input_month <- format(date_from_SQL,"%B")
+  
+  #Length of simulation from the quote.
+  time_from_SQL <- inputs[1, "numDays"]
+  
+  #Air quality focus from the quote (with mapping).
+  air_pref <- inputs[1, "airPref"]
+  if(air_pref == "good"){
+    air_pref <- 0
+  }else{
+    air_pref <- 3
   }
-  test_data <- locationSen
-  try <- data_label(points, example[montht])
-  z <- priority_destinations(locationSen, try, airPref)
-  updates <- nearest_sensor_finder(z, locationSen, airPref, try, geoRadius)
-  locationSen <- updates
-  datefromSQL <- datefromSQL + 60*60
+  
+  #City coordinates from the quote (finds latitude and longitude automatically from inputted city).
+  city_lat <- inputs[1, "citylat"]
+  city_long <- inputs[1, "citylon"]
+  dbClearResult(dbListResults(my_DB)[[1]])
+
+  #Load in city CSV (with formatting).
+  city_CSV <- as.matrix(read.csv(paste0("sample cities/",cityType, ".csv"), header=F))
+  city_grid <- build_city(city_CSV)
+  city_grid_radius <- geo_radius / 20
+  geo_difference <- (15000 - geo_radius) / 20
+
+  #Intialize variables for the loop.
+  pm_data <- NULL
+  new_pm_data <- NULL
+  hour_cnt <- 1
+
+  #Weather factor generation (1% chance every hour there is a storm).
   storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
-  datecnt <- datecnt + 1
+
+  #Naive Bayes classifier.
+  classifier <- MlClassifier()
+
+  #Initital network placement.
+  mapped_network<- SA(budget, city_grid, geo_radius, just_values = F)
+  location_sen <- mapped_network$best
+  location_sen <- cbind(location_sen, "moving"= rep(0, length(location_sen[,1])))
+
+  #Run the network.
+  while(hour_cnt <= 24 * time_from_SQL){
+    pm_data <- NULL
+    new_pm_data <- NULL
+    i <- 1
+    print(hour_cnt)
+    
+    #Generates particulate matter data from simulation.
+    while (i <= dim(location_sen)[1]){
+      new_pm_data <- sort_PM(date_from_SQL, city_grid[trunc(location_sen[i, 1] / 20) + city_grid_radius + geo_difference, trunc(location_sen[i, 2] / 20) + city_grid_radius + geo_difference], storm_time)
+      pm_data <- rbind(pm_data, new_pm_data)
+      i <- i + 1
+    }
+######REMOVE?#####test_data <- location_sen
+    #Movement of the mobile sensors.
+    classed_data <- data_label(pm_data, classifier[input_month])
+    new_dests <- priority_destinations(location_sen, classed_data, air_pref)
+    updated_locations <- nearest_sensor_finder(new_dests, location_sen, air_pref, classed_data, geo_radius)
+    location_sen <- updated_locations
+    date_from_SQL <- date_from_SQL + 60 * 60
+    storm_time <- sample(c(0,1), 1, prob = c(0.99, 0.01))
+    hour_cnt <- hour_cnt + 1
+  }
+  return("Done :)")
 }
+##--SEND INFO TO DATABASE--##
 
-##--Send Info to Database--##
-#format Sensors
-locationSen <- as.data.frame(locationSen)
-locationSen[,1] <- locationSen[,1]/111111 + CityLat
-locationSen[,2] <- locationSen[,2]/(111111*(cos(locationSen[,1]))) + CityLong
-locationSen[,3] <- ifelse(locationSen[,3]==1, "fixed", "mobile")
-names(locationSen) <- c("lat", "lon", "type")
+#Sensor Formatting
+location_sen <- as.data.frame(location_sen)
+location_sen[,1] <- location_sen[,1]/111111 + city_lat
+location_sen[,2] <- location_sen[,2]/(111111*(cos(location_sen[,1]))) + city_long
+location_sen[,3] <- ifelse(location_sen[,3]==1, "fixed", "mobile")
+names(location_sen) <- c("lat", "lon", "type")
 
-#send
-dbWriteTable(myDB, "Sensor", data.frame("N_ID"=Q_ID, locationSen[,1:3]), append=TRUE, header=TRUE,row.names=FALSE)
+#Send to Database
+dbWriteTable(my_DB, "Sensor", data.frame("N_ID"=Q_ID, location_sen[,1:3]), append=TRUE, header=TRUE,row.names=FALSE)
 sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =",Q_ID, ";")
-sensor_query <- dbSendQuery(myDB, sensor_call)
-sensorIDs <- dbFetch(sensor_query)
+sensor_query <- dbSendQuery(my_DB, sensor_call)
+sensor_IDs <- dbFetch(sensor_query)
 
-airData <- data.frame("time"=datefromSQL, sensorIDs, try[, 1:3])
-dbWriteTable(myDB, "Air_Quality", airData, append=TRUE, header=TRUE,row.names=FALSE)
-##--City Options--##
+air_data <- data.frame("time"=date_from_SQL, sensor_IDs, classed_data[, 1:3])
+dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
 
-buildCity <- function(city){
-  geoRadius <- 15000 / 20
-  for(i in 1:(2 * geoRadius)){
-    for(j in 1:(2 * geoRadius)){
+##--CITY FORMATTER--##
+
+#Reformat City
+build_city <- function(city){
+  #city: matrix, represents the zoning of the inputted location to be networked (0 = rural, 1 = residential, 2 = urban/industrial). 
+  
+  geo_radius <- 15000 / 20
+  
+  #Dezones the out of range parts of inputted location.
+  for(i in 1:(2 * geo_radius)){
+    for(j in 1:(2 * geo_radius)){
       dist <- sqrt((i - 750) ^ 2 + (j - 750) ^ 2)
-      if(dist > geoRadius){
+      if(dist > geo_radius){
         city[i, j] <- -1
       }
     }
   }
+  
   return(as.matrix(city))
+  #city: matrix, reformatted city matrix.
 }
 
 
-##--Generate Initial Sensor Placements--##
+##--INITIAL SENSOR PLACEMENT--##
 
-#Random placement generator
-create_random <- function(sensors, geoRadius=15000){
-  #sensors: vector of length two that indicates number of fixed sensors [1], and number of mobile sensors [2]
-  #geoRadius: radius of area to be tracked, as indicated by client
-  sensor_sol <- matrix(data = rep(0,2 * sum(sensors)), nrow = sum(sensors), ncol = 2)
-  i = 0
-  #sensor_sol is a matrix of the centers of radius of the sensors, and the type of sensors (1=fixed,0=mobile)
-  while (i < sum(sensors)){
-    i = i + 1
-    sensor_sol[i,1] <- trunc(runif(1,-geoRadius,geoRadius))
-    sensor_sol[i,2] <- trunc(runif(1,-geoRadius,geoRadius))
-    if (sqrt(sensor_sol[i,1]^2+sensor_sol[i,2]^2) > geoRadius)
-      i = i-1
-  }# This while loop creates a random uniform distribution of 2 columns x and y
-  ## The rows correspond with the number of sensors
-  ## The x,y coordinate creates the location of the center of radius of the sensors range
-  sensor_type <- c(rep(0,sensors[2]),rep(1,sensors[1]))
-  for (n in 1:sum(sensors)){
-    random <- replicate(2,sample(1:sum(sensors),1))
-    hold <- sensor_type[random[1]]
-    sensor_type[random[1]] <- sensor_type[random[2]]
-    sensor_type[random[2]] <- hold
-  }## The sensor type is rearranged and created correspond with the (x,y) coordinate that names the sensor's location
-  sensor_sol <- cbind(sensor_sol,sensor_type)#This binds it all together to make a matrix that is (number of sensors)X3
-}
-
-#Allocation of sensors given client budget
-budget_constraint<-function(budget,repair_cost = 0,opt_repair = 0,risk = 0.01,alpha = 0.05){
-  #Warning Messages
-  # make sure not null
-  if ( any(c(is.null(budget),is.null(repair_cost),is.null(opt_repair),is.null(risk),is.null(alpha))))
-    stop("ERROR: At least one input is null.")
+#Simulated Annealing for Sensor Placement
+SA <- function(budget, city_grid, geo_radius = 15000, r = 50, temperature = 3000, maxit = 1000, cooling = 0.95, just_values = TRUE) {
+  #budget: real, client inputted budget.
+  #city_grid: matrix, the reformatted city inputted by client.
+  #geo_radius: int(divisible by 20), client inputted geographic radius to be monitored.
+  #r: real, observable radius of the sensors.
+  #temperature: int, initial temperature.
+  #maxit: int, maximum number of iterations to execute for.
+  #cooling: real, rate of cooling.
+  #just_values: logical, only return a list of best objective value at each iteration.
   
-  # make sure no NAs
-  if ( all(c(any(is.na(budget)),any(is.na(repair_cost)),any(is.na(opt_repair),any(is.na(risk)),any(is.na(alpha))))))
-    stop("ERROR: At least one NA value found.")
-  
-  # make sure all are numeric
-  if ( !all(c(is.numeric(budget),is.numeric(repair_cost),is.numeric(opt_repair),is.numeric(risk),is.numeric(alpha))) )
-    stop("ERROR: Not all inputs are numeric.")
-  
-  #make sure budget is bigger than 0
-  if(budget < 4000)
-    stop("ERROR: Budget is not bigger than $4,000")
-  
-  #make sure opt_repair is binary
-  if(opt_repair != 1 && opt_repair != 0)
-    stop("ERROR: opt_repairt is not binary.")
-  
-  #make sure alpha and risk are a probability
-  if(risk > 1 || alpha > 1)
-    stop("ERROR: risk and alpha are not a probability")
-  
-  #This program uses the lpsolve function
-  #objective function
-  #maximize value{x1:mobile sensors, x2:fixed sensors}
-  #max z = 7x1 + x2
-  f.obj<-c(7,1)
-  #subject to:
-  #Budget
-  #3500x1 + 500x2 <= budget-repair_cost*opt_repair
-  #Preliminary Risk
-  EV1= 4*risk
-  EV2 = risk
-  #Constrainst are inputed as matrices
-  f.con<-matrix(c(3500,500,EV1,EV2),nrow=2,byrow=TRUE)
-  f.rhs<-c(budget-repair_cost*opt_repair,10000)
-  f.dir<-c("<=","<=")
-  #the lpsolve function takes the linear program and finds the optimal solution 
-  #based on the constraints
-  solution = lp("max", f.obj, f.con, f.dir, f.rhs,int.vec=1:2)$solution
-  
-  #After the first run, the risk will be taken into account and the number of mobile and fixed sensors will be
-  #adjusted based on the alpha. Solution[1] = mobile, solution[2] = fixed
-  fails = dbinom(as.integer((solution[1]+solution[2])*alpha), size = solution[1], prob = 4*risk)
-  
-  #At low budgets and really high budgets, the risk factor cannot be taken into consideration.
-  if(fails >= 0.5){
-    solution
-    stop
-  }
-  else{
-    while(fails > alpha){
-      solution[1] = solution[1] - 1
-      solution[2] = solution[2] + 1
-      fails = dbinom(as.integer((solution[1]+solution[2])*alpha), size = solution[1], prob = 4*risk)
-    }
-  }
-  solution_hold <- solution[1]
-  solution[1] <- solution[2]
-  solution[2] <- solution_hold
-  return(solution)
-}
-
-# Calculate the objective value of a valid candidate solution
-mapPoints <- function(centers, cityGrid, r=50, geoRadius = 15000){
-  #Function takes in centers of various 
-  area <- pi*(r^2)*length(centers[,1])
-  spaceReduct <- 0
-  distFactor <- 0
-  for (i in 1:(length(centers[,1]))){
-    j=i+1
-    while(j<=length(centers[,1])){
-      dist <- sqrt((centers[i,1]-centers[j,1])^2+(centers[i,2]-centers[j,2])^2)
-      if( dist < (r*2)){
-        spaceReduct <- spaceReduct + 2*r^2*acos(dist/(2*r))-dist/2*sqrt(r^2-(dist/2)^2)
-      }
-      j = j+1
-    } 
-  }
-  edgeReduct <- 0
-  for (i in 1:(length(centers[,1]))){
-    distance <- sqrt((centers[i,1])^2+(centers[i,2])^2)
-    if(distance>geoRadius-r){
-      d1 <- (geoRadius^2-r^2 + distance^2)/(2*distance)
-      d2 <- distance - d1
-      edgeReduct <- edgeReduct + pi * r^2 - geoRadius^2*acos(d1/geoRadius) + d1 * sqrt(geoRadius^2-d1^2) - r^2 * acos(d2/r) + d2 * sqrt(r^2-d2^2)
-    }
-  }
-  edgeReduct <- edgeReduct / area
-  spaceReduct <- spaceReduct / area
-  reduct_avg <- (edgeReduct + spaceReduct) / 2
-  region_factor <- 0
-  mobile_factor <- 0
-  city_grid_radius <- geoRadius/20
-  for (i in 1:(length(centers[,1]))){
-    if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 2 & centers[i,3] == 0)
-      region_factor <- region_factor + reduct_avg/2
-    if(cityGrid[trunc(centers[i,1]/20) + city_grid_radius, trunc(centers[i,2]/20) + city_grid_radius] == 1 & centers[i,3] == 1)
-      region_factor <- region_factor + reduct_avg/2 
-    if(centers[i,3] == 1){
-      mobile_factor <- mobile_factor + (-sqrt(centers[i,1]^2 + centers[i,2]^2) + geoRadius) * 1 / (geoRadius * length(centers[,3]))
-    }
-  }
-  return(1 - spaceReduct - edgeReduct + region_factor + mobile_factor)
-}
-
-#Simulated Annealing
-SA <- function(budget, cityGrid, geoRadius=15000, r=50, temperature=3000, maxit=1000, cooling=0.95, just_values=TRUE) {
-  # core_number: number of cores available
-  # task_data: data.frame of task processing time
-  # temperature: initial temperature
-  # maxit: maximum number of iterations to execute for
-  # cooling: rate of cooling
-  # just_values: only return a list of best objective value at each iteration
+  #Intialize sensor allocation.
   numSensors <- budget_constraint(budget)
-  s_sol <- create_random(numSensors,geoRadius) # generate a valid initial solution
-  s_obj <- mapPoints(s_sol,cityGrid, r, geoRadius)     # evaluate initial solution
-  best  <- s_sol                                             # track the best solution found so far
-  best_obj <- s_obj                                           # track the best objective value found so far
   
-  # to keep best objective values through the algorithm
+  #Intialize solution.
+  s_sol <- create_random(numSensors, geo_radius) 
+  s_obj <- calc_obj(s_sol, city_grid, r, geo_radius)     
+  best  <- s_sol                                            
+  best_obj <- s_obj                                         
+  
+  #Keeps best solution.
   obj_vals <- best_obj
   cnt <- 0
   
-  # run Simulated Annealing
+  #Run simulated annealing process.
   for(i in 1:maxit) {
-    neigh <- create_random(numSensors,geoRadius)              # generate a neighbor solution
-    neigh_obj <- mapPoints(neigh, cityGrid, r, geoRadius)   # calculate the objective value of the new solution
-    if ( neigh_obj >= best_obj ) {                                # keep neigh if it is the new global best solution
+    #Generate neighboring solution.
+    neigh <- create_random(numSensors, geo_radius)             
+    neigh_obj <- calc_obj(neigh, city_grid, r, geo_radius) 
+    
+    #Replace best solution with neighboring solution of neighbor objective is better.
+    if (neigh_obj >= best_obj) {                                
       s_sol <- neigh
       s_obj <- neigh_obj
       best <- neigh
       best_obj <- neigh_obj
-    } else if ( runif(1) <= exp((neigh_obj-s_obj)/temperature) ) {    # otherwise, probabilistically accept 
+    
+    #Replace best solution with a worse neighbor based on a probability.
+    } else if ( runif(1) <= exp((neigh_obj - s_obj) / temperature)){
       s_sol <- neigh
       s_obj <- neigh_obj
-      cnt <- cnt +1
+      cnt <- cnt + 1
     }
-    temperature <- temperature * cooling                          # update cooling
-    obj_vals <- c(obj_vals, best_obj)                             # maintain list of best found so far
+    
+    #Temperature update.
+    temperature <- temperature * cooling 
+    
+    obj_vals <- c(obj_vals, best_obj)
   }
-  library(berryFunctions)
-  plot(best[,1],best[,2], xlim = c(-geoRadius,geoRadius), ylim = c(-geoRadius,geoRadius), pch = 20, xlab = "X", ylab = "Y")
-  points(best[,1][which(best[,3]==1)],best[,2][which(best[,3]==1)], col = "green",pch = 20)
-  legend("topleft", legend = c("Fixed", "Mobile"), col = c("Black","Green"), pch = c(20,20), cex = 0.5)
+  
+  #Plotting of best sensor network.
+  plot(best[, 1], best[, 2], xlim = c(-geo_radius, geo_radius), ylim = c(-geo_radius, geo_radius), pch = 20, xlab = "X", ylab = "Y")
+  points(best[, 1][which(best[, 3] == 1)], best[, 2][which(best[, 3] == 1)], col = "green", pch = 20)
+  legend("topleft", legend = c("Fixed", "Mobile"), col = c("Black", "Green"), pch = c(20, 20), cex = 0.5)
   title("Default Sensor Locations")
-  circle(0,0,geoRadius)
-  ifelse(just_values, return(obj_vals), return(list(best=best, best_obj=best_obj, values=obj_vals)))
+  circle(0, 0, geo_radius)
+  
+  ifelse(just_values, return(obj_vals), return(list(best = best, best_obj = best_obj, values = obj_vals)))
   return(best)
+  #best:data_frame, the sensor information for the best network.
+}
+
+#Random placement generator
+create_random <- function(sensors, geo_radius = 15000){
+  #sensors: vector(length 2), indicates number of fixed sensors [1], and number of mobile sensors [2].
+  #geo_radius: int(divisible by 20), radius of area to be tracked, as indicated by client.
+  
+  sensor_sol <- matrix(data = rep(0, 2 * sum(sensors)), nrow = sum(sensors), ncol = 2)
+  i <- 0
+  
+  #Randomize sensor locations.
+  while (i < sum(sensors)){
+    i <- i + 1
+    sensor_sol[i, 1] <- trunc(runif(1, -geo_radius, geo_radius))
+    sensor_sol[i, 2] <- trunc(runif(1, -geo_radius, geo_radius))
+    if (sqrt(sensor_sol[i, 1] ^ 2+sensor_sol[i, 2] ^ 2) > geo_radius)
+      i <- i - 1
+  }
+  
+  #Randomize swapping of sensors.
+  sensor_type <- c(rep(0, sensors[2]), rep(1, sensors[1]))
+  for (n in 1:sum(sensors)){
+    random <- replicate(2, sample(1:sum(sensors), 1))
+    hold <- sensor_type[random[1]]
+    sensor_type[random[1]] <- sensor_type[random[2]]
+    sensor_type[random[2]] <- hold
+  }
+  sensor_sol <- cbind(sensor_sol,sensor_type)
+  
+  return(sensor_sol)
+  #sensor_sol: data_frame, randomized sensors.
+}
+
+#Generate Sensor Allocation from Budget 
+budget_constraint<-function(budget, repair_cost = 0, opt_repair = 0, risk = 0.01, alpha = 0.05){
+  #budget: real, inputted budget from client.
+  #repair_cost: real, cost to repair one sensor.
+  #opt_repair: 
+  #risk: real, rate of sensor failure.
+  #alpha:
+
+  #Objective function.
+  f_obj <- c(7,1)
+  
+  #Preliminary risk generation.
+  EV1 <- 4 * risk
+  EV2 <- risk
+  
+  #Constrainst generation.
+  f_con <- matrix(c(3500, 500, EV1, EV2), nrow = 2, byrow = TRUE)
+  f_rhs <- c(budget - repair_cost * opt_repair, 10000)
+  f_dir <- c("<=", "<=")
+  
+  #Generate intial solution.
+  sen_allocate <- lp("max", f_obj, f_con, f_dir, f_rhs, int_vec = 1:2)$solution
+  
+  #Readjust solution taking risk and alpha(mobile vs fixed) into account.
+  fails <- dbinom(as.integer((sen_allocate[1] + sen_allocate[2]) * alpha), size = sen_allocate[1], prob = 4 * risk)
+  
+  #Risk not important for high and low budgets.
+  if(fails >= 0.5){
+    sen_allocate
+    stop
+  }
+  else{
+    #Factor in risk.
+    while(fails > alpha){
+      sen_allocate[1] <- sen_allocate[1] - 1
+      sen_allocate[2] <- sen_allocate[2] + 1
+      fails <- dbinom(as.integer((sen_allocate[1] + sen_allocate[2]) * alpha), size = sen_allocate[1], prob = 4 * risk)
+    }
+  }
+  
+  #Swap mobile and sensor indicies.
+  allocate_hold <- sen_allocate[1]
+  sen_allocate[1] <- sen_allocate[2]
+  sen_allocate[2] <- allocate_hold
+  
+  return(sen_allocate)
+  #sen_allocate: vector(length 2), the sensor allocation with number of fixed and mobile.
+}
+
+# Calculate the objective value of a valid candidate solution.
+calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
+  #centers: data_frame, the locations of the sensors in the network.
+  #city_grid: matrix, the zoning values of the inputted city.
+  #r: real, the detection radius of the sensors.
+  #geo_radius: int(divisible by 20), the radius to be covered as designated by the client.
+  
+  #Intialization of obj values.
+  area <- pi * (r ^ 2) * length(centers[, 1])
+  space_reduct <- 0
+  edge_reduct <- 0
+  region_factor <- 0
+  mobile_factor <- 0
+  
+  #Reduce obj value based on overlapping sensors.
+  for (i in 1:(length(centers[, 1]))){
+    j <- i + 1
+    while(j <= length(centers[, 1])){
+      dist <- sqrt((centers[i, 1] - centers[j, 1]) ^2 + (centers[i, 2] - centers[j, 2]) ^ 2)
+      if(dist < (r * 2)){
+        space_reduct <- space_reduct + 2 * r ^ 2 * acos(dist / (2 * r)) - dist / 2 * sqrt(r ^ 2 - (dist / 2) ^ 2)
+      }
+      j <- j + 1
+    } 
+  }
+  
+  #Reduce obj value based on sensors close to edge of geographic radius.
+  for (i in 1:(length(centers[, 1]))){
+    distance <- sqrt((centers[i, 1]) ^ 2 + (centers[i, 2]) ^ 2)
+    if(distance > geo_radius - r){
+      d1 <- (geo_radius ^ 2 - r ^ 2 + distance ^ 2) / (2 * distance)
+      d2 <- distance - d1
+      edge_reduct <- edge_reduct + pi * r ^ 2 - geo_radius ^ 2 * acos(d1 / geo_radius) + d1 * sqrt(geo_radius ^ 2 - d1 ^ 2) - r ^ 2 * acos(d2 / r) + d2 * sqrt(r ^ 2 - d2 ^ 2)
+    }
+  }
+  
+  #Normalize the reduction numbers.
+  edge_reduct <- edge_reduct / area
+  space_reduct <- space_reduct / area
+  reduct_avg <- (edge_reduct + space_reduct) / 2
+  
+  #City indexing.
+  city_grid_radius <- geo_radius / 20
+  
+  #Account for region sensors are in and mobile placement for obj value.
+  for (i in 1:(length(centers[, 1]))){
+    #Fixed sensors better in industrial.
+    if(city_grid[trunc(centers[i, 1] / 20) + city_grid_radius, trunc(centers[i, 2] / 20) + city_grid_radius] == 2 & centers[i, 3] == 0)
+      region_factor <- region_factor + reduct_avg / 2
+    #Mobile sensors better in residential.
+    if(city_grid[trunc(centers[i, 1] / 20) + city_grid_radius, trunc(centers[i, 2] / 20) + city_grid_radius] == 1 & centers[i, 3] == 1)
+      region_factor <- region_factor + reduct_avg / 2 
+    #Mobile sensors better towards the center.
+    if(centers[i, 3] == 1){
+      mobile_factor <- mobile_factor + (-sqrt(centers[i, 1] ^ 2 + centers[i, 2] ^ 2) + geo_radius) * 1 / (geo_radius * length(centers[, 3]))
+    }
+  }
+  
+  obj_value <- 1 - space_reduct - edge_reduct + region_factor + mobile_factor
+  return(obj_value)
+  #obj_value: int, a value representing the relative value of the current network.
 }
 
 
-##--PM data classifier--##
+##--PM DATA CLASSIFIER--##
 MlClassifier <- function(){
-  #Load in all Kaggle Data for machine learning
+  #Load in all Kaggle data for machine learning.
   january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
   february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
   march = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/march-2017.csv"))
@@ -336,9 +378,10 @@ MlClassifier <- function(){
   november = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/november-2017.csv"))
   december = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/december-2017.csv"))
   
-  Sys.setenv(TZ='Poland') #we're looking at data from Poland, to avoid erors we'll use this command. If this is not given a timezone error will appear.
+  #Adjusts for Polish time zone.
+  Sys.setenv(TZ='Poland') 
   
-  #Convert time to a time that we can manipulate
+  #Convert to manipulatable time.
   january$`UTC time` = as_datetime(january$`UTC time`)
   february$`UTC time` = as_datetime(february$`UTC time`)
   march$`UTC time` = as_datetime(march$`UTC time`)
@@ -365,30 +408,27 @@ MlClassifier <- function(){
   nov.test = november %>% select(contains("pm"))
   dec.test = december %>% select(contains("pm"))
   
-  #function created to fill a data frame with all particulate data from Kaggle
-  #df.noname = Data frame of all pm values with no dates 
-  #df.test= data from the respective month to load into dataframe
-  #col= the col that is desired to load into the matrix, default value is set to 1
-  janyr.noname = next3rep(jan.test, "jan")  # fill rest of jan
-  febyr.noname = next3rep(feb.test, "feb")  # fill with feb
-  maryr.noname = next3rep(mar.test, "mar")  # fill with mar
-  apryr.noname = next3rep(apr.test, "apr")  # fill with apr
-  mayyr.noname = next3rep(may.test, "may")  # fill with may
-  junyr.noname = next3rep(jun.test, "jun")  # fill with jun
-  julyr.noname = next3rep(jul.test, "jul")  # fill with jul
-  augyr.noname = next3rep(aug.test, "aug")  # fill with aug
-  sepyr.noname = next3rep(sep.test, "sep")  # fill with sep
-  octyr.noname = next3rep(oct.test, "oct")  # fill with oct
-  novyr.noname = next3rep(nov.test, "nov")  # fill with nov
-  decyr.noname = next3rep(dec.test, "dec")  # fill with dec
+  #Fill data frame with all particulate data from Kaggle.
+  janyr.noname = next3rep(jan.test, "jan")  
+  febyr.noname = next3rep(feb.test, "feb")  
+  maryr.noname = next3rep(mar.test, "mar")  
+  apryr.noname = next3rep(apr.test, "apr")  
+  mayyr.noname = next3rep(may.test, "may")  
+  junyr.noname = next3rep(jun.test, "jun")  
+  julyr.noname = next3rep(jul.test, "jul")
+  augyr.noname = next3rep(aug.test, "aug") 
+  sepyr.noname = next3rep(sep.test, "sep")  
+  octyr.noname = next3rep(oct.test, "oct")  
+  novyr.noname = next3rep(nov.test, "nov")  
+  decyr.noname = next3rep(dec.test, "dec")  
   
-  #finds the minimum number of days in the kaggle data for a given month
+  #Minimum number of days for a given month in kaggle data.
   n <- min(dim(janyr.noname)[1], dim(febyr.noname)[1], dim(maryr.noname)[1], dim(apryr.noname)[1], dim(mayyr.noname)[1], dim(junyr.noname)[1], dim(julyr.noname)[1], dim(augyr.noname)[1], dim(sepyr.noname)[1], dim(octyr.noname)[1], dim(novyr.noname)[1], dim(decyr.noname)[1])
   
-  #randomly selects days for each month to then us for classifying the data
+  #Randomly selects days for each month to then us for classifying the data.
   yr.noname <- cbind(janyr.noname[sample(dim(janyr.noname)[1], n),], febyr.noname[sample(dim(febyr.noname)[1], n),], maryr.noname[sample(dim(maryr.noname)[1], n),], apryr.noname[sample(dim(apryr.noname)[1], n),], mayyr.noname[sample(dim(mayyr.noname)[1], n),], junyr.noname[sample(dim(junyr.noname)[1], n),], julyr.noname[sample(dim(julyr.noname)[1], n),], augyr.noname[sample(dim(augyr.noname)[1], n),], sepyr.noname[sample(dim(sepyr.noname)[1], n),], octyr.noname[sample(dim(octyr.noname)[1], n),], novyr.noname[sample(dim(novyr.noname)[1], n),], decyr.noname[sample(dim(decyr.noname)[1], n),])
   
-  # we need to remove outliers using interquartile range
+  #Removes outliers.
   for (cnt in 1:dim(yr.noname)[2]){
     outliers1 = boxplot.stats((yr.noname[ ,cnt]),coef = 3)$out
     yr.nout = yr.noname[-which(yr.noname[ ,cnt] %in% outliers1), ]
@@ -467,7 +507,7 @@ data_label <- function(pm_data, nB){
 ##--Simulation--##
 
 #Call function
-sortPM <- function(input_time, region, storm_time){
+sort_PM <- function(input_time, region, storm_time){
   month <- lubridate::month(input_time, label = TRUE, abbr = FALSE)
   monthnum <- lubridate::month(input_time)
   input_time <- round(input_time, "hour")
@@ -574,7 +614,7 @@ priority_destinations <- function(sensors, pm_data, quality_desired){
 }
 
 #Find sensor nearest to destination
-nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class, geoRadius = 15000){
+nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class, geo_radius = 15000){
   #destination: final destination for sensor to move to
   #sensors: data frame of all sensors in the network
   #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
@@ -609,7 +649,7 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
         nth_term <- nth_term + 1
       }
       if(loop_iterate == 1){
-        movement <- move_sensor(dist_vec[near_mobile_index], destination[k,], sensors[near_index,], geoRadius)
+        movement <- move_sensor(dist_vec[near_mobile_index], destination[k,], sensors[near_index,], geo_radius)
         movement <- unlist(movement)
         if(movement[3]){
           sensors[near_index,4] <- 1
@@ -627,9 +667,9 @@ nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class
   return(sensors)
 }
 #Moves sensor to new location
-move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
-  if(distance > geoRadius/50){
-    destination <- sample(-geoRadius:geoRadius, 2)
+move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
+  if(distance > geo_radius/50){
+    destination <- sample(-geo_radius:geo_radius, 2)
   }
   x <- c(destination[1], near_sensor[1])
   y <- c(destination[2], near_sensor[2])
@@ -664,7 +704,7 @@ move_sensor <- function(distance, destination, near_sensor, geoRadius = 15000){
       y_dest <- destination[2] + dist_line$coeff[[2]] * x_minus_fifty
     }
   }
-  if(sqrt((x_dest+near_sensor[1]) ^ 2 + (y_dest + near_sensor[2])^2) > geoRadius){
+  if(sqrt((x_dest+near_sensor[1]) ^ 2 + (y_dest + near_sensor[2])^2) > geo_radius){
     x_dest <- 0
     y_dest <- 0
   }
