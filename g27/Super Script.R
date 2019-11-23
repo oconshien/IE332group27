@@ -63,6 +63,7 @@ dbClearResult(dbListResults(myDB)[[1]])
 cityCSV <- as.matrix(read.csv(paste0("sample cities/",cityType, ".csv"), header=F))
 cityGrid <- buildCity(cityCSV)
 city_grid_radius <- geoRadius / 20
+geo_difference <- (15000- geoRadius) / 20
 
 #Create Null variables
 points <- NULL
@@ -88,7 +89,7 @@ while(datecnt <= 24*timefromSQL){
   i = 1
   print(datecnt)
   while (i <= dim(locationSen)[1]){
-    point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius, trunc(locationSen[i,2]/20) + city_grid_radius], storm_time)
+    point <- sortPM(datefromSQL, cityGrid[trunc(locationSen[i,1]/20) + city_grid_radius + geo_difference, trunc(locationSen[i,2]/20) + city_grid_radius + geo_difference], storm_time)
     points <- rbind(points, point)
     i <- i + 1
   }
