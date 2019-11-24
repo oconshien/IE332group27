@@ -344,7 +344,7 @@ calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
   
   #Account for region sensors are in and mobile placement for obj value.
   for (i in 1:(length(centers[, 1]))){
-    #Fixed sensors better in industrial.
+    #Fixed sensors better in urban/industrial.
     if(city_grid[trunc(centers[i, 1] / 20) + city_grid_radius, trunc(centers[i, 2] / 20) + city_grid_radius] == 2 & centers[i, 3] == 0)
       region_factor <- region_factor + reduct_avg / 2
     #Mobile sensors better in residential.
@@ -357,175 +357,207 @@ calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
   }
   
   obj_value <- 1 - space_reduct - edge_reduct + region_factor + mobile_factor
+  
   return(obj_value)
   #obj_value: int, a value representing the relative value of the current network.
 }
 
 
 ##--PM DATA CLASSIFIER--##
+
 MlClassifier <- function(){
   #Load in all Kaggle data for machine learning.
-  january = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
-  february = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
-  march = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/march-2017.csv"))
-  april = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/april-2017.csv"))
-  may = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/may-2017.csv"))
-  june = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/june-2017.csv"))
-  july = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/july-2017.csv"))
-  august = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/august-2017.csv"))
-  september = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/september-2017.csv"))
-  october = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/october-2017.csv"))
-  november = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/november-2017.csv"))
-  december = as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/december-2017.csv"))
+  january <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/january-2017.csv"))
+  february <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/february-2017.csv"))
+  march <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/march-2017.csv"))
+  april <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/april-2017.csv"))
+  may <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/may-2017.csv"))
+  june <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/june-2017.csv"))
+  july <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/july-2017.csv"))
+  august <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/august-2017.csv"))
+  september <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/september-2017.csv"))
+  october <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/october-2017.csv"))
+  november <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/november-2017.csv"))
+  december <- as_tibble(fread("air-quality-data-from-extensive-network-of-sensors/december-2017.csv"))
   
   #Adjusts for Polish time zone.
-  Sys.setenv(TZ='Poland') 
+  Sys.setenv(TZ = 'Poland') 
   
   #Convert to manipulatable time.
-  january$`UTC time` = as_datetime(january$`UTC time`)
-  february$`UTC time` = as_datetime(february$`UTC time`)
-  march$`UTC time` = as_datetime(march$`UTC time`)
-  april$`UTC time` = as_datetime(april$`UTC time`)
-  may$`UTC time` = as_datetime(may$`UTC time`)
-  june$`UTC time` = as_datetime(june$`UTC time`)
-  july$`UTC time` = as_datetime(july$`UTC time`)
-  august$`UTC time` = as_datetime(august$`UTC time`)
-  september$`UTC time` = as_datetime(september$`UTC time`)
-  october$`UTC time` = as_datetime(october$`UTC time`)
-  november$`UTC time` = as_datetime(november$`UTC time`)
-  december$`UTC time` = as_datetime(december$`UTC time`)
+  january$`UTC time` <- as_datetime(january$`UTC time`)
+  february$`UTC time` <- as_datetime(february$`UTC time`)
+  march$`UTC time` <- as_datetime(march$`UTC time`)
+  april$`UTC time` <- as_datetime(april$`UTC time`)
+  may$`UTC time` <- as_datetime(may$`UTC time`)
+  june$`UTC time` <- as_datetime(june$`UTC time`)
+  july$`UTC time` <- as_datetime(july$`UTC time`)
+  august$`UTC time` <- as_datetime(august$`UTC time`)
+  september$`UTC time` <- as_datetime(september$`UTC time`)
+  october$`UTC time` <- as_datetime(october$`UTC time`)
+  november$`UTC time` <- as_datetime(november$`UTC time`)
+  december$`UTC time` <- as_datetime(december$`UTC time`)
   
-  jan.test = january %>% select(contains("pm"))
-  feb.test = february %>% select(contains("pm"))
-  mar.test = march %>% select(contains("pm"))
-  apr.test = april %>% select(contains("pm"))
-  may.test = may %>% select(contains("pm"))
-  jun.test = june %>% select(contains("pm"))
-  jul.test = july %>% select(contains("pm"))
-  aug.test = august %>% select(contains("pm"))
-  sep.test = september %>% select(contains("pm"))
-  oct.test = october %>% select(contains("pm"))
-  nov.test = november %>% select(contains("pm"))
-  dec.test = december %>% select(contains("pm"))
-  
+  jan_test <- january %>% select(contains("pm"))
+  feb_test <- february %>% select(contains("pm"))
+  mar_test <- march %>% select(contains("pm"))
+  apr_test <- april %>% select(contains("pm"))
+  may_test <- may %>% select(contains("pm"))
+  jun_test <- june %>% select(contains("pm"))
+  jul_test <- july %>% select(contains("pm"))
+  aug_test <- august %>% select(contains("pm"))
+  sep_test <- september %>% select(contains("pm"))
+  oct_test <- october %>% select(contains("pm"))
+  nov_test <- november %>% select(contains("pm"))
+  dec_test <- december %>% select(contains("pm"))
+
   #Fill data frame with all particulate data from Kaggle.
-  janyr.noname = next3rep(jan.test, "jan")  
-  febyr.noname = next3rep(feb.test, "feb")  
-  maryr.noname = next3rep(mar.test, "mar")  
-  apryr.noname = next3rep(apr.test, "apr")  
-  mayyr.noname = next3rep(may.test, "may")  
-  junyr.noname = next3rep(jun.test, "jun")  
-  julyr.noname = next3rep(jul.test, "jul")
-  augyr.noname = next3rep(aug.test, "aug") 
-  sepyr.noname = next3rep(sep.test, "sep")  
-  octyr.noname = next3rep(oct.test, "oct")  
-  novyr.noname = next3rep(nov.test, "nov")  
-  decyr.noname = next3rep(dec.test, "dec")  
+  janyr_noname <- next_3_rep(jan_test, "jan")  
+  febyr_noname <- next_3_rep(feb_test, "feb")  
+  maryr_noname <- next_3_rep(mar_test, "mar")  
+  apryr_noname <- next_3_rep(apr_test, "apr")  
+  mayyr_noname <- next_3_rep(may_test, "may")  
+  junyr_noname <- next_3_rep(jun_test, "jun")  
+  julyr_noname <- next_3_rep(jul_test, "jul")
+  augyr_noname <- next_3_rep(aug_test, "aug") 
+  sepyr_noname <- next_3_rep(sep_test, "sep")  
+  octyr_noname <- next_3_rep(oct_test, "oct")  
+  novyr_noname <- next_3_rep(nov_test, "nov")  
+  decyr_noname <- next_3_rep(dec_test, "dec")  
   
-  #Minimum number of days for a given month in kaggle data.
-  n <- min(dim(janyr.noname)[1], dim(febyr.noname)[1], dim(maryr.noname)[1], dim(apryr.noname)[1], dim(mayyr.noname)[1], dim(junyr.noname)[1], dim(julyr.noname)[1], dim(augyr.noname)[1], dim(sepyr.noname)[1], dim(octyr.noname)[1], dim(novyr.noname)[1], dim(decyr.noname)[1])
+  #Minimum number of days for a given month in Kaggle data.
+  n <- min(dim(janyr_noname)[1], dim(febyr_noname)[1], dim(maryr_noname)[1], dim(apryr_noname)[1], dim(mayyr_noname)[1], dim(junyr_noname)[1], dim(julyr_noname)[1], dim(augyr_noname)[1], dim(sepyr_noname)[1], dim(octyr_noname)[1], dim(novyr_noname)[1], dim(decyr_noname)[1])
   
   #Randomly selects days for each month to then us for classifying the data.
-  yr.noname <- cbind(janyr.noname[sample(dim(janyr.noname)[1], n),], febyr.noname[sample(dim(febyr.noname)[1], n),], maryr.noname[sample(dim(maryr.noname)[1], n),], apryr.noname[sample(dim(apryr.noname)[1], n),], mayyr.noname[sample(dim(mayyr.noname)[1], n),], junyr.noname[sample(dim(junyr.noname)[1], n),], julyr.noname[sample(dim(julyr.noname)[1], n),], augyr.noname[sample(dim(augyr.noname)[1], n),], sepyr.noname[sample(dim(sepyr.noname)[1], n),], octyr.noname[sample(dim(octyr.noname)[1], n),], novyr.noname[sample(dim(novyr.noname)[1], n),], decyr.noname[sample(dim(decyr.noname)[1], n),])
+  yr_noname <- cbind(janyr_noname[sample(dim(janyr_noname)[1], n),], febyr_noname[sample(dim(febyr_noname)[1], n),], maryr_noname[sample(dim(maryr_noname)[1], n),], apryr_noname[sample(dim(apryr_noname)[1], n),], mayyr_noname[sample(dim(mayyr_noname)[1], n),], junyr_noname[sample(dim(junyr_noname)[1], n),], julyr_noname[sample(dim(julyr_noname)[1], n),], augyr_noname[sample(dim(augyr_noname)[1], n),], sepyr_noname[sample(dim(sepyr_noname)[1], n),], octyr_noname[sample(dim(octyr_noname)[1], n),], novyr_noname[sample(dim(novyr_noname)[1], n),], decyr_noname[sample(dim(decyr_noname)[1], n),])
   
   #Removes outliers.
-  for (cnt in 1:dim(yr.noname)[2]){
-    outliers1 = boxplot.stats((yr.noname[ ,cnt]),coef = 3)$out
-    yr.nout = yr.noname[-which(yr.noname[ ,cnt] %in% outliers1), ]
+  for (cnt in 1:dim(yr_noname)[2]){
+    outliers_1 <- boxplot.stats((yr_noname[, cnt]), coef = 3)$out
+    yr_nout <- yr_noname[-which(yr_noname[, cnt] %in% outliers_1), ]
   }
-  rownames(yr.nout) = NULL
+  rownames(yr_nout) <- NULL
   
   
-  jan.nB =nBbymonth(yr.nout %>% select(contains("jan")))
-  feb.nB =nBbymonth(yr.nout %>% select(contains("feb")))
-  mar.nB =nBbymonth(yr.nout %>% select(contains("mar")))
-  apr.nB =nBbymonth(yr.nout %>% select(contains("apr")))
-  may.nB =nBbymonth(yr.nout %>% select(contains("may")))
-  jun.nB =nBbymonth(yr.nout %>% select(contains("jun")))
-  jul.nB =nBbymonth(yr.nout %>% select(contains("jul")))
-  aug.nB =nBbymonth(yr.nout %>% select(contains("aug")))
-  sep.nB =nBbymonth(yr.nout %>% select(contains("sep")))
-  oct.nB =nBbymonth(yr.nout %>% select(contains("oct")))
-  nov.nB =nBbymonth(yr.nout %>% select(contains("nov")))
-  dec.nB =nBbymonth(yr.nout %>% select(contains("dec")))
+  jan_nB <- nB_by_month(yr_nout %>% select(contains("jan")))
+  feb_nB <- nB_by_month(yr_nout %>% select(contains("feb")))
+  mar_nB <- nB_by_month(yr_nout %>% select(contains("mar")))
+  apr_nB <- nB_by_month(yr_nout %>% select(contains("apr")))
+  may_nB <- nB_by_month(yr_nout %>% select(contains("may")))
+  jun_nB <- nB_by_month(yr_nout %>% select(contains("jun")))
+  jul_nB <- nB_by_month(yr_nout %>% select(contains("jul")))
+  aug_nB <- nB_by_month(yr_nout %>% select(contains("aug")))
+  sep_nB <- nB_by_month(yr_nout %>% select(contains("sep")))
+  oct_nB <- nB_by_month(yr_nout %>% select(contains("oct")))
+  nov_nB <- nB_by_month(yr_nout %>% select(contains("nov")))
+  dec_nB <- nB_by_month(yr_nout %>% select(contains("dec")))
   
-  all.nBs = list("January" = jan.nB, "February" = feb.nB, "March" = mar.nB, "April"=apr.nB, "May"=may.nB, "June"=jun.nB, "July"=jul.nB, "August"=aug.nB, "September"=sep.nB, "October"=oct.nB, "November"=nov.nB, "December" =dec.nB)
-  return(all.nBs)
-}
-next3rep = function(df.test, month){
-  col = 1
-  df.noname = NULL
-  while(col <= length(df.test)-2) {
-    df.next3 = df.test[col:(col+2)]
-    names(df.next3) = c(paste0("pm010",month), paste0("pm025",month), paste0("pm100",month))
-    df.noname = rbind(df.noname, df.next3)
-    col = col+3
-  }
-  df.noname[df.noname < 0] = NA   # mark negative values NA
-  df.noname = na.omit(df.noname)  # eventually omit NA
-  return(df.noname)
-}
-#After running the confusion matrix our predicter has 87.37% accuracy!
-#We can now just input generated pm values and get labels automatically
-nBbymonth <- function(yr.nout){
-  colnames(yr.nout) = c("pm010", "pm025", "pm100")  
-  
-  yr.avg_pm010 = mean(yr.nout$pm010)
-  yr.avg_pm025 = mean(yr.nout$pm025)
-  yr.avg_pm100 = mean(yr.nout$pm100)
-  
-  # preparing factors for training based on means after outliers removed, per pm level
-  yr.nout$pm010.label = as.factor(ifelse(yr.nout$pm010 >= yr.avg_pm010, 1, 0))
-  yr.nout$pm025.label = as.factor(ifelse(yr.nout$pm025 >= yr.avg_pm025, 1, 0))
-  yr.nout$pm100.label = as.factor(ifelse(yr.nout$pm100 >= yr.avg_pm100, 1, 0))
-  yr.nout$rating = as.numeric(as.character(yr.nout[,4])) + as.numeric(as.character(yr.nout[,5])) + as.numeric(as.character(yr.nout[,6]))  # row-sum of pm factors
-  yr.nout$rating = factor(yr.nout$rating) # back to factor with Levels: {0, 1, 2, 3} in order of 'best' to 'worst'
-  
-  #Do the classify procedure as labeled in A2
-  trainIndex = createDataPartition(yr.nout$rating, p=0.75)$Resample1
-  train = yr.nout[trainIndex, ]
-  test = yr.nout[-trainIndex, ]
-  yr.nB = naiveBayes(rating ~ pm010 + pm025 + pm100, data=train) # uses *.label cols
-  yr.trainPred = predict(yr.nB, newdata = train)
-  yr.trainTable = table(train$rating, yr.trainPred)
-  yr.testPred = predict(yr.nB, newdata = test[1:3])
-  yr.testTable = table(test$rating, yr.testPred)
-  #(confusionMatrix(yr.testPred, test$rating)$overall['Accuracy'])
-  return(yr.nB)
+  all_nBs <- list("January" = jan_nB, "February" = feb_nB, "March" = mar_nB, "April"=apr_nB, "May"=may_nB, "June"=jun_nB, "July"=jul_nB, "August"=aug_nB, "September"=sep_nB, "October"=oct_nB, "November"=nov_nB, "December" =dec_nB)
+  return(all_nBs)
+  #all_nBs:
 }
 
-#Function made to take in new data points that are able to classify simulated data
-#pm_data = generated partiulate matter dataframe
-#nB= inputed naive Bayes classifier generated from the Kaggle data using machine learning
+#Pull Kaggle data based on designated month.
+next_3_rep <- function(df_test, month){
+  #df_test: data_frame, data frame to be filled with Kaggle pm data.
+  #month: string, designated month to choose Kaggle data from.
+  
+  #Initialization
+  col <- 1
+  df_noname <- NULL
+  
+  #Pulls corresponding Kaggle data.
+  while(col <= length(df_test) - 2) {
+    df_next_3 <- df_test[col:(col + 2)]
+    names(df_next_3) <- c(paste0("pm010", month), paste0("pm025", month), paste0("pm100", month))
+    df.noname <- rbind(df_noname, df_next_3)
+    col <- col + 3
+  }
+  
+  #Remove negative values and NAs
+  df_noname[df_noname < 0] <- NA   
+  df_noname <- na.omit(df_noname) 
+  
+  return(df_noname)
+  #df_noname: data_frame, formatted Kaggle data for designated month.
+}
+
+
+#Attach classes to the Kaggle data.
+nB_by_month <- function(yr_nout){
+  #yr_nout: data_frame, the generated Kaggle data from the year.
+  
+  #Assign column names to data frame.
+  colnames(yr_nout) <- c("pm010", "pm025", "pm100")  
+  
+  #Means of each pm type.
+  yr_avg_pm010 <- mean(yr_nout$pm010)
+  yr_avg_pm025 <- mean(yr_nout$pm025)
+  yr_avg_pm100 <- mean(yr_nout$pm100)
+  
+  #Preparing factors for training based on means after outliers removed, per pm level.
+  yr_nout$pm010.label <- as.factor(ifelse(yr_nout$pm010 >= yr_avg_pm010, 1, 0))
+  yr_nout$pm025.label <- as.factor(ifelse(yr_nout$pm025 >= yr_avg_pm025, 1, 0))
+  yr_nout$pm100.label <- as.factor(ifelse(yr_nout$pm100 >= yr_avg_pm100, 1, 0))
+  yr_nout$rating <- as.numeric(as.character(yr_nout[,4])) + as.numeric(as.character(yr_nout[,5])) + as.numeric(as.character(yr_nout[,6]))  # row-sum of pm factors
+  yr_nout$rating <- factor(yr_nout$rating)
+  
+  #Classification procedure (classes = 0, 1, 2, 3; from best air quality to worst).
+  train_index <- createDataPartition(yr_nout$rating, p=0.75)$Resample1
+  train <- yr_nout[train_index, ]
+  test <- yr_nout[-train_index, ]
+  yr_nB <- naiveBayes(rating ~ pm010 + pm025 + pm100, data = train)
+  ###yr_trainPred = predict(yr_nB, newdata = train)
+  ###yr_trainTable = table(train$rating, yr_trainPred)
+  ###yr_testPred = predict(yr_nB, newdata = test[1:3])
+  ###yr_testTable = table(test$rating, yr_testPred)
+  
+  return(yr_nB)
+  #yr_nB: data_frame, classes of the air quality attached to Kaggle data frame.
+}
+
+#Classifies new data points using classifier generated from Kaggle.
 data_label <- function(pm_data, nB){
-  testdata = predict(nB, newdata = pm_data)
-  combined= cbind(pm_data, testdata)
+  #pm_data: data_frame, generated particulate matter from simualtion.
+??#nB: inputed naive Bayes classifier generated from the Kaggle data using machine learning
+  
+  #Classifies the inputted pm data.  
+  test_data <- predict(nB, newdata = pm_data)
+  combined <- cbind(pm_data, test_data)
+  
   return(combined)
+  #combined: data_frame, the classes of the inputted pm data.
 }
 
 
-##--Simulation--##
+##--SIMULATION--##
 
-#Call function
+#Simulator Organizer and Call Function
 sort_PM <- function(input_time, region, storm_time){
+  #input_time: POSIXct, time of the simulation.
+  #region: int(0,1,2), region the sensor being simulated for is in.
+  #storm_time: binary, if the selected time is featuring a storm.
+  
+  #Time formatting.
   month <- lubridate::month(input_time, label = TRUE, abbr = FALSE)
-  monthnum <- lubridate::month(input_time)
+  month_num <- lubridate::month(input_time)
   input_time <- round(input_time, "hour")
-  yearnum <- lubridate::year(input_time)
+  year_num <- lubridate::year(input_time)
   day <- sample(c(1:30), 1)
   hour <- sample(c(0:23), 1)
-  input_time <- as.POSIXct(paste0(yearnum,"-",monthnum,"-",day," ",hour,":00:00 CET"))
-  ##just take current data and put it into 2017
+  input_time <- as.POSIXct(paste0(year_num, "-", month_num, "-", day, " ", hour, ":00:00 CET"))
   year(input_time) <- 2017
   time_since <- as.numeric(input_time)
-  pm_df <- data.frame(PM = rep(0,3), row.names = c(1,2.5,10))
+  pm_df <- data.frame(PM = rep(0, 3), row.names = c(1, 2.5, 10))
   
+  #PM data simualtor and randomizer.
+  #Rural
   if (region == 0){
     sensor_num <- sample(c(169, 225), 1)  
     pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since, storm_time)
     pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since, storm_time)
     pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since, storm_time)
   }
+  #Residential
   if (region == 1){
     sensor_num <- sample(c(204, 194, 210), 1)  
     
@@ -533,55 +565,69 @@ sort_PM <- function(input_time, region, storm_time){
     pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since, storm_time)
     pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since, storm_time)
   }
-  
+  #Urban/Industrial
   if (region == 2){
     sensor_num <- sample(c(185, 182, 219), 1)
     pm_df[1,] <- smooth_reg_month_maker(sensor_num, 1, month, time_since, storm_time)
     pm_df[2,] <- smooth_reg_month_maker(sensor_num, 25, month, time_since, storm_time)
     pm_df[3,] <- smooth_reg_month_maker(sensor_num, 10, month, time_since, storm_time)
   }
+  
+  #Data frame formatting.
   pm_df <- transpose(pm_df)
   colnames(pm_df) <- c("pm010", "pm025", "pm100")
+  
   return(pm_df)
+  #pm_df: data_frame, simualted particulate matter data from kaggle with noise.
 }
 
-#Generate random data point 
-smooth_reg_month_maker<-function(sensor,pms=1,month="january", time_since, storm_time){
-  #Geographic information contained in this csv file
+#Generate Spline of the Kaggle Data
+smooth_reg_month_maker<-function(sensor, pms = 1, month = "january", time_since, storm_time){
+  #sensor: int, sensor number to be pulling from for simulation.
+  #pms: real, particulate matter to be splined.
+  #month: month, the month to be splined.
+  #time_since: UTC, the time since the beginning of the month (used to pull corresponding row).
+  #storm_time: binary, if the selected time is featuring a storm.
+  
+  #Corresponding CSV pulling.
   sensor_locations <- read.csv("air-quality-data-from-extensive-network-of-sensors/sensor_locations.csv")
-  #Monthly data contained in these csv files. 
-  gett_data<-paste("air-quality-data-from-extensive-network-of-sensors/",month,"-2017.csv",sep="")
-  month_data <- as_tibble(fread(gett_data))
+  get_data<-paste("air-quality-data-from-extensive-network-of-sensors/", month, "-2017.csv", sep = "")
+  month_data <- as_tibble(fread(get_data))
   
-  Sys.setenv(TZ='Poland') #we're looking at data from Poland, to avoid erors we'll use this command. If this is not given a timezone error will appear.
+  #Adjusts for Polish time.
+  Sys.setenv(TZ = 'Poland')
   month_data$`UTC time` <- as_datetime(month_data$`UTC time`)
-  
-  MONTH <- month_data
-  
-  #Code to create the Fit Test
-  kable(head(is.na(MONTH),n=10))
-  MONTH.test<-MONTH %>% select(-`UTC time`)
-  medrep <- function(i){
+  current_month <- month_data
+??#Creates the fit test.
+  kable(head(is.na(current_month),n = 10))
+  month_test <- current_month %>% select(-`UTC time`)
+??medrep <- function(i){
     i[is.na(i)] <- median(i, na.rm=TRUE) 
     as.numeric(i)
   }
-  MONTH.med<- data.frame(apply(MONTH.test,2,medrep))
-  MONTH.med<-MONTH.med %>% mutate(Date=MONTH$`UTC time`)
+  month_med<- data.frame(apply(month_test, 2, medrep))
+  month_med<-month_med %>% mutate(Date = current_month$`UTC time`)
   
-  Date <- MONTH.med$Date
-  Sensor_and_pm<-paste("X",sensor,"_pm",pms,sep="")
+  date <- month_med$Date
+  sensor_and_pm<-paste("X", sensor, "_pm", pms, sep="")
   
-  S_PM <- MONTH.med[[Sensor_and_pm]]
-  fit<-smooth.spline(Date,S_PM,df=32)
+  S_PM <- month_med[[sensor_and_pm]]
+  fit <- smooth.spline(date , S_PM , df = 32)
   index <- match(time_since, fit$x)
   
-  return(random_collect(fit$y[index],storm_time)) 
+  #Add noise to pulled pm data points.
+  simulate_noise <- random_collect(fit$y[index], storm_time)
+  
+  return(simulate_noise)
+  #simulate_noise: vector, the simualted pm data with noise added.
 }
 
-#Random number generator
+#Add Noise to Inputted Values
 random_collect <- function(x, storm_time){
-  #x: randomized number from regression to be "collected" by sensor.
-  require(truncnorm)
+  #x: real, number to add noise to for simulation.
+  #storm_time: binary, indicates if there is a storm occuring(causes higher error rates and more noise).
+  
+  #Error reading rate  generation.
   error_rate <- 0.01
   std_dev <- sqrt(abs(x))
   if(storm_time){
@@ -589,86 +635,113 @@ random_collect <- function(x, storm_time){
     std_dev <- 2 * sqrt(abs(x))
   }
   
-  #Chances of erroneous reading by sensor is 1%.
-  if (!sample(c(0,1), 1, prob = c(1-error_rate,error_rate))) #Normal reading result.
-    return(rtruncnorm(1, a = 0, mean = x, sd = std_dev)) #how to handle sd, can we calc it from the data?
-  else{ #Erroneous reading result.
-    #Randomizes if the erroneous reading is unusually high or low.
+  #Normal reading result.
+  if (!sample(c(0,1), 1, prob = c(1-error_rate,error_rate)))
+    return(rtruncnorm(1, a = 0, mean = x, sd = std_dev))
+  #Erroneous reading result.
+  else{
+    #Erroneously high reading.
     if(sample(c(0,1), 1))
       return(rtruncnorm(1, a = x * 1.95, mean = x, sd = std_dev))
+    #Erroneously low reading.
     else
       return(rtruncnorm(1, a = 0, b = x * 0.05, mean = x, sd = std_dev))
   }
+  #returns the noisy reading.
 }
 
 
-##--Mobile Sensor Movement--##
+##--MOBILE SENSOR MOVEMENT--##
 
-#Generate destinations of sensors
+#Generate Sensor Destinations
 priority_destinations <- function(sensors, pm_data, quality_desired){
-  destination_sensors <- sample(which(pm_data[,4] == quality_desired), trunc(length(which(pm_data[,4] == quality_desired))))
+  #sensors: data_frame, all the sensors in the network.
+  #pm_data: data_frame, the corresponding pm_data to the network.
+  #quality_desired: int(0 or 3), the air quality of focus as designated by the client.
+  
+  #Pulls out sensors in priority locations based on classifier.
+  destination_sensors <- sample(which(pm_data[, 4] == quality_desired), trunc(length(which(pm_data[, 4] == quality_desired))))
   destinations_x <- sensors[destination_sensors, 1]
-  destinations_y <- sensors[destination_sensors,2]
+  destinations_y <- sensors[destination_sensors, 2]
   destinations <- data.frame("x_dest" = destinations_x,"y_dest" = destinations_y)
+  
   return(destinations)
+  #destinations: data_frame, the (x,y) coordinates of the destinations to be moved to by sensors. 
 }
 
-#Find sensor nearest to destination
+#Nearest Mobile Sensor to Destination
 nearest_sensor_finder <-function(destination, sensors, quality_desired, pm_class, geo_radius = 15000){
-  #destination: final destination for sensor to move to
-  #sensors: data frame of all sensors in the network
-  #quality_desired: the type of air quality the client desires to know more about ("good" or "bad")(client-defined)
-  #pm_data: the classification of the particulate matter collected by each sensor 
-  sensors[,4] <- rep(0,length(sensors[,4]))
-  for(k in 1:length(destination[,1])){
-    mobile_sensors <- sensors[which(sensors[,3]==1),]
-    num_mobiles <- length(mobile_sensors[,1])
+  #destination: data_frame, coordinates of final destinations for sensors to move to.
+  #sensors: data frame, all the sensors in the network.
+  #quality_desired: int(0 or 3), the air quality of focus as designated by the client.
+  #pm_data: data_frame, the corresponding pm_data to the network.
+  
+  #Intialize 'moved' column of data frame, indicating if a sensor has already been chosen to move.
+  sensors[, 4] <- rep(0, length(sensors[, 4]))
+  
+  #Find and move nearest sensor that is "open" (not already moved and not in a priority location).
+  for(k in 1:length(destination[, 1])){
+    mobile_sensors <- sensors[which(sensors[, 3] == 1), ]
+    num_mobiles <- length(mobile_sensors[, 1])
     dist_vec <- vector(length = num_mobiles)
+    
+    #Calculate distances between destination and each mobile sensor.
     for(i in 1:num_mobiles){
-      dist_vec[i] <- sqrt((destination[k,1] - mobile_sensors[i,1]) ^ 2 + (destination[k,2] - mobile_sensors[i,2]) ^ 2)
+      dist_vec[i] <- sqrt((destination[k, 1] - mobile_sensors[i, 1]) ^ 2 + (destination[k, 2] - mobile_sensors[i, 2]) ^ 2)
     }
     dist_vec <- unlist(dist_vec)
     dist_vec[which(dist_vec == 0)] <- 15001
     loop_iterate <- 1
     nth_term <- 1
+    
+    #Finds nearest "open" mobile sensor.
     while(loop_iterate){
       loop_iterate <- 1
       nth_term <- nth_term + 1
+      #Exit loop if no nearby sensors are "open".
       if(nth_term > length(dist_vec)){
         break
       }
       near_mobile_index <- which(dist_vec == dist_vec[order(dist_vec)][nth_term])
-      near_mobile <- mobile_sensors[near_mobile_index,]
-      near_index <- which(sensors[,1] == near_mobile[1] & sensors[,2] == near_mobile[2])
+      near_mobile <- mobile_sensors[near_mobile_index, ]
+      near_index <- which(sensors[, 1] == near_mobile[1] & sensors[, 2] == near_mobile[2])
+      #Sensor already moved, not "open".
       if(near_mobile[4] == 1){
         loop_iterate <- 2
         nth_term <- nth_term + 1
         already_indexed <- 1
-      } else if(pm_class[near_index, 4] == quality_desired){
+      } 
+      #Sensor already in priority location, not "open".
+      else if(pm_class[near_index, 4] == quality_desired){
         loop_iterate <- 2
         nth_term <- nth_term + 1
       }
+      
+      #Move the mobile sensor.
       if(loop_iterate == 1){
         movement <- move_sensor(dist_vec[near_mobile_index], destination[k,], sensors[near_index,], geo_radius)
         movement <- unlist(movement)
-        if(movement[3]){
-          sensors[near_index,4] <- 1
-        }
-        sensors[near_index,1] <- movement[1] + sensors[near_index,1]
-        sensors[near_index,2] <- movement[2] + sensors[near_index, 2]
-        if(!movement[3]){
-          sensors[near_index,4] == 0
-        }
+        sensors[near_index, 1] <- movement[1] + sensors[near_index, 1]
+        sensors[near_index, 2] <- movement[2] + sensors[near_index, 2]
+        sensors[near_index, 4] <- 1
       }
       loop_iterate <- loop_iterate - 1
       
     }
   }
+  
   return(sensors)
+  #sensors: data_frame, updated sensor info after movements.
 }
-#Moves sensor to new location
+
+#Moves Sensor Closer to Destination
 move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
-  if(distance > geo_radius/50){
+  #distance: real, distance to travel to get to destination.
+  #destination: vector(length 2), coordinate of the final destiantion to move to.
+  #geo_radius: int(divisible by 20), the geographic radius of coverage as specified by the client.
+  
+  #Goes towards destination if with 3 time steps (3000m).
+  if(distance > 3000){
     destination <- sample(-geo_radius:geo_radius, 2)
   }
   x <- c(destination[1], near_sensor[1])
@@ -676,11 +749,15 @@ move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
   x <- unlist(x)
   y <- unlist(y)
   dist_line <- lm(y ~ x)
-  if(is.na(dist_line$coefficients[2])){
+  
+  #No movement if already at destination.
+  if(is.na(dist_line$coefficients[2]))
     return(c(0,0,0))
-  }
+    
+  #If more than one time step (1000m) moves 1000m closer to destination.
   if(distance>=1000){
     dest <- 1000
+    #Determines the direction of movement. 
     if(x[1] > x[2]){
       x_dest <- sqrt(dest^2/(dist_line$coeff[[2]]^2+1))
     } else{
@@ -691,8 +768,11 @@ move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
     } else{
       y_dest <- -abs(dist_line$coeff[[2]] * x_dest)
     }
-  }else{
+  }
+  #If less than one time step(1000m) than move within 50m of the destination (do not want to fully overlap).
+  else{
     x_minus_fifty <- sqrt(50^2/(dist_line$coeff[[2]]^2+1))
+    #Determines direction of movement.
     if(x[1] > x[2]){
       x_dest <- destination[1] - x_minus_fifty
     } else{
@@ -704,12 +784,15 @@ move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
       y_dest <- destination[2] + dist_line$coeff[[2]] * x_minus_fifty
     }
   }
+  #If moving outside the geographic radius then sensor does not move.
   if(sqrt((x_dest+near_sensor[1]) ^ 2 + (y_dest + near_sensor[2])^2) > geo_radius){
     x_dest <- 0
     y_dest <- 0
   }
   
-  return(c(x_dest,y_dest, 1))
+  movement <- c(x_dest,y_dest, 1)
+  return(movement)
+  #movement: vector(length 3), the updated location of the sensor and indicates that it already is moving for this hour.
 }
 
 data_analytics<-function(bigData, montht){
