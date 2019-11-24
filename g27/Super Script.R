@@ -1,22 +1,22 @@
 ##--LOAD PACKAGES--##
-require(dplyr) #data wrangling    use
-require(lubridate) #date/time     use
-require(knitr) #quite fond of the kable function for making tables. use
-require(ggplot2) #plotting    use
-require(ggthemes) #plotting   use
-require(gridExtra) #extra space for plots
-require(data.table) #data manipulation    use
-require(RColorBrewer) #plotting
-require(stringr) #more data wrangling
-require(ggridges) #plotting density ridges
-require(readr)  #input/output              use
-require(tibble) #as_tibble, easy to use    use
-require(plyr)
-require(caret)  #create data partition    use
-require(e1071)  #naiveBayes               use
-require(truncnorm)                        #use
-require(lpSolve)                          #use
-require(RMySQL)                           #use
+require(dplyr) #data wrangling
+require(lubridate) #date/time
+require(knitr) #quite fond of the kable function for making tables(TEST)
+require(ggplot2) #plotting(TEST)
+require(ggthemes) #plotting(TEST)
+require(gridExtra) #extra space for plots(TEST)
+require(data.table) #data manipulation
+require(RColorBrewer) #plotting(TEST)
+require(stringr) #more data wrangling (TEST)
+require(ggridges) #plotting density ridges (TEST)
+require(readr)  #input/output(TEST)
+require(tibble) #as_tibble, easy to use
+require(plyr)   ###TEST, same as dplyr???
+require(caret)  #create data partition
+require(e1071)  #naiveBayes
+require(truncnorm)   
+require(lpSolve)                          
+require(RMySQL)                       
 
 ##--START CODE--##
 
