@@ -270,7 +270,7 @@ budget_constraint<-function(budget, repair_cost = 0, opt_repair = 0, risk = 0.01
   f_dir <- c("<=", "<=")
   
   #Generate intial solution.
-  sen_allocate <- lp("max", f_obj, f_con, f_dir, f_rhs, int_vec = 1:2)$solution
+  sen_allocate <- lp("max", f_obj, f_con, f_dir, f_rhs, int.vec = 1:2)$solution
   
   #Readjust solution taking risk and alpha(mobile vs fixed) into account.
   fails <- dbinom(as.integer((sen_allocate[1] + sen_allocate[2]) * alpha), size = sen_allocate[1], prob = 4 * risk)
@@ -316,7 +316,7 @@ calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
   for (i in 1:(length(centers[, 1]))){
     j <- i + 1
     while(j <= length(centers[, 1])){
-      dist <- sqrt((centers[i, 1] - centers[j, 1]) ^2 + (centers[i, 2] - centers[j, 2]) ^ 2)
+      dist <- sqrt((centers[i, 1] - centers[j, 1]) ^ 2 + (centers[i, 2] - centers[j, 2]) ^ 2)
       if(dist < (r * 2)){
         space_reduct <- space_reduct + 2 * r ^ 2 * acos(dist / (2 * r)) - dist / 2 * sqrt(r ^ 2 - (dist / 2) ^ 2)
       }
@@ -337,7 +337,6 @@ calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
   #Normalize the reduction numbers.
   edge_reduct <- edge_reduct / area
   space_reduct <- space_reduct / area
-  reduct_avg <- (edge_reduct + space_reduct) / 2
   
   #City indexing.
   city_grid_radius <- geo_radius / 20
@@ -346,10 +345,10 @@ calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
   for (i in 1:(length(centers[, 1]))){
     #Fixed sensors better in urban/industrial.
     if(city_grid[trunc(centers[i, 1] / 20) + city_grid_radius, trunc(centers[i, 2] / 20) + city_grid_radius] == 2 & centers[i, 3] == 0)
-      region_factor <- region_factor + reduct_avg / 2
+      region_factor <- region_factor + 1 / length(centers[, 1])
     #Mobile sensors better in residential.
     if(city_grid[trunc(centers[i, 1] / 20) + city_grid_radius, trunc(centers[i, 2] / 20) + city_grid_radius] == 1 & centers[i, 3] == 1)
-      region_factor <- region_factor + reduct_avg / 2 
+      region_factor <- region_factor + 1 / length(centers[, 1])
     #Mobile sensors better towards the center.
     if(centers[i, 3] == 1){
       mobile_factor <- mobile_factor + (-sqrt(centers[i, 1] ^ 2 + centers[i, 2] ^ 2) + geo_radius) * 1 / (geo_radius * length(centers[, 3]))
