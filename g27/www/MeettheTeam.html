@@ -13,12 +13,9 @@
     <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
     <link href="css/custom.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Many users already have downloaded jQuery from Google or Microsoft when visiting another site. As a result, it will be loaded from cache when they visit your site, which leads to faster loading time. Also, most CDN's will make sure that once a user requests a file from it, it will be served from the server closest to them, which also leads to faster loading time.
+	Google CDN:	-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 
@@ -36,65 +33,80 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
-                	<span class="glyphicon glyphicon-grain"></span> 
-                	Group 27
+                	<span class="glyphicon glyphicon-cloud"></span> 
+                	Cair Inc.
                 </a>
             </div>
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="https://web.ics.purdue.edu/~g1109699/index">Home</a>
+                   
+                    <li>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
-                    </li>
-                    <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
                     </li>
 					<li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData">Historical Data</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/HistoricalData.php">Historical Data</a>
                     </li>
-					
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
-						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="#">Will Hicks</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
-							<li><a href="#">Truman Boggs</a></li>
-							<li><a href="#">Jorge Valdez</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
-						</ul>
+					<li class="active">
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/MeetTheTeam">Meet The Team</a>
 					</li>
                 </ul>
-
-				
-
+	
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
 
-	<div class="jumbotron feature">
-		<div class="container">
-			<h1><span class="glyphicon glyphicon-equalizer"></span> Dramatically Engage</h1>
-			<p>Objectively innovate empowered manufactured products whereas parallel platforms.</p>
-			<p><a class="btn btn-default" href="#">Engage Now</a></p>
-		</div>
+	<div class="jumbotron feature" style="background-color:#AADAFF">	
+	<table id="mapTable" style="margin-left: 0px;margin-right: 0px;border-bottom-width: 2px">
+		<tr>
+			<th>
+				<!-- <p> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+				<a id="demo0" class="btn btn-default" value="hicks88">William Hicks</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo1" class="btn btn-default" value="jfinucane">Jeff Finucane</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo2" class="btn btn-default" value="lroach">Laura Roach</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo3" class="btn btn-default" value="tboggs">Truman Boggs</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo4" class="btn btn-default" value="jvaldez">Jorge Valdez</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo5" class="btn btn-default" value="gharold">Giovanni Harold</a>
+				<!-- </p> -->
+			</th>
+		</tr>
+	</table>
 	</div>
 
     <!-- Content -->
-    <div class="container">
-
+    <div id='hicks88' class="container">
+	
         <!-- Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Solutions
-                    <small>Visualize Quality</small>
+                <h1 class="page-header">William Hicks
+                    <small>Systems Engineer and Platform Support</small>
                 </h1>
-                <p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>
             </div>
         </div>
         <!-- /.row -->
@@ -103,31 +115,384 @@
         <div class="row">
             <article class="col-md-4 article-intro">
                 <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
+					<!-- THIS IS WHERE YOU PICTURE WILL GO. SAVE A PICTURE TO THE www FOLDER AND CHANGE THE src="yourpic.png" -->
+                    <img class="img-responsive img-rounded" src="hicks88" alt="hicks88">
                 </a>
-                <h3>
-                    <a href="#">Efficiently Unleash</a>
-                </h3>
-                <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
             </article>
-            <article class="col-md-4 article-intro">
-                <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
-                </a>
-                <h3>
-                    <a href="#">Completely Synergize</a>
-                </h3>
-                <p>Dramatically maintain clicks-and-mortar solutions without functional solutions. Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas.</p>
+            <article id="a1" class="col-md-4 article-intro img-rounded">
+				<table id="t1">
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;">
+							<h4>About:</h4>
+						</th>
+						<th id="th1">
+							<p align="justify" id="p1">William is a multi-faceted individual with strong communication skills and diverse leadership experience. He is a Senior studying Industrial Engineering at Purdue University with varied technical computing history. He looks forward to leveraging his skillsets into developing solutions for clients of <i>Cair</i>.</p>
+							
+						</th>
+					</tr>
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;"> 
+							<h4>Strengths:</h4>
+						</th>
+						<th id="th1" style="color:">
+							<ul id="p1" style="padding-left: 13px;">
+								<li>Teamwork and Communication</li>
+							<br><li>Public Speaking</li>
+							<br><li>ECE Coding Experience</li>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>Contact:</h4>
+						</th>
+						<th id="th1" style="font-weight: 100;">
+							<a href="mailto:wb.hicks@cairinc.com">wb.hicks@cairinc.com</a>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/william-hicks-6a35ba133/" class="btn btn-default">LinkedIn Profile</a>
+						</th>
+					</tr>
+				</table>
             </article>
+        </div>
+        <!-- /.row -->
 
+    </div>
+    <!-- /.container -->
+	
+    <!-- Content -->
+    <div id="jfinucane" style="display:none" class="container">
+
+        <!-- Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Jeffrey Finucane
+                    <small>Machine Learning Programmer</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Feature Row -->
+        <div class="row">
             <article class="col-md-4 article-intro">
                 <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
+					<!-- THIS IS WHERE YOU PICTURE WILL GO. SAVE A PICTURE TO THE www FOLDER AND CHANGE THE src="yourpic.png" -->
+                    <img class="img-responsive img-rounded" src="jfinucane.png" alt="">
                 </a>
-                <h3>
-                    <a href="#">Dynamically Procrastinate</a>
-                </h3>
-                <p>Professionally cultivate one-to-one customer service with robust ideas. Completely synergize resource taxing relationships via premier niche markets. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>
+            </article>
+            <article id="a1" class="col-md-4 article-intro img-rounded">
+				<table id="t1">
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;">
+							<h4>About:</h4> 
+						</th>
+						<th id="th1">
+							<p id="p1">Jeffrey has worked as an Operations Engineering Intern for Reyonolds Consumer Products. He loves learning new topics and diving right into complicated problems. Jeffrey enjoys aiding clients in achieving their goals in sustainibility and business. Jeffrey would be happy to have a discussion explaining the functionality of any backend algorithms at *Company Name*. He is always willing to make a connection and is very responsive to all emails.</p>
+						</th>
+					</tr>
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;"> 
+							<h4>Strengths:</h4>
+						</th>
+						<th id="th1" style="color:">
+							<ul id="p1" style="padding-left: 13px;">
+								<li>Time Management</li><br>
+								<li>Growth Mindset</li><br>
+								<li>Teamwork</li>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>Contact:</h4>
+						</th>
+						<th id="th1" style="font-weight: 100;">
+							<a href="mailto:jfinucane@cairinc.com">jfinucane@cairinc.com</a>
+						</th>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/jeffrey-finucane" class="btn btn-default">LinkedIn Profile</a>
+						</th>
+					</tr>
+				</table>
+            </article>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+	
+	<!-- Content -->
+    <div id="lroach" style="display:none" class="container">
+
+        <!-- Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Laura Roach
+                    <small>Systems Engineer and Website Support</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Feature Row -->
+        <div class="row">
+            <article class="col-md-4 article-intro">
+                <a href="#">
+					<!-- THIS IS WHERE YOU PICTURE WILL GO. SAVE A PICTURE TO THE www FOLDER AND CHANGE THE src="yourpic.png" -->
+                    <img class="img-responsive img-rounded" src="AirNOW_beachparty.png" alt="">
+                </a>
+            </article>
+            <article id="a1" class="col-md-4 article-intro img-rounded">
+				<table id="t1">
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;">
+							<h4>About:</h4>
+						</th>
+						<th id="th1">
+							<p id="p1">Laura has previously worked as a Research Assistant in Human Factors Engineering. She enjoys the challenge that comes with interpretting data in the many forms that it comes in. Laura would describe her problem solving approach as "user driven", which she thinks is largely due to her research background. At *COMPANY NAME* Laura works to ensure that the data and solutions that are being provided are relevant and innovative for each customer.</p>
+						</th>
+					</tr>
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;"> 
+							<h4>Strengths:</h4>
+						</th>
+						<th id="th1" style="color:">
+							<ul id="p1" style="padding-left: 13px;">
+								<li>Problem Solving</li><br>
+								<li>Data Analytics</li><br>
+								<li>Organization</li>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>Contact:</h4>
+						</th>
+						<th id="th1" style="font-weight: 100;">
+							<a href="mailto:lroach@cairinc.com">lroach@cairinc.com</a>
+						</th>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/laura-roach-a1b6b7174/" class="btn btn-default">LinkedIn Profile</a>
+						</th>
+					</tr>				
+				</table>
+            </article>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+	
+    <!-- Content -->
+    <div id="tboggs" style="display:none" class="container">
+
+        <!-- Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Truman Boggs
+                    <small>Network Support and Integration</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Feature Row -->
+        <div class="row">
+            <article class="col-md-4 article-intro">
+                <a href="#">
+					<!-- THIS IS WHERE YOU PICTURE WILL GO. SAVE A PICTURE TO THE www FOLDER AND CHANGE THE src="yourpic.png" -->
+                    <img class="img-responsive img-rounded" src="tboggs photo.jpg" alt="">
+                </a>
+            </article>
+            <article id="a1" class="col-md-4 article-intro img-rounded">
+				<table id="t1">
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;">
+							<h4>About:</h4>
+						</th>
+						<th id="th1">
+							<p id="p1">Truman is an eager Industrial Engineering student at Purdue University. He looks forward to showcasing his skills as a coder and engineer 
+							at Meijer next summer as an operations engineer. He enjoys taking on new challenges and is a keen on learning and developing new skills and knowledge in a variety of different
+							areas. He wants to ensure that clients are recieving the best solution possible to their air quality related issues and looks forward to any feedback and improvement
+							opportunities to maximize client satisfaction.
+							</p>
+						</th>
+					</tr>
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;"> 
+							<h4>Strengths:</h4>
+						</th>
+						<th id="th1" style="color:">
+							<ul id="p1" style="padding-left: 13px;">
+								<li>Optimization</li><br>
+								<li>Problem Solving</li><br>
+								<li>Adaptive Learner</li>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>Contact:</h4>
+						</th>
+						<th id="th1" style="font-weight: 100;">
+							<a href="mailto:tboggs@cairinc.com">tboggs@cairinc.com</a>
+						</th>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/truman-boggs-b232b4170/" class="btn btn-default">LinkedIn Profile</a>
+						</th>
+					</tr>
+				</table>
+            </article>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+	
+    <!-- Content -->
+    <div id="jvaldez" style="display:none" class="container">
+
+        <!-- Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Jorge Valdez
+                    <small>Associate Engineer</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Feature Row -->
+        <div class="row">
+            <article class="col-md-4 article-intro">
+                <a href="#">
+					<!-- THIS IS WHERE YOU PICTURE WILL GO. SAVE A PICTURE TO THE www FOLDER AND CHANGE THE src="yourpic.png" -->
+                    <img class="img-responsive img-rounded" src="jvaldez.jpg" alt="">
+                </a>
+            </article>
+            <article id="a1" class="col-md-4 article-intro img-rounded">
+				<table id="t1">
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;">
+							<h4>About:</h4>
+						</th>
+						<th id="th1">
+							<p id="p1">Jorge Valdez has previously interned with food manufacturing companies as a process engineer, and has worked internationally in Guatemala. With a focus on Statistics on his course work, he has develop an interest in data gathering, interpretation and application. At *COMPANY NAME* Jorge is able to help develop appropiate models for simulation in order to better analyze cities </p>
+						</th>
+					</tr>
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;"> 
+							<h4>Strengths:</h4>
+						</th>
+						<th id="th1" style="color:">
+							<ul id="p1" style="padding-left: 13px;">
+								<li>Statistics</li><br>
+								<li>Data Analytics</li><br>
+								<li>Teamwork and Collaboration</li>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>Contact:</h4>
+						</th>
+						<th id="th1" style="font-weight: 100;">
+							jvaldez@cairinc.com
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/jorge-valdez-40926913b" class="btn btn-default">LinkedIn Profile</a>
+						</th>
+					</tr>
+				</table>
+            </article>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+	
+    <!-- Content -->
+    <div id="gharold" style="display:none" class="container">
+
+        <!-- Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Giovanni Harold
+                    <small>Web Support and Integration</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Feature Row -->
+        <div class="row">
+            <article class="col-md-4 article-intro">
+                <a href="#">
+                    <img class="img-responsive img-rounded" src="gharold.png" alt="">
+                </a>
+            </article>
+            <article id="a1" class="col-md-4 article-intro img-rounded">
+				<table id="t1">
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;">
+							<h4>About:</h4>
+						</th>
+						<th id="th1">
+							<p id="p1">Giovanni previously worked as an Engineering Co-op at an
+							electronics manufacturing company. He has enjoyed his database
+							course-work and is eager to branch out from manufacturing and
+							put his new coding skills to use. Giovanni always approaches
+							problem solving with a sustainability focus. At *COMPANY NAME*
+							he is able to help cities become aware of their impact on
+							the environment which can lead to effective policy changes.</p>
+						</th>
+					</tr>
+					<tr id="tr1">
+						<th id="th1" style="vertical-align: top;"> 
+							<h4>Strengths:</h4>
+						</th>
+						<th id="th1" style="color:">
+							<ul id="p1" style="padding-left: 13px;">
+								<li>Web Development</li><br>
+								<li>Database Management</li><br>
+								<li>Performance Under Pressure</li>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>Contact:</h4>
+						</th>
+						<th id="th1" style="font-weight: 100;">
+							<a href="mailto:gharold@cairinc.com">gharold@cairinc.com</a>
+						</th>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/giovanniharold/"class="btn btn-default">LinkedIn Profile</a>
+						</th>
+					</tr>
+				</table>
             </article>
         </div>
         <!-- /.row -->
@@ -136,24 +501,10 @@
     <!-- /.container -->
 	
 	<footer>
-		<div class="footer-blurb">
+		<div class="input">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-fire"></span> Dynamically Procrastinate</h3>
-						<p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-						<p><a class="btn btn-default" href="#">Procrastinate</a></p>
-					</div>
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-cloud-upload"></span> Efficiently Unleash</h3>
-						<p>Dramatically maintain clicks-and-mortar solutions without functional solutions. Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. </p>
-						<p><a class="btn btn-default" href="#">Unleash</a></p>
-					</div>
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-leaf"></span> Completely Synergize</h3>
-						<p>Professionally cultivate one-to-one customer service with robust ideas. Completely synergize resource taxing relationships via premier niche markets. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>
-						<p><a class="btn btn-default" href="#">Synergize</a></p>
-					</div>
+					
 
 				</div>
 				<!-- /.row -->	
@@ -162,15 +513,100 @@
         
         <div class="small-print">
         	<div class="container">
-        		<p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="mailto:czarneckirya@gmail.com">Contact</a></p>
+        		<font color="#71c8f4"><p>Terms &amp; Conditions | Privacy Policy | <a href="https://twitter.com/cair_inc">Contact</a></p></font>
         		<p>Copyright &copy; Group 27 2019 </p>
         	</div>
         </div>
 	</footer>
 
 	
-    <!-- jQuery -->
-    <script src="js/jquery-1.11.3.min.js"></script>
+    <script>
+	
+	document.getElementById("demo0").onclick = function(){
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "block";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo1").onclick = function(){
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "block";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo2").onclick = function(){
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "block";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo3").onclick = function(){
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "block";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo4").onclick = function(){
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "block";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo5").onclick = function(){
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "block";
+	}
+</script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>

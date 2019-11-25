@@ -13,12 +13,9 @@
     <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
     <link href="css/custom.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Many users already have downloaded jQuery from Google or Microsoft when visiting another site. As a result, it will be loaded from cache when they visit your site, which leads to faster loading time. Also, most CDN's will make sure that once a user requests a file from it, it will be served from the server closest to them, which also leads to faster loading time.
+	Google CDN:	-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	
 	<style>
 		
@@ -78,17 +75,14 @@
                 </button>
                 <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.php">
                 	<span class="glyphicon glyphicon-cloud"></span> 
-                	Group 27
+                	Cair Inc.
                 </a>
             </div>
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="https://web.ics.purdue.edu/~g1109699/index.php">Home</a>
-                    </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
+                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions.php">Solutions</a>
                     </li>
                     <li>
                         <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
@@ -96,17 +90,8 @@
 					<li>
                         <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData">Historical Data</a>
                     </li>
-					
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
-						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/tboggsPage">Truman Boggs</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jvaldezPage">Jorge Valdez</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
-						</ul>
+					<li>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/MeetTheTeam">Meet The Team</a>
 					</li>
                 </ul>
 
@@ -118,19 +103,11 @@
         <!-- /.container -->
     </nav>
 	
-	<div class="jumbotron feature">
-		<div class="container">
-			<h1><span class="glyphicon glyphicon-cloud"></span> Cair Inc</h1>
-			<p>Our goal is to help our clients have quality business and quality a</p>
-			<form action="Solutions">
-			<input type="submit" value="How Can We Help You?" />
-		</form>
-		</div>
-	</div>
 	
 
+
     <!-- Content -->
-		<div align="center">
+		<div style="padding-top: 80px;" align="center">
 		<table align="center" id="mapTable2">
 		<tr>
 		<th color="black">
@@ -148,7 +125,7 @@
 		
 
 		
-		<div id="map"></div>
+		<div id="map" style="height:700px"></div>
 		
 		<script>
 		
@@ -173,7 +150,7 @@
 			
 			var map = new google.maps.Map(document.getElementById('map'), {
 				center: new google.maps.LatLng(0,0),
-				zoom: 1
+				zoom: 2
 			});
 			
 			var infoWindow = new google.maps.InfoWindow;
@@ -283,6 +260,16 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdumpALL.php$N_ID=2', functi
 		<script async defer
 			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfNAIKeP6ySNvYp2ohmGlpIroJs6aFlxA&callback=initMap">
 		</script>
+		
+		<div class="jumbotron feature">
+		<div class="container">
+			<h1 style="text-align:center"><span class="glyphicon glyphicon-cloud"></span> Cair Inc</h1>
+			<p style="text-align:center;" >Our goal is to help our clients have quality business and quality air. Knowledge is power, and we are dedicated to empower our clients.</p>
+			<form style="text-align:center;" action="Solutions">
+			<input type="submit" value="How Can We Help You?" />
+		</form>
+		</div>
+	</div>
 
 	<footer>
         
@@ -295,8 +282,9 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdumpALL.php$N_ID=2', functi
 	</footer>
 
 	
-    <!-- jQuery -->
+    <!-- jQuery ADDED TO HEADER; CDN >
     <script src="js/jquery-1.11.3.min.js"></script>
+	-->
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
