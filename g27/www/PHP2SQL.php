@@ -14,14 +14,13 @@ $FirstName = htmlentities($_POST['FirstName']);
 $LastName = htmlentities($_POST['LastName']);
 $CompanyName = htmlentities($_POST['CompanyName']);
 $cEmail = htmlentities($_POST['cEmail']);
-$cPassword = htmlentities($_POST['cPassword']);
 $cAddress = htmlentities($_POST['cAddress']);
 $cCity = htmlentities($_POST['cCity']);
 $cPostalCode = htmlentities($_POST['cPostalCode']);
 $cCountry = htmlentities($_POST['cCountry']);
 
-$sql = "INSERT INTO Client (cFirst, cLast, company, email, password, address, city, postcode, country)
-VALUES ('$FirstName','$LastName','$CompanyName','$cEmail','$cPassword','$cAddress','$cCity','$cPostalCode','$cCountry')";
+$sql = "INSERT INTO Client (cFirst, cLast, company, email, address, city, postcode, country)
+VALUES ('$FirstName','$LastName','$CompanyName','$cEmail','$cAddress','$cCity','$cPostalCode','$cCountry')";
 
 
 if($conn->query($sql) === TRUE){

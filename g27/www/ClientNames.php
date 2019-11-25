@@ -13,17 +13,27 @@
     <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
     <link href="css/custom.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Many users already have downloaded jQuery from Google or Microsoft when visiting another site. As a result, it will be loaded from cache when they visit your site, which leads to faster loading time. Also, most CDN's will make sure that once a user requests a file from it, it will be served from the server closest to them, which also leads to faster loading time.
+	Google CDN:	-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<!-- AJAX -->
 	
 	<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+		margin: 20px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 70%;
+        margin: 20;
+        padding: 0;
+      }
 	th {
 		padding: 15px;
-		background-color: #4CAF50;
+		background-color: #7AE1E6;
 		color: white;
 		border-color: black;
 		}
@@ -45,8 +55,7 @@
         margin: 0;
         padding: 0;
       }
-	</style>
-
+    </style>
 
 </head>
 
@@ -63,8 +72,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
-                	<span class="glyphicon glyphicon-grain"></span> 
+                <a id="a2" class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.php">
+                	<span class="glyphicon glyphicon-cloud"></span> 
                 	Group 27
                 </a>
             </div>
@@ -72,31 +81,29 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/index">Home</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/index.php">Home</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
                     <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
                     </li>
 					<li class="active">
-                        <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData">Historical Data</a>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/HistoricalData.php">Historical Data</a>
                     </li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
+						<a id="a2" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
 						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="#">Will Hicks</a></li>
-							<li><a href="#">Jeff Finucane</a></li>
-							<li><a href="#">Laura Roach</a></li>
-							<li><a href="#">Truman Boggs</a></li>
-							<li><a href="#">Jorge Valdez</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/tboggsPage">Truman Boggs</a></li>
+							<li><a href="https://web.ics.purdue.edu/~g1109699/jvaldezPage">Jorge Valdez</a></li>
 							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
 						</ul>
 					</li>
                 </ul>
-
-				
 
             </div>
             <!-- /.navbar-collapse -->
@@ -108,17 +115,123 @@
 		<div class="container">
 		</div>
 	</div>
-
-	<div id="map"></div>
 	
+	<table id="mapTable">
+		<tr>
+			<th>
+				<!-- <p> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+				<a id="demo0" class="btn btn-default" value="sydney">Sydney</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo1" class="btn btn-default" value="chicago">Chicago</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo2" class="btn btn-default" value="london">London</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo3" class="btn btn-default">Tokyo</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo4" class="btn btn-default">Paris</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo5" class="btn btn-default">Rome</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo6" class="btn btn-default">Dubai</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo7" class="btn btn-default">Cape Town</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo8" class="btn btn-default">Los Angeles</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo9" class="btn btn-default">West Lafayette</a>
+				<!-- </p> -->
+			</th>
+		</tr>
+		<!-- <tr>
+			<form action="HistoricalData.php" method="post">
+				<input type="submit" class="button" name="city" value="cityLondon">
+			</form>
+			</tr> -->
+	</table>
+	
+		<div id="map"></div>
 	
 	<script>
 	
+	document.getElementById("demo0").onclick = function(){
+		initMap();
+	}
+	document.getElementById("demo1").onclick = function(){
+		initMap1();
+	}
+	document.getElementById("demo2").onclick = function(){
+		initMap2();
+		showAnaly(this.value)
+	}
+	document.getElementById("demo3").onclick = function(){
+		initMap3();
+	}
+	document.getElementById("demo4").onclick = function(){
+		initMap4();
+	}
+	document.getElementById("demo5").onclick = function(){
+		initMap5();
+	}
+	document.getElementById("demo6").onclick = function(){
+		initMap6();
+	}
+	document.getElementById("demo7").onclick = function(){
+		initMap7();
+	}
+	document.getElementById("demo8").onclick = function(){
+		initMap8();
+	}
+	document.getElementById("demo9").onclick = function(){
+		initMap9();
+	}
+
+function showAnaly(cityname) {
+	if(cityname == "") {
+		document.write("<h1>no cityname</h1>");
+		return;
+	} else {
+		$.ajax({
+			url:'HistAjax.php',
+			type:'GET',
+			success:function(cityname){
+			
+			}
+		});
+	}
+}
+
 	var customLabel = {
-        restaurant: {
+        fixed: {
           label: 'F'
         },
-        bar: {
+        mobile: {
           label: 'M'
         }
       };
@@ -128,13 +241,11 @@
   infoWindow.open(map, marker);
 });
 
-
-	
-// Initialize and add the map
+//Sydney
 function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
+		var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(-33.863276, 151.207977),
-          zoom: 12
+          zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
 
@@ -151,13 +262,392 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump.php', function(data) {
                   parseFloat(markerElem.getAttribute('lng')));
 
               var infowincontent = document.createElement('div');
-              var strong = document.createElement('strong');
-              strong.textContent = name
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
               infowincontent.appendChild(strong);
               infowincontent.appendChild(document.createElement('br'));
 
               var text = document.createElement('text');
-              text.textContent = address
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+	
+// Chicago Initialize and add the map
+function initMap1() {
+		var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(41.869361, -87.660712),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump1.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//London		
+function initMap2() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(51.507489, -0.127957),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump2.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//Tokyo	
+function initMap3() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(35.680553, 139.769253),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump3.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//Paris
+function initMap4() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(48.8566, 2.3522),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump4.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//Rome
+function initMap5() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(41.9028, 12.4964),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump5.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//Dubai
+function initMap6() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(25.2048, 55.2708),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump6.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//Cape Town
+function initMap7() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(-33.9249, 18.4241),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump7.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//Los Angeles
+function initMap8() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(34.0522, -118.2437),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump8.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              var marker = new google.maps.Marker({
+                map: map,
+                position: point,
+                label: icon.label
+              });
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
+//West Lafayette
+function initMap9() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(40.4259, -86.9081),
+          zoom: 11
+        });
+        var infoWindow = new google.maps.InfoWindow;
+
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump9.php', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('name');
+              var address = markerElem.getAttribute('address');
+              var type = markerElem.getAttribute('type');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('lat')),
+                  parseFloat(markerElem.getAttribute('lng')));
+
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('text');
+              strong.textContent = "Sensor ID: " + id
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
+
+              var text = document.createElement('text');
+              text.textContent = "Sensor Type: " + type
               infowincontent.appendChild(text);
               var icon = customLabel[type] || {};
               var marker = new google.maps.Marker({
@@ -206,117 +696,17 @@ function doNothing() {}
                 <h1 class="page-header">Historical Data
                     <small>Visualize Quality</small>
                 </h1>
-                <p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>
             </div>
         </div>
+		
         <!-- /.row -->
-		<div>
-		
-		<form action="ClientNames.php">
-			<input type="submit" value="List Clients" />
-		</form>
-		
-		<?php
-			$servername = "mydb.itap.purdue.edu";
-			$username = "g1109699";
-			$password = "MySQL27";
-			$dbname = "g1109699";
-
-			// Create connection
-			$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-			// Check connection
-			if ($conn-> connect_error) {
-				die("Connection failed: " . $conn->connect_error);
-			}
-
-			$sql = "SELECT C_ID, company, cFirst FROM Client";
-
-			$result = mysqli_query($conn, $sql);
-
-			echo "<table border='1'>
-			<tr>
-			<th>Client ID</th>
-			<th>Company</th>
-			<th>First Name</th>
-			</tr>";
-
-			while($row = mysqli_fetch_array($result))
-			{
-			echo "<tr>";
-			echo "<td>" . $row['C_ID'] . "</td>";
-			echo "<td>" . $row['company'] . "</td>";
-			echo "<td>" . $row['cFirst'] . "</td>";
-			echo "</tr>";
-			}
-			echo "</table>" . "<br>";
-
-			$conn->close();
-
-		?>
-		
+		<div id="analy">
+			<p>test</p>
 		
 		
 		</div>
         <!-- Feature Row -->
         <div class="row">
-            <article class="col-md-4 article-intro">
-                <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
-                </a>
-                <h3>
-                    <a href="#">Efficiently nope</a>
-                </h3>
-                <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-            </article>
-            <article class="col-md-4 article-intro">
-                <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
-                </a>
-                <h3>
-                    <a href="#">Completely Synergize</a>
-                </h3>
-                <p>Dramatically maintain clicks-and-mortar solutions without functional solutions. Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas.</p>
-            </article>
-
-            <article class="col-md-4 article-intro">
-                <a href="#">
-                    <img class="img-responsive img-rounded" src="holder.js/700x300" alt="">
-                </a>
-                <h3>
-                    <a href="#">Dynamically Procrastinate</a>
-                </h3>
-                <p>Professionally cultivate one-to-one customer service with robust ideas. Completely synergize resource taxing relationships via premier niche markets. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>
-            </article>
-        </div>
-        <!-- /.row -->
-
-    </div>
-    <!-- /.container -->
-	
-	<footer>
-		<div class="footer-blurb">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-fire"></span> Dynamically Procrastinate</h3>
-						<p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-						<p><a class="btn btn-default" href="#">Procrastinate</a></p>
-					</div>
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-cloud-upload"></span> Efficiently Unleash</h3>
-						<p>Dramatically maintain clicks-and-mortar solutions without functional solutions. Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. </p>
-						<p><a class="btn btn-default" href="#">Unleash</a></p>
-					</div>
-					<div class="col-sm-4 footer-blurb-item">
-						<h3><span class="glyphicon glyphicon-leaf"></span> Completely Synergize</h3>
-						<p>Professionally cultivate one-to-one customer service with robust ideas. Completely synergize resource taxing relationships via premier niche markets. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>
-						<p><a class="btn btn-default" href="#">Synergize</a></p>
-					</div>
-
-				</div>
-				<!-- /.row -->	
-			</div>
         </div>
         
         <div class="small-print">
@@ -328,8 +718,9 @@ function doNothing() {}
 	</footer>
 
 	
-    <!-- jQuery -->
+    <!-- jQuery 
     <script src="js/jquery-1.11.3.min.js"></script>
+	-->
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>

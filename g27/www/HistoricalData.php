@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<!-- Template by Quackit.com -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -19,43 +17,6 @@
 	Google CDN:	-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<!-- AJAX -->
-	<script>
-	$(document).ready(function()	{
-		$('.button').click(function()	{
-			alert("City: " + $(this).val());
-		$('.btn btn-default').click(function()	{
-			var clickBtnValue = $(this).val();
-			var ajaxurl = 'HistAjax.php',
-				data = {'action': clickBtnValue};
-			$.post(ajaxurl, data, function (response) {
-					alert("ajax worked");
-			});
-		});
-	};
-	</script>
-	<script>
-	function showUser(str) {
-		if(str == "") {
-			document.getElementById("txtHint").innerHTML = "";
-			return;
-		} else {
-			if (window.XMLHttpRequest) {
-				// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp = new XMLHttpRequest();
-			} else {
-				// code for IE6, IE5
-				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById("txtHint").innerHTML = this.responseText;
-				}
-			};
-			xmlhttp.open("GET","getuser.php?q="+str,true);
-			xmlhttp.send();
-		}
-	}
-	</script>
 	
 	<style>
       /* Always set the map height explicitly to define the size of the div
@@ -96,13 +57,6 @@
       }
     </style>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </head>
 
 <body style="background-color: #AADAFF">
@@ -120,15 +74,13 @@
                 </button>
                 <a id="a2" class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.php">
                 	<span class="glyphicon glyphicon-cloud"></span> 
-                	Group 27
+                	Cair Inc.
                 </a>
             </div>
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/index.php">Home</a>
-                    </li>
+                   
                     <li>
                         <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
@@ -138,96 +90,62 @@
 					<li class="active">
                         <a id="a2" href="https://web.ics.purdue.edu/~g1109699/HistoricalData.php">Historical Data</a>
                     </li>
-					<li class="dropdown">
-						<a id="a2" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
-						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/tboggsPage">Truman Boggs</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jvaldezPage">Jorge Valdez</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
-						</ul>
+					<li>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/MeetTheTeam">Meet The Team</a>
 					</li>
                 </ul>
 
             </div>
             <!-- /.navbar-collapse -->
         </div>
+		
         <!-- /.container -->
     </nav>
-
-	<div class="jumbotron feature">
-		<div class="container">
-		</div>
-	</div>
 	
-	<button type="button" class="btn btn-default" value="cityname">TEST</button>
-
-	<form>
-		<select name="users" onchange="showUser(this.value)">
-			<option value="">Select a person:</option>
-			<option value="1">Peter Griffin</option>
-			<option value="2">Lois Griffin</option>
-			<option value="3">Joseph Swanson</option>
-			<option value="4">Glenn Quagmire</option>
-		</select>
-	</form>
-
-<br>
-<div id="txtHint"><b>Person info will be listed here...</b></div>
-
+	<div class="jumbotron feature" style="background-color:#AADAFF">
+		
 	
-	<table id="mapTable">
+	<table id="mapTable" style="margin-left: 0px;margin-right: 0px;border-bottom-width: 2px">
 		<tr>
 			<th>
-				<!-- <p> -->
-				<a id="demo0" class="btn btn-default" value="sydney">Sydney</a>
+				<!-- <p> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+				<a id="demo0" class="btn btn-default" value="CLT">Charlotte, NC</a>
 				<!-- </p> -->
 			</th>
 			<th>
 				<!-- <p> -->
-				<a id="demo1" class="btn btn-default" value="chicago">Chicago</a>
+				<a id="demo1" class="btn btn-default" value="IND">Indianapolis, IN</a>
 				<!-- </p> -->
 			</th>
 			<th>
 				<!-- <p> -->
-				<a id="demo2" class="btn btn-default" value="london">London</a>
+				<a id="demo2" class="btn btn-default" value="LEX">Lexington, KY</a>
 				<!-- </p> -->
 			</th>
 			<th>
 				<!-- <p> -->
-				<a id="demo3" class="btn btn-default">Tokyo</a>
+				<a id="demo3" class="btn btn-default" value="LAX">Los Angeles, CA</a>
+				<!-- </p> -->
+			</th>
+			
+			<th>
+				<!-- <p> -->
+				<a id="demo4" class="btn btn-default" value="LAF">West Lafayette, IN</a>
 				<!-- </p> -->
 			</th>
 			<th>
 				<!-- <p> -->
-				<a id="demo4" class="btn btn-default">Paris</a>
+				<a id="demo5" class="btn btn-default" value="MEX">Mexico City</a>
 				<!-- </p> -->
 			</th>
 			<th>
 				<!-- <p> -->
-				<a id="demo5" class="btn btn-default">Rome</a>
+				<a id="demo6" class="btn btn-default" value="NRT">Tokyo</a>
 				<!-- </p> -->
 			</th>
 			<th>
 				<!-- <p> -->
-				<a id="demo6" class="btn btn-default">Dubai</a>
-				<!-- </p> -->
-			</th>
-			<th>
-				<!-- <p> -->
-				<a id="demo7" class="btn btn-default">Cape Town</a>
-				<!-- </p> -->
-			</th>
-			<th>
-				<!-- <p> -->
-				<a id="demo8" class="btn btn-default">Los Angeles</a>
-				<!-- </p> -->
-			</th>
-			<th>
-				<!-- <p> -->
-				<a id="demo9" class="btn btn-default">West Lafayette</a>
+				<a id="demo7" class="btn btn-default" value="LHR">London</a>
 				<!-- </p> -->
 			</th>
 		</tr>
@@ -237,40 +155,163 @@
 			</form>
 			</tr> -->
 	</table>
+	</div>
 	
-		<div id="map"></div>
+		<div id="map" style="height:700px"></div>
 	
 	<script>
 	
 	document.getElementById("demo0").onclick = function(){
 		initMap();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "block";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+		t6.style.display = "none";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo1").onclick = function(){
 		initMap1();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "block";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+		t6.style.display = "none";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo2").onclick = function(){
 		initMap2();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "block";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+		t6.style.display = "none";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo3").onclick = function(){
 		initMap3();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "block";
+		t4.style.display = "none";
+		t5.style.display = "none";
+		t6.style.display = "none";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo4").onclick = function(){
 		initMap4();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "block";
+		t5.style.display = "none";
+		t6.style.display = "none";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo5").onclick = function(){
 		initMap5();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "block";
+		t6.style.display = "none";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo6").onclick = function(){
 		initMap6();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+		t6.style.display = "block";
+		t7.style.display = "none";
 	}
 	document.getElementById("demo7").onclick = function(){
 		initMap7();
-	}
-	document.getElementById("demo8").onclick = function(){
-		initMap8();
-	}
-	document.getElementById("demo9").onclick = function(){
-		initMap9();
+		var t0 = document.getElementById("tabled0");
+		var t1 = document.getElementById("tabled1");
+		var t2 = document.getElementById("tabled2");
+		var t3 = document.getElementById("tabled3");
+		var t4 = document.getElementById("tabled4");
+		var t5 = document.getElementById("tabled5");
+		var t6 = document.getElementById("tabled6");
+		var t7 = document.getElementById("tabled7");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+		t6.style.display = "none";
+		t7.style.display = "block";
 	}
 	
 	var customLabel = {
@@ -287,10 +328,10 @@
   infoWindow.open(map, marker);
 });
 
-//Sydney
+//Charlotte
 function initMap() {
 		var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(-33.863276, 151.207977),
+          center: new google.maps.LatLng(35.2271, -80.8431),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -330,10 +371,10 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump.php', function(data) {
           });
         }
 	
-// Chicago Initialize and add the map
+//Indianapolis
 function initMap1() {
 		var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(41.869361, -87.660712),
+          center: new google.maps.LatLng(39.7684, -86.1581),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -372,10 +413,11 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump1.php', function(data) 
             });
           });
         }
-//London		
+
+//Lexington		
 function initMap2() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(51.507489, -0.127957),
+          center: new google.maps.LatLng(38.0406, -84.5037),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -414,10 +456,11 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump2.php', function(data) 
             });
           });
         }
-//Tokyo	
+
+//Los Angeles
 function initMap3() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(35.680553, 139.769253),
+          center: new google.maps.LatLng(34.0522, -118.2437),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -456,10 +499,11 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump3.php', function(data) 
             });
           });
         }
-//Paris
+
+//West Lafayette
 function initMap4() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(48.8566, 2.3522),
+          center: new google.maps.LatLng(40.4259, -86.9081),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -498,10 +542,11 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump4.php', function(data) 
             });
           });
         }
-//Rome
+
+//Mexico City
 function initMap5() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(41.9028, 12.4964),
+          center: new google.maps.LatLng(19.4326, -99.1332),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -540,10 +585,11 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump5.php', function(data) 
             });
           });
         }
-//Dubai
+
+//Tokyo
 function initMap6() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(25.2048, 55.2708),
+          center: new google.maps.LatLng(35.6762, 139.6503),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
@@ -582,99 +628,16 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump6.php', function(data) 
             });
           });
         }
-//Cape Town
+
+//London
 function initMap7() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(-33.9249, 18.4241),
+          center: new google.maps.LatLng(51.5074, -0.1278),
           zoom: 11
         });
         var infoWindow = new google.maps.InfoWindow;
 
 downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump7.php', function(data) {
-            var xml = data.responseXML;
-            var markers = xml.documentElement.getElementsByTagName('marker');
-            Array.prototype.forEach.call(markers, function(markerElem) {
-              var id = markerElem.getAttribute('id');
-              var name = markerElem.getAttribute('name');
-              var address = markerElem.getAttribute('address');
-              var type = markerElem.getAttribute('type');
-              var point = new google.maps.LatLng(
-                  parseFloat(markerElem.getAttribute('lat')),
-                  parseFloat(markerElem.getAttribute('lng')));
-
-              var infowincontent = document.createElement('div');
-              var strong = document.createElement('text');
-              strong.textContent = "Sensor ID: " + id
-              infowincontent.appendChild(strong);
-              infowincontent.appendChild(document.createElement('br'));
-
-              var text = document.createElement('text');
-              text.textContent = "Sensor Type: " + type
-              infowincontent.appendChild(text);
-              var icon = customLabel[type] || {};
-              var marker = new google.maps.Marker({
-                map: map,
-                position: point,
-                label: icon.label
-              });
-              marker.addListener('click', function() {
-                infoWindow.setContent(infowincontent);
-                infoWindow.open(map, marker);
-              });
-            });
-          });
-        }
-//Los Angeles
-function initMap8() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(34.0522, -118.2437),
-          zoom: 11
-        });
-        var infoWindow = new google.maps.InfoWindow;
-
-downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump8.php', function(data) {
-            var xml = data.responseXML;
-            var markers = xml.documentElement.getElementsByTagName('marker');
-            Array.prototype.forEach.call(markers, function(markerElem) {
-              var id = markerElem.getAttribute('id');
-              var name = markerElem.getAttribute('name');
-              var address = markerElem.getAttribute('address');
-              var type = markerElem.getAttribute('type');
-              var point = new google.maps.LatLng(
-                  parseFloat(markerElem.getAttribute('lat')),
-                  parseFloat(markerElem.getAttribute('lng')));
-
-              var infowincontent = document.createElement('div');
-              var strong = document.createElement('text');
-              strong.textContent = "Sensor ID: " + id
-              infowincontent.appendChild(strong);
-              infowincontent.appendChild(document.createElement('br'));
-
-              var text = document.createElement('text');
-              text.textContent = "Sensor Type: " + type
-              infowincontent.appendChild(text);
-              var icon = customLabel[type] || {};
-              var marker = new google.maps.Marker({
-                map: map,
-                position: point,
-                label: icon.label
-              });
-              marker.addListener('click', function() {
-                infoWindow.setContent(infowincontent);
-                infoWindow.open(map, marker);
-              });
-            });
-          });
-        }
-//West Lafayette
-function initMap9() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(40.4259, -86.9081),
-          zoom: 11
-        });
-        var infoWindow = new google.maps.InfoWindow;
-
-downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdump9.php', function(data) {
             var xml = data.responseXML;
             var markers = xml.documentElement.getElementsByTagName('marker');
             Array.prototype.forEach.call(markers, function(markerElem) {
@@ -742,25 +705,13 @@ function doNothing() {}
                 <h1 class="page-header">Historical Data
                     <small>Visualize Quality</small>
                 </h1>
-                <p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>
+                <p> Our sensors, as seen on the map above, cover the expanse of the area that is designated to them. They work to ensure that no section of the city will be left undiscovered. Our clients can view their sensors individually on the table shown below.</p>
             </div>
         </div>
-        <!-- /.row -->
-		<div id="analydiv" class="row">
-			<table id="analytable" border='1'>
-				<tr id="analytr">
-					<th id="analyth">analytics...</th>
-				</tr>
-				<!-- ANALYTICS FROM SQL THRU PHP/AJAX SHOULD DISPLAY HERE -->
-			</table>	
-		</div>
+        
 		<div>
-		
-		<form action="ClientNames.php">
-			<input type="submit" value="List Clients" />
-		</form><br>
 
-		<?php /*
+		<?php 
 			$servername = "mydb.itap.purdue.edu";
 			$username = "g1109699";
 			$password = "MySQL27";
@@ -774,38 +725,121 @@ function doNothing() {}
 				die("Connection failed: " . $conn->connect_error);
 			}
 			
-			$sql = "SELECT S_ID, N_ID, type, lon, lat FROM Sensor";
-
+		//	CLT:0
+			$sql = "SELECT S_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+								 ROUND(AVG(pm025),4) AS 'PM_2.5',
+								 ROUND(AVG(pm100),4) AS 'PM_10'
+								 FROM Air_Quality WHERE S_ID='3' GROUP BY S_ID";
 			$result = mysqli_query($conn, $sql);
-
-			echo "<table border='1'>
+			echo "<table border='1' id='tabled0' align='center' style='display:block;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
+			
+		//	IND:1
+			$sql = "SELECT Air_Quality.S_ID, Sensor.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality INNER JOIN Sensor ON Air_Quality.S_ID = Sensor.S_ID";
+			$result = mysqli_query($conn, $sql);
+			echo "<table border='1' id='tabled1' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
 			<tr>
 			<th>Sensor ID</th>
 			<th>Network ID</th>
-			<th>Sensor Type</th>
-			<th>Longitude</th>
-			<th>Latitude</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
 			</tr>";
-
 			while($row = mysqli_fetch_array($result))
 			{
 			echo "<tr>";
 			echo "<td>" . $row['S_ID'] . "</td>";
 			echo "<td>" . $row['N_ID'] . "</td>";
-			echo "<td>" . $row['type'] . "</td>";
-			echo "<td>" . $row['lon'] . "</td>";
-			echo "<td>" . $row['lat'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
 			echo "</tr>";
 			}
-			echo "</table>" . "<br>";			
+			echo "</table>";
+			
+			echo "<table border='1' id='tabled2' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			echo "<table border='1' id='tabled3' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			echo "<table border='1' id='tabled4' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			echo "<table border='1' id='tabled5' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			echo "<table border='1' id='tabled6' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			echo "<table border='1' id='tabled7' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
 			
 			$conn->close();
-			*/
+			
 		?>
 
 
 		</div>
-
+		
+    <!-- button 
+		<button id="btn2" onclick="hideTable()" align='center'>New Network</button><br></br>
+	-->
+	<br>
     </div>
     <!-- /.container -->
 	
@@ -818,10 +852,10 @@ function doNothing() {}
         	</div>
         </div>
 	</footer>
-
 	
-    <!-- jQuery -->
+    <!-- jQuery 
     <script src="js/jquery-1.11.3.min.js"></script>
+	-->
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>

@@ -45,10 +45,11 @@ h1, h2, h3, h4, h5, h6 {
 
 #mapTable{
 	color: black;
-	width: 95%;
-	border: 2px solid black;
+	width: 100%;
+	border: 0px solid black;
 	margin-left: 20px;
 	margin-right: 20px;
+	height: 55px;
 }
 
 #mapTable2{
@@ -60,7 +61,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #mapTable th {
-	padding: 5px;
 	background-color: #D5D8DB;
 	text-align: center;
 	vertical-align: middle;
@@ -77,6 +77,36 @@ h1, h2, h3, h4, h5, h6 {
 	color:black;
 }
 
+#myDIV{
+	background-color: #AADAFF;
+}
+#myDIV2{
+	background-color: #AADAFF;
+}
+#table0{
+	background-color: #D5D8DB;
+}
+#table1{
+	background-color: #D5D8DB;
+}
+#table2{
+	background-color: #D5D8DB;
+}
+#table3{
+	background-color: #D5D8DB;
+}
+#table4{
+	background-color: #D5D8DB;
+}
+#table5{
+	background-color: #D5D8DB;
+}
+#table6{
+	background-color: #D5D8DB;
+}
+#table7{
+	background-color: #D5D8DB;
+}
 .feature {
 	background-color: #D5D8DB;
 	color: gray;

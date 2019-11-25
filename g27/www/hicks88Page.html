@@ -13,12 +13,9 @@
     <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
     <link href="css/custom.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Many users already have downloaded jQuery from Google or Microsoft when visiting another site. As a result, it will be loaded from cache when they visit your site, which leads to faster loading time. Also, most CDN's will make sure that once a user requests a file from it, it will be served from the server closest to them, which also leads to faster loading time.
+	Google CDN:	-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 
@@ -36,16 +33,14 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
-                	<span class="glyphicon glyphicon-grain"></span> 
-                	Group 27
+                	<span class="glyphicon glyphicon-cloud"></span> 
+                	Cair Inc.
                 </a>
             </div>
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/index">Home</a>
-                    </li>
+                    
                     <li>
                         <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
@@ -68,8 +63,7 @@
 						</ul>
 					</li>
                 </ul>
-
-				
+	
 
             </div>
             <!-- /.navbar-collapse -->
@@ -77,14 +71,48 @@
         <!-- /.container -->
     </nav>
 
-	<div class="jumbotron feature">
-		<div class="container">
-
-		</div>
+	<div class="jumbotron feature" style="background-color:#AADAFF">
+		
+	
+	<table id="mapTable" style="margin-left: 0px;margin-right: 0px;border-bottom-width: 2px">
+		<tr>
+			<th>
+				<!-- <p> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+				<a id="demo0" class="btn btn-default" value="hicks88">William Hicks</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo1" class="btn btn-default" value="IND">Jeff</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo2" class="btn btn-default" value="LEX">3</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo3" class="btn btn-default" value="LAX">4</a>
+				<!-- </p> -->
+			</th>
+			
+			<th>
+				<!-- <p> -->
+				<a id="demo4" class="btn btn-default" value="LAF">5</a>
+				<!-- </p> -->
+			</th>
+			<th>
+				<!-- <p> -->
+				<a id="demo5" class="btn btn-default" value="MEX">6</a>
+				<!-- </p> -->
+			</th>
+		</tr>
+	</table>
 	</div>
 
     <!-- Content -->
-    <div class="container">
+    <div id='hicks88' class="container">
 
         <!-- Heading -->
         <div class="row">
@@ -112,7 +140,7 @@
 						</th>
 						<th id="th1">
 							<p align="justify" id="p1">William is a multi-faceted individual with strong communication skills and diverse leadership experience. He is a Senior studying Industrial Engineering at Purdue University with varied technical computing history. He looks forward to leveraging his skillsets into developing solutions for clients of <i>Cair</i>.</p>
-							<br><a href="https://www.linkedin.com/in/william-hicks-6a35ba133/" class="btn btn-default">LinkedIn</a>
+							
 						</th>
 					</tr>
 					<tr id="tr1">
@@ -132,6 +160,14 @@
 						</th>
 						<th id="th1" style="font-weight: 100;">
 							<a href="mailto:wb.hicks@cairinc.com">wb.hicks@cairinc.com</a>
+						</th>
+					</tr>
+					<tr>
+						<th id="th1" style="vertical-align: top;">
+							<h4>LinkedIn:</h4>
+						</th>
+						<th>
+							<a href="https://www.linkedin.com/in/william-hicks-6a35ba133/" class="btn btn-default">LinkedIn Profile</a>
 						</th>
 					</tr>
 				</table>
@@ -162,8 +198,99 @@
 	</footer>
 
 	
-    <!-- jQuery -->
-    <script src="js/jquery-1.11.3.min.js"></script>
+    <script>
+	
+	document.getElementById("demo0").onclick = function(){
+		initMap();
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "block";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo1").onclick = function(){
+		initMap1();
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "block";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo2").onclick = function(){
+		initMap2();
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "block";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo3").onclick = function(){
+		initMap3();
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "block";
+		t4.style.display = "none";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo4").onclick = function(){
+		initMap4();
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "block";
+		t5.style.display = "none";
+	}
+	document.getElementById("demo5").onclick = function(){
+		initMap5();
+		var t0 = document.getElementById("hicks88");
+		var t1 = document.getElementById("jfinucane");
+		var t2 = document.getElementById("lroach");
+		var t3 = document.getElementById("tboggs");
+		var t4 = document.getElementById("jvaldez");
+		var t5 = document.getElementById("gharold");
+		t0.style.display = "none";
+		t1.style.display = "none";
+		t2.style.display = "none";
+		t3.style.display = "none";
+		t4.style.display = "none";
+		t5.style.display = "block";
+	}
+</script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>

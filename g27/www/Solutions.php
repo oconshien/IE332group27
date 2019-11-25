@@ -42,18 +42,15 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.php">
-                	<span class="glyphicon glyphicon-grain"></span> 
-                	Group 27
+                	<span class="glyphicon glyphicon-cloud"></span> 
+                	Cair Inc.
                 </a>
             </div>
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/index.php">Home</a>
-                    </li>
-                    <li class="active">
-                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
+                    <li  class="active">
+                        <a href="https://web.ics.purdue.edu/~g1109699/Solutions.php">Solutions</a>
                     </li>
                     <li>
                         <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
@@ -61,19 +58,14 @@
 					<li>
                         <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData">Historical Data</a>
                     </li>
-					
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
-						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/tboggsPage">Truman Boggs</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jvaldezPage">Jorge Valdez</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
-						</ul>
+					<li>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/MeetTheTeam">Meet The Team</a>
 					</li>
                 </ul>
+
+				
+
+            </div>
 
 				
 
@@ -102,8 +94,6 @@
             </div>
         </div>
         <!-- /.row -->
-		
-	<button id="btn1" onclick="hideNetReq()">Already have an Account</button><br></br>	
 	
 	<div>
 		<div id="myDIV2" class="jumbotron feature" style="color:black;">
@@ -127,6 +117,14 @@
 						<input type="text" size="32" name="LastName" class="input" placeholder="Last Name">
 					</th>
 				<tr>	
+				</tr>
+				<tr>	
+					<th>
+						<strong>Email: </strong>
+					</th>
+					<th>
+						<input type="email" size="32" name="cEmail" class="input" placeholder="Email">
+					</th>
 				</tr>
 				<tr>	
 					<th>
@@ -419,29 +417,9 @@
 						</select>
 					</th>
 				</tr>
-				</table>
 				
-				
-					
-				<p style="color:black;font-size:150%;text-align:center;"><u>Account Information</u></p>
-					
-				<table style="color:black;" align=center>
-				<tr>	
-					<th>
-						<strong>Email: </strong>
-					</th>
-					<th>
-						<input type="email" size="32" name="cEmail" class="input" placeholder="Email">
-					</th>
-				<tr>	
-					<th>
-						<strong>Password: </strong>
-					</th>
-					<th>
-						<input type="password" size="32" name="cPassword" class="input" placeholder="Password">
-					</th>
 			</table>	<br><br>
-						<input type="submit" style="color:black;" value="Create Account"></p>
+						<input type="submit" style="color:black;" value="Create Account"></p>	
 			</form>
 		</div>
         <!-- Feature Row -->
@@ -453,10 +431,10 @@
 			<table style="color:black;" align=center>
 				<tr>
 					<th>
-						<strong>Email: </strong>
+						<strong>Email: <br><font size="1" color="gray">(The email you used <br> to make your account)</font></strong>
 					</th>
 					<th>
-						<input type="text" size="32" name="email" class="input">
+						<input type="email" size="32" name="email" class="input">
 					</th>
 				</tr>			
 				<tr>
@@ -481,7 +459,7 @@
 						<strong>Simulation Start Date: </strong>
 					</th>
 					<th>
-						<input style="color:gray;" type="datetime-local" size="32" name="date" class="input">
+						<input style="color:gray;" type="date" size="32" name="date" class="input">
 					</th>
 				</tr>
 				<tr>	
@@ -514,40 +492,9 @@
 						<input type="submit" style="color:black;" value="Submit"></p>
 			</form>
 		</div>
-		<div class="jumbotron feature" style="color:black;display:none">
-			<p style="color:black;font-size:150%;text-align:center;"><u>rnorm(n, mean = 0, sd = 1)</u></p>
-		
-			<form style="text-align:center;color:black;" name="testR" action="testR.php" method="GET">
-			<!-- onsubmit="return checkReq(this);"> -->
-			<table style="color:black;" align=center>
-				<tr>
-					<th>
-						<strong>n: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="n" class="input">
-					</th>
-				</tr>			
-				<tr>
-					<th>
-						<strong>mean: </strong><br>(default=0)
-					</th>
-					<th>
-						<input type="text" size="32" name="mean" class="input">
-					</th>
-				</tr>
-				<tr>
-					<th>
-						<strong>sd: </strong><br>(default=1)
-					</th>
-					<th>
-						<input type="text" size="32" name="sd" class="input">
-					</th>				
-				</table>	<br><br>
-						<input type="submit" style="color:black;" value="run R"></p>
-			</form>
-		</div>
 	</div>
+	
+	<button id="btn1" onclick="hideNetReq()">Already have an Account</button><br></br>	
 		
         <!-- /.row -->
 
@@ -651,7 +598,7 @@
 		var date = document.forms["netReq"]["date"]
 		var numDays = document.forms["netReq"]["numDays"]
 		var AirPref = document.forms["netReq"]["AirPref"]
-		var cityType = document.forms["netReq"]["cityType"]
+		var city = document.forms["netReq"]["city"]
 
 		if(isNaN(form.budget.value)) {
 			alert("Please input a valid budget.");
@@ -659,39 +606,27 @@
 			return false;
 		}
 		
-		if(!isNaN(form.LastName.value)) {
-			alert("Please input a valid last name.");
-			form.LastName.focus();
+		if(!(form.geoRadius.value % 20 === 0 && form.geoRadius.value >= 500 && form.geoRadius.value <= 15000)) {
+			alert("Please input a valid radius for your network. It must be between 500 and 15000 meters, inclusive, and divisable by 20.");
+			form.geoRadius.focus();
 			return false;
 		}
 		
-		if(!isNaN(form.CompanyName.value)) {
-			alert("Please input a valid Company name.");
-			form.CompanyName.focus();
+		if(!isNaN(form.date.value)) {
+			alert("Please input a valid date.");
+			form.date.focus();
 			return false;
 		}
 		
-		if(!isNaN(form.cAddress.value)) {
-			alert("Please input a valid address.");
-			form.cAddress.focus();
+		if(isNaN(form.numDays.value)) {
+			alert("Please input a valid amount of days to run the simulation.");
+			form.numDays.focus();
 			return false;
 		}
 		
-		if(!isNaN(form.cCity.value)) {
-			alert("Please input a valid city.");
-			form.cCity.focus();
-			return false;
-		}
-		
-		if(isNaN(form.cPostalCode.value)) {
-			alert("Please input a valid postal code");
-			form.cPostalCode.focus();
-			return false;
-		}
-		
-		if(!isNaN(form.cCountry.value)) {
-			alert("Please input a valid country name.");
-			form.cCountry.focus();
+		if(!isNaN(form.city.value)) {
+			alert("Please input a valid city to base the sensor network in.");
+			form.city.focus();
 			return false;
 		}
 		

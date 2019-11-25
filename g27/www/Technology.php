@@ -35,41 +35,29 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index.php">
-                	<span class="glyphicon glyphicon-grain"></span> 
-                	Group 27
+                <a class="navbar-brand" href="https://web.ics.purdue.edu/~g1109699/index">
+                	<span class="glyphicon glyphicon-cloud"></span> 
+                	Cair Inc.
                 </a>
             </div>
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="https://web.ics.purdue.edu/~g1109699/index.php">Home</a>
-                    </li>
+                    
                     <li>
                         <a href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
                     </li>
 					<li>
                         <a href="https://web.ics.purdue.edu/~g1109699/HistoricalData">Historical Data</a>
                     </li>
-					
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Meet the Team <span class="caret"></span></a>
-						<ul class="dropdown-menu" aria-labelledby="about-us">
-							<li><a href="https://web.ics.purdue.edu/~g1109699/hicks88Page">Will Hicks</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jfinucanePage">Jeff Finucane</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/lroachPage">Laura Roach</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/tboggsPage">Truman Boggs</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/jvaldezPage">Jorge Valdez</a></li>
-							<li><a href="https://web.ics.purdue.edu/~g1109699/gharoldPage">Giovanni Harold</a></li>
-						</ul>
+					<li>
+                        <a id="a2" href="https://web.ics.purdue.edu/~g1109699/MeetTheTeam">Meet The Team</a>
 					</li>
                 </ul>
-
-				
+	
 
             </div>
             <!-- /.navbar-collapse -->
