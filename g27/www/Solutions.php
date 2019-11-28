@@ -90,7 +90,7 @@
                 <h1 class="page-header">Client Info
                     <small>Let us help you find the perfect solution</small>
                 </h1>
-                <p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>
+                <p>Explore the options and packages that we have to offer at Cair Inc. Each one of our solutions is tailored to our clients needs and wants. Feel free to explore multiple quotes to see our levels of service.</p>
             </div>
         </div>
         <!-- /.row -->
