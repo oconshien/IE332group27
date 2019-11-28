@@ -351,7 +351,7 @@ calc_obj <- function(centers, city_grid, r = 50, geo_radius = 15000){
       region_factor <- region_factor + 1 / length(centers[, 1])
     #Mobile sensors better towards the center.
     if(centers[i, 3] == 1){
-      mobile_factor <- mobile_factor + (-sqrt(centers[i, 1] ^ 2 + centers[i, 2] ^ 2) + geo_radius) * 1 / (geo_radius * length(centers[, 3]))
+      mobile_factor <- mobile_factor + (-sqrt(centers[i, 1] ^ 2 + centers[i, 2] ^ 2) + geo_radius) * 1 / (geo_radius * length(which(centers[, 3]==1)))
     }
   }
   
