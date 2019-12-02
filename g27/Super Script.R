@@ -59,7 +59,7 @@ start <- function(email, quote_num, city){
   
   #Length of simulation from the quote.
   time_from_SQL <- inputs[1, "numDays"]
-  time_from_SQL <- 1/24
+  time_from_SQL <- 3/24
   
   #Air quality focus from the quote (with mapping).
   air_pref <- inputs[1, "airPref"]
@@ -139,7 +139,9 @@ send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
   
-  air_data <- data.frame("time"=date_from_SQL, sensor_IDs, classed_data[, 1:3])
+  print(date_from_SQL)
+  
+  air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
   if (loop == 1){
     dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
   }else{
