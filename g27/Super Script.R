@@ -20,6 +20,8 @@ require(RMySQL)
 
 ##--START CODE--##
 
+
+
 start <- function(email, quote_num, city){
   #email: string, email from the inputted quote.
   #quote_num: int, the nth quote from the associated email (e.g. second quote for user = 2).
@@ -101,7 +103,7 @@ start <- function(email, quote_num, city){
       pm_data <- rbind(pm_data, new_pm_data)
       i <- i + 1
     }
-######REMOVE?#####test_data <- location_sen
+    
     #Movement of the mobile sensors.
     classed_data <- data_label(pm_data, classifier[input_month])
     new_dests <- priority_destinations(location_sen, classed_data, air_pref)
@@ -111,11 +113,16 @@ start <- function(email, quote_num, city){
     storm_time <- sample(c(0, 1), 1, prob = c(0.99, 0.01))
     hour_cnt <- hour_cnt + 1
   }
+  return(c(location_sen, classed_data))
+}
+  
+  #Input to start code
+  results <- start(email, quote_num, city)
   
   ##--SEND INFO TO DATABASE--##
 
   #Sensor Formatting
-  location_sen <- as.data.frame(location_sen)
+  location_sen <- as.data.frame(results[1])
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
   location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "fixed", "mobile")
@@ -127,10 +134,11 @@ start <- function(email, quote_num, city){
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
 
+  classed_data <- results[2]
   air_data <- data.frame("time"=date_from_SQL, sensor_IDs, classed_data[, 1:3])
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
-  return("Done :)")
-}
+  
+  
 ##--CITY FORMATTER--##
 
 #Reformat City
