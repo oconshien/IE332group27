@@ -118,13 +118,13 @@ start <- function(email, quote_num, city){
     storm_time <- sample(c(0, 1), 1, prob = c(0.99, 0.01))
     hour_cnt <- hour_cnt + 1
   }
-  return(c(location_sen, classed_data))
+  return(cbind(location_sen, classed_data))
 }
   
 ##--SEND INFO TO DATABASE--##
 
   #Sensor Formatting
-  location_sen <- as.data.frame(results[1])
+  location_sen <- as.data.frame(results[, 1:4])
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
   location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "fixed", "mobile")
@@ -136,7 +136,7 @@ start <- function(email, quote_num, city){
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
 
-  classed_data <- results[2]
+  classed_data <- results[,5:8]
   air_data <- data.frame("time"=date_from_SQL, sensor_IDs, classed_data[, 1:3])
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
   
