@@ -33,7 +33,7 @@ $sql = "INSERT INTO Quote (email, budget, geoRadius, date, numDays, airPref, cit
 VALUES ('$email','$budget','$geoRadius','$date','$numDays','$airPref','$lat', '$lng')";
 
 if($conn->query($sql) === TRUE){
-	header("Location: https://web.ics.purdue.edu/~g1109699/Solutions.html");
+	header("Location: https://web.ics.purdue.edu/~g1109699/Solutions");
 	exit;
 }
 else{
