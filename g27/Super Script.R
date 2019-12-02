@@ -59,7 +59,7 @@ start <- function(email, quote_num, city){
   
   #Length of simulation from the quote.
   time_from_SQL <- inputs[1, "numDays"]
-  time_from_SQL <- 3/24
+  time_from_SQL <- 8/24
   
   #Air quality focus from the quote (with mapping).
   air_pref <- inputs[1, "airPref"]
@@ -112,7 +112,7 @@ start <- function(email, quote_num, city){
     
     #Movement of the mobile sensors.
     classed_data <- data_label(pm_data, classifier[input_month])
-    send_to_DB(location_sen, classed_data, hour_cnt, city_lat, city_long, my_DB, Q_ID, date_from_SQL)
+    send_to_DB(location_sen, classed_data, hour_cnt, 24 * time_from_SQL, city_lat, city_long, my_DB, Q_ID, date_from_SQL)
     new_dests <- priority_destinations(location_sen, classed_data, air_pref)
     updated_locations <- nearest_sensor_finder(new_dests, location_sen, air_pref, classed_data, geo_radius)
     location_sen <- updated_locations
@@ -126,7 +126,7 @@ start <- function(email, quote_num, city){
 ##--SEND INFO TO DATABASE--##
 
 #Sensor Formatting
-send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my_DB, Q_ID, date_from_SQL){
+send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, city_long, my_DB, Q_ID, date_from_SQL){
   location_sen <- as.data.frame(location_sen)
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
@@ -136,8 +136,8 @@ send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my
   #Send to Database
   if(loop == 1){
     dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
-  }else{
-    dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = FALSE, overwrite=TRUE, header = TRUE,row.names = FALSE)
+  #}else{
+   # dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = FALSE, overwrite=TRUE, header = TRUE,row.names = FALSE)
   }
   sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =", Q_ID, ";")
   sensor_query <- dbSendQuery(my_DB, sensor_call)
@@ -145,6 +145,14 @@ send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my
   
   print(date_from_SQL)
   
+  if(loop == last_run){
+    for(i in 1:length(sensor_IDs[,1])){
+      last_call <- paste0("UPDATE Sensor SET lat =", location_sen[i, 1], ",", "lon =", location_sen[i, 2], "WHERE S_ID=", sensor_IDs[i, 1], ";")
+      last_query <- dbSendQuery(my_DB, sensor_call)
+      dbFetch(last_query)
+      dbClearResult(dbListResults(my_DB)[[1]])
+    }
+  }
   air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
 }
