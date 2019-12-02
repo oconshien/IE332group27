@@ -24,7 +24,7 @@ VALUES ('$FirstName','$LastName','$CompanyName','$cEmail','$cAddress','$cCity','
 
 
 if($conn->query($sql) === TRUE){
-	header("Location: https://web.ics.purdue.edu/~g1109699/Solutions.html");
+	header("Location: https://web.ics.purdue.edu/~g1109699/Solutions");
 	exit;
 }
 else{

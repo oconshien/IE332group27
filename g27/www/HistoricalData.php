@@ -16,7 +16,6 @@
 	<!-- Many users already have downloaded jQuery from Google or Microsoft when visiting another site. As a result, it will be loaded from cache when they visit your site, which leads to faster loading time. Also, most CDN's will make sure that once a user requests a file from it, it will be served from the server closest to them, which also leads to faster loading time.
 	Google CDN:	-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<!-- AJAX -->
 	
 	<style>
       /* Always set the map height explicitly to define the size of the div
@@ -42,7 +41,7 @@
 		color: black;
 		padding: 5px;
 	}
-	tr:nth-child(even) {background-color: #d2d2d2;}
+	tr:nth-child(even) {background-color: #dbdbdb;}
 	/* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
@@ -110,7 +109,7 @@
 	<div class="jumbotron feature" style="background-color:#AADAFF">
 		
 	
-	<table id="mapTable" style="margin-left: 0px;margin-right: 0px;border-bottom-width: 2px">
+	<table id="mapTable" style="margin-left: 0px;margin-right: 0px;border-bottom-width: 2px;">
 		<tr>
 			<th>
 				<!-- <p> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -198,7 +197,7 @@
 					
 			$result = mysqli_query($conn, $sql);
 			
-			echo "<table border='1' id='tabled0' align='center' style='display:block;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			echo "<table border='1' id='tabled0' align='center' style='display:block;width:447.725px;text-align:center;'>
 			<tr>
 			<th>Sensor ID</th>
 			<th>Network ID</th>
@@ -228,7 +227,7 @@
 					
 			$result = mysqli_query($conn, $sql);
 			
-			echo "<table border='1' id='tabled1' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
+			echo "<table border='1' id='tabled1' align='center' style='display:none;width:447.725px;text-align:center;'>
 			<tr>
 			<th>Sensor ID</th>
 			<th>Network ID</th>
@@ -248,6 +247,30 @@
 			echo "</tr>";
 			}
 			echo "</table>";
+			
+		//	LEX:2	default hidden (style='display:NONE...)
+			
+			// echo "<table border='1' id='tabled2' align='center' style='display:none;width:447.725px;text-align:center;'>
+			
+		//	LAX:3	default hidden (style='display:NONE...)
+			
+			// echo "<table border='1' id='tabled3' align='center' style='display:none;width:447.725px;text-align:center;'>
+			
+		//	LAF:4	default hidden (style='display:NONE...)
+
+			// echo "<table border='1' id='tabled4' align='center' style='display:none;width:447.725px;text-align:center;'>
+			
+		//	MEX:5	default hidden (style='display:NONE...)
+
+			// echo "<table border='1' id='tabled5' align='center' style='display:none;width:447.725px;text-align:center;'>
+			
+		//	NRT:6	default hidden (style='display:NONE...)
+			
+			// echo "<table border='1' id='tabled6' align='center' style='display:none;width:447.725px;text-align:center;'>
+			
+		//	LHR:7	default hidden (style='display:NONE...)
+			
+			// echo "<table border='1' id='tabled7' align='center' style='display:none;width:447.725px;text-align:center;'>
 			?>
 		
 		</article>
