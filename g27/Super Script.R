@@ -21,9 +21,9 @@ require(berryFunctions)
 
 ###--HOW TO RUN CODE--###
 #1) Run 'Super Script.R' in the console
-#2) Assign the 'start' function to 'results' (i.e. results <- start())
+#2) Set working directory to ?????
+#3) Run the 'start' function
     #'start' function inputs described inside function below
-#3) Run SQL statements found on lines 124-141 to send information to database
 
 ##--START CODE--##
 
@@ -112,7 +112,7 @@ start <- function(email, quote_num, city){
     
     #Movement of the mobile sensors.
     classed_data <- data_label(pm_data, classifier[input_month])
-    send_to_DB(location_sen, classed_data, hour_cnt)
+    send_to_DB(location_sen, classed_data, hour_cnt, city_lat, city_long, my_DB, Q_ID, date_from_SQL)
     new_dests <- priority_destinations(location_sen, classed_data, air_pref)
     updated_locations <- nearest_sensor_finder(new_dests, location_sen, air_pref, classed_data, geo_radius)
     location_sen <- updated_locations
@@ -126,7 +126,7 @@ start <- function(email, quote_num, city){
 ##--SEND INFO TO DATABASE--##
 
 #Sensor Formatting
-send_to_DB <- function(location_sen, classed_data, loop){
+send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my_DB, Q_ID, date_from_SQL){
   location_sen <- as.data.frame(location_sen)
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
