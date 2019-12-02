@@ -16,11 +16,16 @@ require(caret)  #create data partition
 require(e1071)  #naiveBayes
 require(truncnorm)   
 require(lpSolve)                          
-require(RMySQL)                       
+require(RMySQL) 
+require(berryFunctions)
+
+###--HOW TO RUN CODE--###
+#1) Run 'Super Script.R' in the console
+#2) Assign the 'start' function to 'results' (i.e. results <- start())
+    #'start' function inputs described inside function below
+#3) Run SQL statements found on lines 124-141 to send information to database
 
 ##--START CODE--##
-
-
 
 start <- function(email, quote_num, city){
   #email: string, email from the inputted quote.
@@ -30,7 +35,7 @@ start <- function(email, quote_num, city){
   #Intialize and load in database.
   my_DB <- dbConnect(MySQL(), user='g1109699', password='MySQL27', dbname='g1109699', host='mydb.itap.purdue.edu')
   on.exit(dbDisconnect(my_DB))
-  email_call <- paste0("SELECT Q_ID FROM Quote WHERE email =",email,";")
+  email_call <- paste0("SELECT Q_ID FROM Quote WHERE email =","'",email,"'",";")
   email_query <- dbSendQuery(my_DB, email_call)
   quotes <- dbFetch(email_query)
   Q_ID <- quotes[quote_num, 1]
@@ -116,10 +121,7 @@ start <- function(email, quote_num, city){
   return(c(location_sen, classed_data))
 }
   
-  #Input to start code
-  results <- start(email, quote_num, city)
-  
-  ##--SEND INFO TO DATABASE--##
+##--SEND INFO TO DATABASE--##
 
   #Sensor Formatting
   location_sen <- as.data.frame(results[1])
@@ -129,7 +131,7 @@ start <- function(email, quote_num, city){
   names(location_sen) <- c("lat", "lon", "type")
 
   #Send to Database
-  dbWriteTable(my_DB, "Sensor", data.frame("N_ID"=Q_ID, location_sen[,1:3]), append = TRUE, header = TRUE,row.names = FALSE)
+  dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
   sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =", Q_ID, ";")
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
@@ -476,7 +478,7 @@ next_3_rep <- function(df_test, month){
   while(col <= length(df_test) - 2) {
     df_next_3 <- df_test[col:(col + 2)]
     names(df_next_3) <- c(paste0("pm010", month), paste0("pm025", month), paste0("pm100", month))
-    df.noname <- rbind(df_noname, df_next_3)
+    df_noname <- rbind(df_noname, df_next_3)
     col <- col + 3
   }
   
