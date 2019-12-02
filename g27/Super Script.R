@@ -134,7 +134,11 @@ send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my
   names(location_sen) <- c("lat", "lon", "type")
   
   #Send to Database
+  if(loop == 1){
   dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
+  }else{
+    dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = FALSE, overwrite=TRUE, header = TRUE,row.names = FALSE)
+  }
   sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =", Q_ID, ";")
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
@@ -142,11 +146,6 @@ send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my
   print(date_from_SQL)
   
   air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
-  if (loop == 1){
-    dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
-  }else{
-    dbWriteTable(my_DB, "Air_Quality", air_data, append=F, overwrite= TRUE, header=TRUE,row.names=FALSE)
-  }
 }
   
   
