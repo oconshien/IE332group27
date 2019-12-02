@@ -111,6 +111,7 @@ start <- function(email, quote_num, city){
     
     #Movement of the mobile sensors.
     classed_data <- data_label(pm_data, classifier[input_month])
+    send_to_DB(location_sen, classed_data, hour_cnt)
     new_dests <- priority_destinations(location_sen, classed_data, air_pref)
     updated_locations <- nearest_sensor_finder(new_dests, location_sen, air_pref, classed_data, geo_radius)
     location_sen <- updated_locations
@@ -123,22 +124,27 @@ start <- function(email, quote_num, city){
   
 ##--SEND INFO TO DATABASE--##
 
-  #Sensor Formatting
-  location_sen <- as.data.frame(results[, 1:4])
+#Sensor Formatting
+send_to_DB <- function(location_sen, classed_data, loop){
+  location_sen <- as.data.frame(location_sen)
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
   location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "fixed", "mobile")
   names(location_sen) <- c("lat", "lon", "type")
-
+  
   #Send to Database
   dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
   sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =", Q_ID, ";")
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
-
-  classed_data <- results[,5:8]
+  
   air_data <- data.frame("time"=date_from_SQL, sensor_IDs, classed_data[, 1:3])
-  dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
+  if (loop == 1){
+    dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
+  }else{
+    dbWriteTable(my_DB, "Air_Quality", air_data, append=F, overwrite= TRUE header=TRUE,row.names=FALSE)
+  }
+}
   
   
 ##--CITY FORMATTER--##
