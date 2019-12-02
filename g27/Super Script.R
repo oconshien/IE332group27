@@ -59,6 +59,7 @@ start <- function(email, quote_num, city){
   
   #Length of simulation from the quote.
   time_from_SQL <- inputs[1, "numDays"]
+  time_from_SQL <- 1/24
   
   #Air quality focus from the quote (with mapping).
   air_pref <- inputs[1, "airPref"]
@@ -119,7 +120,7 @@ start <- function(email, quote_num, city){
     storm_time <- sample(c(0, 1), 1, prob = c(0.99, 0.01))
     hour_cnt <- hour_cnt + 1
   }
-  return(cbind(location_sen, classed_data))
+  return("Done :)")
 }
   
 ##--SEND INFO TO DATABASE--##
@@ -142,7 +143,7 @@ send_to_DB <- function(location_sen, classed_data, loop){
   if (loop == 1){
     dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
   }else{
-    dbWriteTable(my_DB, "Air_Quality", air_data, append=F, overwrite= TRUE header=TRUE,row.names=FALSE)
+    dbWriteTable(my_DB, "Air_Quality", air_data, append=F, overwrite= TRUE, header=TRUE,row.names=FALSE)
   }
 }
   
