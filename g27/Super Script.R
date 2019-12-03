@@ -27,7 +27,7 @@ require(berryFunctions)
 
 ##--START CODE--##
 
-start <- function(email, quote_num, city){
+startfun <- function(email, quote_num, city){
   #email: string, email from the inputted quote.
   #quote_num: int, the nth quote from the associated email (e.g. second quote for user = 2).
   #city: string, the city being networked (should match name of the inputted city csv).
@@ -130,7 +130,7 @@ send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, cit
   location_sen <- as.data.frame(location_sen)
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
-  location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "fixed", "mobile")
+  location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "mobile", "fixed")
   names(location_sen) <- c("lat", "lon", "type")
   
   #Send to Database
@@ -145,14 +145,13 @@ send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, cit
   
   print(date_from_SQL)
   
-  if(loop == last_run){
+  #if(loop == last_run){
     for(i in 1:length(sensor_IDs[,1])){
       last_call <- paste0("UPDATE Sensor SET lat =", location_sen[i, 1], ",", "lon =", location_sen[i, 2], "WHERE S_ID=", sensor_IDs[i, 1], ";")
-      last_query <- dbSendQuery(my_DB, sensor_call)
-      dbFetch(last_query)
+      last_query <- dbSendQuery(my_DB, last_call)
       dbClearResult(dbListResults(my_DB)[[1]])
     }
-  }
+  #}
   air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
 }
