@@ -281,6 +281,8 @@ budget_constraint<-function(budget, repair_cost = 0, opt_repair = 0, risk = 0.01
   #alpha:
 
   #Objective function.
+  overflow <- budget %% 500
+  budget <- budget - overflow
   f_obj <- c(7,1)
   
   #Preliminary risk generation.
