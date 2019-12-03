@@ -59,7 +59,6 @@ startfun <- function(email, quote_num, city){
   
   #Length of simulation from the quote.
   time_from_SQL <- inputs[1, "numDays"]
-  time_from_SQL <- 8/24
   
   #Air quality focus from the quote (with mapping).
   air_pref <- inputs[1, "airPref"]
@@ -145,14 +144,12 @@ send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, cit
   
   print(date_from_SQL)
   
-  #if(loop == last_run){
-    for(i in 1:length(sensor_IDs[,1])){
-      last_call <- paste0("UPDATE Sensor SET lat =", location_sen[i, 1], ",", "lon =", location_sen[i, 2], "WHERE S_ID=", sensor_IDs[i, 1], ";")
-      last_query <- dbSendQuery(my_DB, last_call)
-      dbClearResult(dbListResults(my_DB)[[1]])
+  for(i in 1:length(sensor_IDs[,1])){
+    last_call <- paste0("UPDATE Sensor SET lat =", location_sen[i, 1], ",", "lon =", location_sen[i, 2], "WHERE S_ID=", sensor_IDs[i, 1], ";")
+    last_query <- dbSendQuery(my_DB, last_call)
+    dbClearResult(dbListResults(my_DB)[[1]])
     }
-  #}
-  air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
+  air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data)
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
 }
   
@@ -548,6 +545,7 @@ data_label <- function(pm_data, nB){
   #Classifies the inputted pm data.  
   test_data <- predict(nB, newdata = pm_data)
   combined <- cbind(pm_data, test_data)
+  names(combined)[4] <- "classifier"
   
   return(combined)
   #combined: data_frame, the classes of the inputted pm data.
@@ -820,57 +818,3 @@ move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
   #movement: vector(length 3), the updated location of the sensor and indicates that it already is moving for this hour.
 }
 
-data_analytics<-function(bigData, montht){
-  distinct_locations<-distinct(bigData,x,y)
-  results <- NULL
-  i=1
-  while(i <= nrow(distinct_locations)){
-    indexesX<-which(bigData[,5] == distinct_locations[i,1])
-    indexesboth<-which(bigData[indexesX,6] == distinct_locations[i,2])
-    listofboth<-bigData[indexesX[indexesboth],]
-    location<-listofboth[1,5:6]
-    numberofinstances<-c(1:nrow(listofboth))
-    #Data Analytics for the location
-    #Data Analytics for PM010
-    averagePM010<-mean(listofboth[,1])
-    minPM010<-min(listofboth[,1])
-    maxPM010<-max(listofboth[,1])
-    if(length(numberofinstances)>1){
-      lmPM010<-lm(numberofinstances~listofboth[,1])
-      coefPM010<-coefficients(lmPM010)
-      nextPredictedPM010<-as.numeric(coefPM010[1])+as.numeric(coefPM010[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
-      print(nextPredictedPM010)
-    }
-    #Data Analytics for PM025
-    averagePM025<-mean(listofboth[,2])
-    minPM025<-min(listofboth[,2])
-    maxPM025<-max(listofboth[,2])
-    if(length(numberofinstances)>1){
-      lmPM025<-lm(numberofinstances~listofboth[,2])
-      coefPM025<-coefficients(lmPM025)
-      nextPredictedPM025<-as.numeric(coefPM025[1])+as.numeric(coefPM025[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
-      print(nextPredictedPM025)
-    }
-    #Data Analytics for PM100
-    averagePM100<-mean(listofboth[,3])
-    minPM100<-min(listofboth[,3])
-    maxPM100<-max(listofboth[,3])
-    if(length(numberofinstances)>1){
-      lmPM100<-lm(numberofinstances~listofboth[,3])
-      coefPM100<-coefficients(lmPM100)
-      nextPredictedPM100<-as.numeric(coefPM100[1])+as.numeric(coefPM100[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
-      print(nextPredictedPM100)
-    }
-    #Compute a Score
-    pmdata<-c("pm010"=averagePM010,"pm025"=averagePM025,"pm100"=averagePM100)
-    #data_label function will need to reference the previous ML Classifier output
-    #classification<-data_label(pmdata,example[montht])
-    #score<-(.50(classification[1,2])+.35(classification[2,2])+.15(classification[3,2]))/3
-    result <- cbind("x" = distinct_locations[i,1],"y" = distinct_locations[i,2], averagePM010, minPM010, maxPM010, averagePM025, minPM025, maxPM025, averagePM100, minPM100, maxPM100)
-    results <- rbind(results, result)
-    i <- i+1
-  }
-  class <- data.frame("pm010"=results[,"averagePM010"], "pm025"=results[,"averagePM025"], "pm100"=results[,"averagePM100"])
-  classification<- data_label(class,example[montht])
-  final <- cbind(results, "quality score"= classification[,4])
-}
