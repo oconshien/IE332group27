@@ -21,8 +21,8 @@ require(berryFunctions) #plotting
 
 ###--HOW TO RUN CODE--###
 #1) Run 'Super Script.R' in the console
-#2) Add city csv to sample cities folder in the ?????? folder (pay attention to name of csv)
-#3) Set working directory to the ?????? folder
+#2) Add city csv to sample cities folder in the g27 folder (pay attention to name of csv)
+#3) Set working directory to the g27 folder
 #4) Run the 'start_fun' function in console
     #'start_fun' function inputs described inside function below
 
