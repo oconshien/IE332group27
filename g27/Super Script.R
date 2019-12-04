@@ -166,7 +166,7 @@ send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, cit
     last_query <- dbSendQuery(my_DB, last_call)
     dbClearResult(dbListResults(my_DB)[[1]])
     }
-  air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data)
+  air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
   
   #No return.
