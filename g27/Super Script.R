@@ -1,33 +1,35 @@
 ##--LOAD PACKAGES--##
 require(dplyr) #data wrangling
 require(lubridate) #date/time
-require(knitr) #quite fond of the kable function for making tables(TEST)
-require(ggplot2) #plotting(TEST)
-require(ggthemes) #plotting(TEST)
-require(gridExtra) #extra space for plots(TEST)
+require(knitr) #table formation
+require(ggplot2) #plotting
+require(ggthemes) #plotting
+require(gridExtra) #extra space for plots
 require(data.table) #data manipulation
-require(RColorBrewer) #plotting(TEST)
-require(stringr) #more data wrangling (TEST)
-require(ggridges) #plotting density ridges (TEST)
-require(readr)  #input/output(TEST)
-require(tibble) #as_tibble, easy to use
-require(plyr)   ###TEST, same as dplyr???
+require(RColorBrewer) #plotting
+require(stringr) #more data wrangling
+require(ggridges) #plotting density ridges
+require(readr)  #input/output
+require(tibble) #easy to use data frames
+require(plyr)   #data wrangling
 require(caret)  #create data partition
-require(e1071)  #naiveBayes
-require(truncnorm)   
-require(lpSolve)                          
-require(RMySQL) 
-require(berryFunctions)
+require(e1071)  #naive Bayes
+require(truncnorm)  #truncated normal distributions
+require(lpSolve)  #solve linear programs                          
+require(RMySQL) #SQL connection
+require(berryFunctions) #plotting
 
 ###--HOW TO RUN CODE--###
 #1) Run 'Super Script.R' in the console
-#2) Set working directory to ?????
-#3) Run the 'start' function
-    #'start' function inputs described inside function below
+#2) Add city csv to sample cities folder in the g27 folder (pay attention to name of csv)
+#3) Set working directory to the g27 folder
+#4) Run the 'start_fun' function in console
+    #'start_fun' function inputs described inside function below
 
 ##--START CODE--##
 
-start <- function(email, quote_num, city){
+#Run Code
+start_fun <- function(email, quote_num, city){
   #email: string, email from the inputted quote.
   #quote_num: int, the nth quote from the associated email (e.g. second quote for user = 2).
   #city: string, the city being networked (should match name of the inputted city csv).
@@ -59,7 +61,6 @@ start <- function(email, quote_num, city){
   
   #Length of simulation from the quote.
   time_from_SQL <- inputs[1, "numDays"]
-  time_from_SQL <- 3/24
   
   #Air quality focus from the quote (with mapping).
   air_pref <- inputs[1, "airPref"]
@@ -101,6 +102,8 @@ start <- function(email, quote_num, city){
     pm_data <- NULL
     new_pm_data <- NULL
     i <- 1
+    
+    #Lets user know what hour in the simulation is being calculated.
     print(hour_cnt)
     
     #Generates particulate matter data from simulation.
@@ -112,7 +115,7 @@ start <- function(email, quote_num, city){
     
     #Movement of the mobile sensors.
     classed_data <- data_label(pm_data, classifier[input_month])
-    send_to_DB(location_sen, classed_data, hour_cnt, city_lat, city_long, my_DB, Q_ID, date_from_SQL)
+    send_to_DB(location_sen, classed_data, hour_cnt, 24 * time_from_SQL, city_lat, city_long, my_DB, Q_ID, date_from_SQL)
     new_dests <- priority_destinations(location_sen, classed_data, air_pref)
     updated_locations <- nearest_sensor_finder(new_dests, location_sen, air_pref, classed_data, geo_radius)
     location_sen <- updated_locations
@@ -125,28 +128,48 @@ start <- function(email, quote_num, city){
   
 ##--SEND INFO TO DATABASE--##
 
-#Sensor Formatting
-send_to_DB <- function(location_sen, classed_data, loop, city_lat, city_long, my_DB, Q_ID, date_from_SQL){
+#Sensor Formatting for Database
+send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, city_long, my_DB, Q_ID, date_from_SQL){
+  #location_sen: data_frame, the current sensor locations
+  #classed_data: data_frame, the particulate matter data for the sensor locations
+  #loop: int, the current iteration/hour count of the network 
+  #last_run: int, inidicates if this is the last hour to be run for this network
+  #city_lat: real, the corresponding latitude of the city
+  #city_long: real, the corresponding longitude of the city
+  #my_DB: database call, the database connection
+  #Q_ID: int, the unique primary key for the quote being networked
+  #date_from_SQL: date, the current time of the network to be recorded
+  
+  #Sensor data frame formatting.
   location_sen <- as.data.frame(location_sen)
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
-  location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "fixed", "mobile")
+  location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "mobile", "fixed")
   names(location_sen) <- c("lat", "lon", "type")
   
-  #Send to Database
-  dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
+  #Send to database.
+  if(loop == 1){
+    dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
+  #}else{
+   # dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = FALSE, overwrite=TRUE, header = TRUE,row.names = FALSE)
+  }
   sensor_call <- paste0("SELECT S_ID FROM Sensor WHERE N_ID =", Q_ID, ";")
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
   
+  #Lets user know where in the process of the simulation you are.
   print(date_from_SQL)
   
+  #Send updates to sensors in database.
+  for(i in 1:length(sensor_IDs[,1])){
+    last_call <- paste0("UPDATE Sensor SET lat =", location_sen[i, 1], ",", "lon =", location_sen[i, 2], "WHERE S_ID=", sensor_IDs[i, 1], ";")
+    last_query <- dbSendQuery(my_DB, last_call)
+    dbClearResult(dbListResults(my_DB)[[1]])
+    }
   air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data[, 1:3])
-  if (loop == 1){
-    dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
-  }else{
-    dbWriteTable(my_DB, "Air_Quality", air_data, append=F, overwrite= TRUE, header=TRUE,row.names=FALSE)
-  }
+  dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
+  
+  #No return.
 }
   
   
@@ -277,6 +300,8 @@ budget_constraint<-function(budget, repair_cost = 0, opt_repair = 0, risk = 0.01
   #alpha:
 
   #Objective function.
+  overflow <- budget %% 500
+  budget <- budget - overflow
   f_obj <- c(7,1)
   
   #Preliminary risk generation.
@@ -541,6 +566,7 @@ data_label <- function(pm_data, nB){
   #Classifies the inputted pm data.  
   test_data <- predict(nB, newdata = pm_data)
   combined <- cbind(pm_data, test_data)
+  names(combined)[4] <- "classifier"
   
   return(combined)
   #combined: data_frame, the classes of the inputted pm data.
@@ -813,57 +839,3 @@ move_sensor <- function(distance, destination, near_sensor, geo_radius = 15000){
   #movement: vector(length 3), the updated location of the sensor and indicates that it already is moving for this hour.
 }
 
-data_analytics<-function(bigData, montht){
-  distinct_locations<-distinct(bigData,x,y)
-  results <- NULL
-  i=1
-  while(i <= nrow(distinct_locations)){
-    indexesX<-which(bigData[,5] == distinct_locations[i,1])
-    indexesboth<-which(bigData[indexesX,6] == distinct_locations[i,2])
-    listofboth<-bigData[indexesX[indexesboth],]
-    location<-listofboth[1,5:6]
-    numberofinstances<-c(1:nrow(listofboth))
-    #Data Analytics for the location
-    #Data Analytics for PM010
-    averagePM010<-mean(listofboth[,1])
-    minPM010<-min(listofboth[,1])
-    maxPM010<-max(listofboth[,1])
-    if(length(numberofinstances)>1){
-      lmPM010<-lm(numberofinstances~listofboth[,1])
-      coefPM010<-coefficients(lmPM010)
-      nextPredictedPM010<-as.numeric(coefPM010[1])+as.numeric(coefPM010[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
-      print(nextPredictedPM010)
-    }
-    #Data Analytics for PM025
-    averagePM025<-mean(listofboth[,2])
-    minPM025<-min(listofboth[,2])
-    maxPM025<-max(listofboth[,2])
-    if(length(numberofinstances)>1){
-      lmPM025<-lm(numberofinstances~listofboth[,2])
-      coefPM025<-coefficients(lmPM025)
-      nextPredictedPM025<-as.numeric(coefPM025[1])+as.numeric(coefPM025[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
-      print(nextPredictedPM025)
-    }
-    #Data Analytics for PM100
-    averagePM100<-mean(listofboth[,3])
-    minPM100<-min(listofboth[,3])
-    maxPM100<-max(listofboth[,3])
-    if(length(numberofinstances)>1){
-      lmPM100<-lm(numberofinstances~listofboth[,3])
-      coefPM100<-coefficients(lmPM100)
-      nextPredictedPM100<-as.numeric(coefPM100[1])+as.numeric(coefPM100[2])*((length(numberofinstances)+1):(length(numberofinstances)+50))
-      print(nextPredictedPM100)
-    }
-    #Compute a Score
-    pmdata<-c("pm010"=averagePM010,"pm025"=averagePM025,"pm100"=averagePM100)
-    #data_label function will need to reference the previous ML Classifier output
-    #classification<-data_label(pmdata,example[montht])
-    #score<-(.50(classification[1,2])+.35(classification[2,2])+.15(classification[3,2]))/3
-    result <- cbind("x" = distinct_locations[i,1],"y" = distinct_locations[i,2], averagePM010, minPM010, maxPM010, averagePM025, minPM025, maxPM025, averagePM100, minPM100, maxPM100)
-    results <- rbind(results, result)
-    i <- i+1
-  }
-  class <- data.frame("pm010"=results[,"averagePM010"], "pm025"=results[,"averagePM025"], "pm100"=results[,"averagePM100"])
-  classification<- data_label(class,example[montht])
-  final <- cbind(results, "quality score"= classification[,4])
-}
