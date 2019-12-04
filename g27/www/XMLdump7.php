@@ -21,17 +21,16 @@ return $xmlStr;
 // Opens a connection to a MySQL server
 $connection = mysqli_connect($servername, $username, $password, $database);
 if (!$connection) {
-// if ($connection) {
   die('Not connected : ' . mysqli_error());
 }
+
 // Select all the rows in the markers table
-$q1 = "SELECT * FROM Sensor WHERE Sensor.N_ID='8'";
+$q1 = "SELECT * FROM Sensor WHERE Sensor.N_ID='5'";
 $result = mysqli_query($connection, $q1);
 if (!$result) {
   die('Invalid query: ' . mysqli_error());
 }
-// $r1 = mysqli_fetch_array($result);
-// echo $r1['name'] ."<br>";
+
 
 header("Content-type: text/xml");
 
@@ -39,10 +38,7 @@ header("Content-type: text/xml");
 echo "<?xml version='1.0' ?>";
 echo '<markers>';
 $ind=0;
-				// echo "?xml version='1.0' ?" ."<br>";
-				// echo "markers" ."<br>";
-				// echo "\$ind=" . $ind ."<br>";
-// Iterate through the rows, printing XML nodes for each
+
 while ($row = @mysqli_fetch_assoc($result)){
   // Add to XML document node
   echo '<marker ';

@@ -84,84 +84,84 @@
 
         <!-- Heading -->
         <div class="row">
-            <div  class="col-lg-12">
-                <h1 class="page-header">Client Info
-                    <small>Let us help you find the perfect solution</small>
+            <div  align=center class="col-lg-12">
+                <h1 id="SolHead" class="page-header" align=center style="border: 0px solid black;border-bottom-width: 2px;width: 40%;">Client Info
                 </h1>
-                <p>Explore the options and packages that we have to offer at Cair Inc. Each one of our solutions is tailored to our clients needs and wants. Feel free to explore multiple quotes to see our levels of service.</p>
+				<h1 align=center>
+					<small id="SolSec">Let us help you find the perfect solution</small>
+                </h1>
+				<p style="padding-left:8%;padding-right:8%;font-size:125%;color: #474747;">Explore the options and packages that we have to offer at Cair Inc. Each one of our solutions is tailored to our clients needs and wants.</p>
             </div>
         </div>
         <!-- /.row -->
 	
 	<div>
-		<div id="myDIV2" class="jumbotron feature" style="color:black;">
-			<p style="color:black;font-size:150%;text-align:center;"><u>Contact Information</u></p>
-		
+		<div id="myDIV2" class="jumbotron feature" style="color:black;">	
 			<form style="text-align:center;color:black;" name="ClientInfo" method="POST" action="PHP2SQL.php" onsubmit="return checkForm(this);">
-			<table style="color:black;" align=center>	
-				<tr>
-					<th>
-						<strong>First Name: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="FirstName" class="input" placeholder="First Name">
-					</th>
-				</tr>
-				<tr>
-					<th>
-						<strong>Last Name: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="LastName" class="input" placeholder="Last Name">
-					</th>
-				<tr>	
-				</tr>
-				<tr>	
-					<th>
-						<strong>Email: </strong>
-					</th>
-					<th>
-						<input type="email" size="32" name="cEmail" class="input" placeholder="Email">
-					</th>
-				</tr>
-				<tr>	
-					<th>
-						<strong>Company: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="CompanyName" class="input" placeholder="Company">
-					</th>
-				</tr>
-				<tr>	
-					<th>
-						<strong>Address: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="cAddress" class="input" placeholder="Address">
-					</th>
-				</tr>
-				<tr>	
-					<th>
-						<strong>City: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="cCity" class="input" placeholder="City">
-					</th>
-				</tr>
-				<tr>	
-					<th>
-						<strong>Postal Code: </strong>
-					</th>
-					<th>
-						<input type="text" size="32" name="cPostalCode" class="input" placeholder="Postal Code">
-					</th>
-				</tr>
-				<tr>	
-					<th>
+				<table style="color:black;" align=center>	
+					<tr>
+						<th>
+							<strong>First Name: </strong>
+						</th>
+						<th>
+							<input type="text" size="32" name="FirstName" class="input">
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<strong>Last Name: </strong>
+						</th>
+						<th>
+						<input type="text" size="32" name="LastName" class="input">
+						</th>
+					<tr>	
+					</tr>
+					<tr>	
+						<th>
+							<strong>Email: </strong>
+						</th>
+						<th>
+							<input type="email" size="32" name="cEmail" class="input">
+						</th>
+					</tr>
+					<tr>	
+						<th>
+							<strong>Company: </strong>
+						</th>
+						<th>
+							<input type="text" size="32" name="CompanyName" class="input">
+						</th>
+					</tr>
+					<tr>	
+						<th>
+							<strong>Address: </strong>
+						</th>
+						<th>
+							<input type="text" size="32" name="cAddress" class="input">
+						</th>
+					</tr>
+					<tr>	
+						<th>
+							<strong>City: </strong>
+						</th>
+						<th>
+							<input type="text" size="32" name="cCity" class="input">
+						</th>
+					</tr>
+					<tr>	
+						<th>
+							<strong>Postal Code: </strong>
+						</th>
+						<th>
+							<input type="text" size="32" name="cPostalCode" class="input">
+						</th>
+					</tr>
+					<tr>	
+						<th>
 						<strong>Country: </strong>
-					</th>
-					<th>
-						<select style="width:241px" type="text" name="cCountry" class="input" placeholder="Country">
+						</th>
+						<th>
+							<select style="width:241px" type="text" name="cCountry" class="input" placeholder="Country">
 							<option value="" style="color:gray" selected>Select Country</option>
 							<option value="AF">Afghanistan</option>
 							<option value="AX">Åland Islands</option>
@@ -413,23 +413,22 @@
 							<option value="ZM">Zambia</option>
 							<option value="ZW">Zimbabwe</option>
 						</select>
-					</th>
-				</tr>
+						</th>
+					</tr>
 				
-			</table>	<br><br>
-						<input type="submit" style="color:black;" value="Create Account"></p>	
+				</table>	<br><br>
+					<input type="submit" style="color:black;" value="Create Account"></p>	
 			</form>
 		</div>
         <!-- Feature Row -->
 		
 		<div id="myDIV" style="display:none" class="jumbotron feature">
-			<p style="color:black;font-size:150%;text-align:center;"><u>Network Requirements</u></p>
 		
 			<form style="text-align:center;color:black;" name="netReq" method="POST" action="netReqtoSQL.php" onsubmit="return checkReq(this);">
 			<table style="color:black;" align=center>
 				<tr>
 					<th>
-						<strong>Email: <br><font size="1" color="gray">(The email you used <br> to make your account)</font></strong>
+						<strong>Email: </strong><br><font size="1" color="gray">(use the email associated <br> with your account)</font>
 					</th>
 					<th>
 						<input type="email" size="32" name="email" class="input">
@@ -445,7 +444,7 @@
 				</tr>
 				<tr>
 					<th>
-						<strong>Radius of Network: </strong><br>(meters)
+						<strong>Radius of Network: </strong><br><font size="1.5" color="gray">(Meters)</font><br>
 					</th>
 					<th>
 						<input type="text" size="32" name="geoRadius" class="input">
@@ -462,7 +461,7 @@
 				</tr>
 				<tr>	
 					<th>
-						<strong>Length of Simulation </strong><br>(days)
+						<strong>Length of Simulation </strong><br><font size="1.5" color="gray">(Days)</font><br>
 					</th>
 					<th>
 						<input type="text" size="32" name="numDays" class="input">
@@ -470,11 +469,11 @@
 				</tr>
 				<tr>	
 					<th>
-						<strong>Air Quality Focus: </strong>
+						<strong>Focus: </strong><br><font size="1" color="gray">(Air quality you would <br> like to focus on)</font>
 					</th>
 					<th>
-						<input type="radio" size="32" name="AirPref" value="good" class="input">Good</input>
-						<input type="radio" size="32" name="AirPref" value="bad" class="input">Bad</input>
+						<input type="radio" size="32" name="AirPref" value="good" class="input"> Good</input>
+						<input type="radio" size="32" name="AirPref" value="bad" class="input"> Bad</input>
 					</th>
 				</tr>
 				<tr>	
@@ -487,17 +486,14 @@
 				</tr>
 				
 				</table>	<br><br>
-						<input type="submit" style="color:black;" value="Submit"></p>
+						<input type="submit" style="color:black;" value="Initialize Network"></p>
 			</form>
 		</div>
 	</div>
 	
-	<button id="btn1" onclick="hideNetReq()">Already have an Account</button><br></br>	
-		
-        <!-- /.row -->
+	<button id="btn1" style="width: 200px;" onclick="hideNetReq()">Already have an Account</button><br></br>	
 
     </div>
-    <!-- /.container -->
 	
 	<footer>
 
@@ -507,11 +503,7 @@
         		<p>Copyright &copy; Group 27 2019 </p>
         	</div>
         </div>
-	</footer>
-
-	
-    <!-- jQuery -->
-    <script src="js/jquery-1.11.3.min.js"></script>
+	</footer>	
 
 	<script>
 
@@ -522,11 +514,15 @@
 		if (x.style.display === "none") {
 			x.style.display = "block";
 			y.style.display = "none";
-			document.getElementById("btn1").innerHTML = "Create Account";
+			document.getElementById("btn1").innerHTML = "Account Form";
+			document.getElementById("SolHead").innerHTML = "Network Info";
+			document.getElementById("SolSec").innerHTML = "Let's find a solution that fits your needs";
 		} else {
 			x.style.display = "none";
 			y.style.display = "block";
-			document.getElementById("btn1").innerHTML = "Already have an Account"
+			document.getElementById("btn1").innerHTML = "Already have an Account";
+			document.getElementById("SolHead").innerHTML = "Client Info";
+			document.getElementById("SolSec").innerHTML = "Let us help you find the perfect solution";
 		}
 	}
 
@@ -585,18 +581,24 @@
 			return false;
 		}
 		
+		alert('Thank you for signing up with Cair Inc! You can now create a network by clicking "Already have an Account"');
+		
 		
 	}
 	
 	function checkReq(form)
 	{
-	
 		var budget = document.forms["netReq"]["budget"]
 		var geoRadius = document.forms["netReq"]["geoRadius"]
 		var date = document.forms["netReq"]["date"]
 		var numDays = document.forms["netReq"]["numDays"]
 		var AirPref = document.forms["netReq"]["AirPref"]
 		var city = document.forms["netReq"]["city"]
+		
+		var geoRadiusAlert = "Please input a valid radius for your network.\n"
+		var geoRadiusDivBy20 = "\n-\tMust be divisible by 20."
+		var geoRadiusLower = "\n-\tLower limit is 500 meters."
+		var geoRadiusUpper = "\n-\tUpper limit is 15000 meters."
 
 		if(isNaN(form.budget.value)) {
 			alert("Please input a valid budget.");
@@ -605,7 +607,16 @@
 		}
 		
 		if(!(form.geoRadius.value % 20 === 0 && form.geoRadius.value >= 500 && form.geoRadius.value <= 15000)) {
-			alert("Please input a valid radius for your network. It must be between 500 and 15000 meters, inclusive, and divisable by 20.");
+			if(!(form.geoRadius.value % 20 === 0)) {
+				geoRadiusAlert += geoRadiusDivBy20;
+			}
+			if(!(form.geoRadius.value >= 500)) {
+				geoRadiusAlert += geoRadiusLower;
+			}
+			if(!(form.geoRadius.value <= 15000)) {
+				geoRadiusAlert += geoRadiusUpper;
+			}
+			alert("Please input a valid radius for your network." + geoRadiusAlert);
 			form.geoRadius.focus();
 			return false;
 		}
@@ -628,6 +639,7 @@
 			return false;
 		}
 		
+		alert('Thank you for creating a network! Please send your zoning .csv file to zoning@cairinc.com. Once we receive that, we will get back to you within 5 business days.');
 		
 	}
 

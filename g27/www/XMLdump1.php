@@ -25,7 +25,7 @@ if (!$connection) {
   die('Not connected : ' . mysqli_error());
 }
 // Select all the rows in the markers table
-$q1 = "SELECT * FROM Sensor WHERE Sensor.N_ID='0'";
+$q1 = "SELECT * FROM Sensor WHERE Sensor.N_ID='11'";
 $result = mysqli_query($connection, $q1);
 if (!$result) {
   die('Invalid query: ' . mysqli_error());

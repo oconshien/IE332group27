@@ -16,6 +16,16 @@ h1, h2, h3, h4, h5, h6 {
 	width: 60%;
 }
 
+#h1tech1 {
+	border: 0px solid black;
+	border-bottom-width: 2px;
+	width: 40%;
+}
+
+#td1 {
+	background-color: inherit;
+}
+
 #t1 {
 	color: black;
 	width: 100%;
@@ -35,6 +45,11 @@ h1, h2, h3, h4, h5, h6 {
 #p1 {
 	font-weight: 100;
 	line-height: 18px;
+}
+
+#ptech1 {
+	font-size:125%;
+	color: #474747;
 }
 
 #img1 {
@@ -77,11 +92,23 @@ h1, h2, h3, h4, h5, h6 {
 	color:black;
 }
 
+#divtech1 {
+	background-color:black;
+	color:white;
+	padding:20px;
+}
+
+#divhist1 {
+	background-color:#AADAFF
+}
+
 #myDIV{
 	background-color: #AADAFF;
+	height: 450px;
 }
 #myDIV2{
 	background-color: #AADAFF;
+	height: 450px;
 }
 #tabled0{
 	background-color: #D2D2D2;
@@ -107,6 +134,11 @@ h1, h2, h3, h4, h5, h6 {
 #tabled7{
 	background-color: #D2D2D2;
 }
+
+#imgtech1 {
+	border-radius:15px;
+}
+
 .feature {
 	background-color: #D5D8DB;
 	color: gray;

@@ -44,10 +44,10 @@
                     <li>
                         <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Solutions">Solutions</a>
                     </li>
-                    <li>
+					<li class="active">
                         <a id="a2" href="https://web.ics.purdue.edu/~g1109699/Technology">Technology</a>
                     </li>
-					<li class="active">
+                    <li>
                         <a id="a2" href="https://web.ics.purdue.edu/~g1109699/HistoricalData.php">Historical Data</a>
                     </li>
 					<li>
@@ -72,21 +72,23 @@
 
         <!-- Heading -->
         <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Technology
-                    <small>Visualize Quality</small>
+            <div align=center class="col-lg-12">
+                <h1 id="h1tech1" class="page-header">Technology
                 </h1>
-                <p>Cair Inc is known for our relentless service to our customers. Seamlessly visualizing quality intellectual planning, our holistic approach brings the highest level of quality for each one of our customers.</p>
+				<h1 align=center>
+					<small>Visualize Quality</small>
+                </h1>
+                <p id="ptech1">Cair Inc is known for our relentless service to our customers. Seamlessly visualizing quality intellectual planning, our holistic approach brings the highest level of quality for each one of our customers.</p>
              </div> 
         </div> 
         <!-- /.row -->
 
         <!-- Feature Row -->
-        <div class="row" style="background-color:black;color:white;padding:20px;">
+        <div class="row" id="divtech1">
             <article class="col-md-4 article-intro">
                
 				
-                    <img src="cair inc bold.png" alt="logo?" width="300" height="150" align="middle" vspace="79" border="40">
+                    <img src="cair inc with cloud.png" alt="logo?" width="325" height="250" align="middle" vspace="29" border="40" id="imgtech1">
 				
 			   
                 <h3>
@@ -106,7 +108,7 @@
 
             <article class="col-md-4 article-intro">
                 
-                    <img src="mobile.gif" alt="database?" width="350" height="300" align="middle" vspace="7">
+                    <img src="mobile.gif" alt="database?" width="350" height="300" align="middle" vspace="2" id="imgtech1">
                 
                 <h3>
                     <font color="#71c8f4"> A Dynamic Database </font>
@@ -129,10 +131,6 @@
         	</div>
         </div>
 	</footer>
-
-	
-    <!-- jQuery -->
-    <script src="js/jquery-1.11.3.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>

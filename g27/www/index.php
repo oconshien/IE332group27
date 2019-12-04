@@ -110,11 +110,11 @@
 		<div style="padding-top: 80px;" align="center">
 		<table align="center" id="mapTable2">
 		<tr>
-		<th color="black">
-			latitude: <input style="color:black" type="number" name="lat" id="lat2"></input>
+		<th style="color:green;">
+			Latitude: <input style="color:black" type="text" name="lat" id="lat2"></input>
 		</th>
-		<th color="black">
-			longitude: <input style="color:black" type="number" name="lon" id="lon2"></input>
+		<th style="color:green;">
+			Longitude: <input style="color:black" type="text" name="lon" id="lon2"></input>
 		</th>
 		<th>
 			<button style="color:black" onclick="initMap2(document.getElementById('lat2').value,document.getElementById('lon2').value)">see map</button>
@@ -142,8 +142,6 @@
 			infoWindow.setContent(infowincontent);
 			infoWindow.open(map, marker);
 		});
-		
-		//-33.8688
 		
 		function initMap() {
 		    
@@ -200,7 +198,7 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdumpALL.php', function(data
 			
 			var infoWindow = new google.maps.InfoWindow;
 
-downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdumpALL.php$N_ID=2', function(data) {
+downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdumpALL.php', function(data) {
             var xml = data.responseXML;
             var markers = xml.documentElement.getElementsByTagName('marker');
 			Array.prototype.forEach.call(markers, function(markerElem) {
@@ -264,9 +262,9 @@ downloadUrl('https://web.ics.purdue.edu/~g1109699/XMLdumpALL.php$N_ID=2', functi
 		<div class="jumbotron feature">
 		<div class="container">
 			<h1 style="text-align:center"><span class="glyphicon glyphicon-cloud"></span> Cair Inc</h1>
-			<p style="text-align:center;" >Our goal is to help our clients have quality business and quality air. Knowledge is power, and we are dedicated to empower our clients.</p>
+			<p style="text-align:center;" >Our goal is to help our clients make quality decisions through quality data. Knowledge is power, and we are dedicated to empowering our clients.</p>
 			<form style="text-align:center;" action="Solutions">
-			<input type="submit" value="How Can We Help You?" />
+			<input type="submit" value="Learn More" />
 		</form>
 		</div>
 	</div>

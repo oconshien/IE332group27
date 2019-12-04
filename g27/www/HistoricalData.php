@@ -18,18 +18,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	
 	<style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-		margin: 20px;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 70%;
-        margin: 20;
-        padding: 0;
-      }
+
 	th {
 		padding: 15px;
 		background-color: #7AE1E6;
@@ -42,22 +31,19 @@
 		padding: 5px;
 	}
 	tr:nth-child(even) {background-color: #dbdbdb;}
-	/* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
+    #map {
+		height: 100%;
 		margin: 20px;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
+    }
+    html, body {
         height: 70%;
         margin: 0;
         padding: 0;
-      }
-	  article {
-		  float: left;
-		  width: 64%;
-	  }
+    }
+	article {
+		float: left;
+		width: 64%;
+	}
 
     </style>
 
@@ -106,73 +92,52 @@
         <!-- /.container -->
     </nav>
 	
-	<div class="jumbotron feature" style="background-color:#AADAFF">
-		
+	<div id="divhist1" class="jumbotron feature">
 	
 	<table id="mapTable" style="margin-left: 0px;margin-right: 0px;border-bottom-width: 2px;">
 		<tr>
 			<th>
-				<!-- <p> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 				<a id="demo0" class="btn btn-default" value="CLT">Charlotte, NC</a>
-				<!-- </p> -->
 			</th>
 			<th>
-				<!-- <p> -->
 				<a id="demo1" class="btn btn-default" value="IND">Indianapolis, IN</a>
-				<!-- </p> -->
 			</th>
 			<th>
-				<!-- <p> -->
 				<a id="demo2" class="btn btn-default" value="LEX">Lexington, KY</a>
-				<!-- </p> -->
 			</th>
 			<th>
-				<!-- <p> -->
 				<a id="demo3" class="btn btn-default" value="LAX">Los Angeles, CA</a>
-				<!-- </p> -->
 			</th>
-			
 			<th>
-				<!-- <p> -->
 				<a id="demo4" class="btn btn-default" value="LAF">West Lafayette, IN</a>
-				<!-- </p> -->
 			</th>
 			<th>
-				<!-- <p> -->
 				<a id="demo5" class="btn btn-default" value="MEX">Mexico City</a>
-				<!-- </p> -->
 			</th>
 			<th>
-				<!-- <p> -->
 				<a id="demo6" class="btn btn-default" value="NRT">Tokyo</a>
-				<!-- </p> -->
 			</th>
 			<th>
-				<!-- <p> -->
 				<a id="demo7" class="btn btn-default" value="LHR">London</a>
-				<!-- </p> -->
 			</th>
 		</tr>
-		<!-- <tr>
-			<form action="HistoricalData.php" method="post">
-				<input type="submit" class="button" name="city" value="cityLondon">
-			</form>
-			</tr> -->
 	</table>
 	</div>
 	
 	<!-- Heading -->
         <div align="center" class="row">
-            <div align="center" class="col-lg-12">
-                <h1 align="center" class="page-header">Historical Data
-                    <small>Visualize Quality</small>
+            <div align=center class="col-lg-12">
+                <h1 style="border: 0px solid black;border-bottom-width: 2px;width: 40%;" align="center">Historical Data
                 </h1>
-                <p style="padding-left:20px;padding-right:20px;font-size:125%" align="center"> Our sensors, as seen on the map above, cover the expanse of the area that is designated to them. They work to ensure that no section of the city will be left undiscovered. Our clients can view their sensors individually on the table shown below.</p>
+                <p style="padding-left:8%;padding-right:8%;font-size:125%;color: #474747;" align="center"> 
+				Our sensors, as seen on the map below, cover the expanse of the area that is designated to them. 
+				They work to ensure that no section of the city will be left unmonitored. See the average readings 
+				for each sensor on the table provided below.</p>
             </div>
         </div>
 	
-		<article id="map" style="height:700px"></article>
-		<article style="float:left;width: 30%;">
+		<article id="map" style="height:900px"></article>
+		<article style="float:left;width: 30%;margin-top: 20px;">
 		
 			<?php 
 			$servername = "mydb.itap.purdue.edu";
@@ -189,11 +154,12 @@
 			}
 			
 		//	CLT:0	default shown (style='display:BLOCK...)
+		
 			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
 														  ROUND(AVG(pm025),4) AS 'PM_2.5',
 														  ROUND(AVG(pm100),4) AS 'PM_10'
 					FROM Air_Quality AS aq
-					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID GROUP BY aq.S_ID";
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 3 GROUP BY aq.S_ID";
 					
 			$result = mysqli_query($conn, $sql);
 			
@@ -211,19 +177,19 @@
 			echo "<tr>";
 			echo "<td>" . $row['S_ID'] . "</td>";
 			echo "<td>" . $row['N_ID'] . "</td>";
-			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td id='td1'>" . $row['PM_1'] . "</td>";
 			echo "<td>" . $row['PM_2.5'] . "</td>";
 			echo "<td>" . $row['PM_10'] . "</td>";
 			echo "</tr>";
 			}
 			echo "</table>";
 			
-		//	IND:1	default hidden (style='display:NONE...)
+		//	IND
 			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
 														  ROUND(AVG(pm025),4) AS 'PM_2.5',
 														  ROUND(AVG(pm100),4) AS 'PM_10'
 					FROM Air_Quality AS aq
-					INNER JOIN Sensor as s ON aq.S_ID = s.S_ID GROUP BY aq.S_ID LIMIT 20";
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 11 GROUP BY aq.S_ID";
 					
 			$result = mysqli_query($conn, $sql);
 			
@@ -248,30 +214,194 @@
 			}
 			echo "</table>";
 			
-		//	LEX:2	default hidden (style='display:NONE...)
+		//	LEX
 			
-			// echo "<table border='1' id='tabled2' align='center' style='display:none;width:447.725px;text-align:center;'>
+			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality AS aq
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 6 GROUP BY aq.S_ID";
+					
+			$result = mysqli_query($conn, $sql);
 			
-		//	LAX:3	default hidden (style='display:NONE...)
+			echo "<table border='1' id='tabled2' align='center' style='display:none;width:447.725px;text-align:center;'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
 			
-			// echo "<table border='1' id='tabled3' align='center' style='display:none;width:447.725px;text-align:center;'>
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
 			
-		//	LAF:4	default hidden (style='display:NONE...)
+		//	LAX
+			
+			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality AS aq
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 12 GROUP BY aq.S_ID";
+					
+			$result = mysqli_query($conn, $sql);
+			
+			echo "<table border='1' id='tabled3' align='center' style='display:none;width:447.725px;text-align:center;'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
+			
+		//	LAF
 
-			// echo "<table border='1' id='tabled4' align='center' style='display:none;width:447.725px;text-align:center;'>
 			
-		//	MEX:5	default hidden (style='display:NONE...)
+			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality AS aq
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 1 GROUP BY aq.S_ID";
+					
+			$result = mysqli_query($conn, $sql);
+			
+			echo "<table border='1' id='tabled4' align='center' style='display:none;width:447.725px;text-align:center;'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
+			
+		//	MEX
 
-			// echo "<table border='1' id='tabled5' align='center' style='display:none;width:447.725px;text-align:center;'>
+			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality AS aq
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 13 GROUP BY aq.S_ID";
+					
+			$result = mysqli_query($conn, $sql);
 			
-		//	NRT:6	default hidden (style='display:NONE...)
+			echo "<table border='1' id='tabled5' align='center' style='display:none;width:447.725px;text-align:center;'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
 			
-			// echo "<table border='1' id='tabled6' align='center' style='display:none;width:447.725px;text-align:center;'>
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
 			
-		//	LHR:7	default hidden (style='display:NONE...)
+		//	NRT
 			
-			// echo "<table border='1' id='tabled7' align='center' style='display:none;width:447.725px;text-align:center;'>
-			?>
+			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality AS aq
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 7 GROUP BY aq.S_ID";
+					
+			$result = mysqli_query($conn, $sql);
+			
+			echo "<table border='1' id='tabled6' align='center' style='display:none;width:447.725px;text-align:center;'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
+			
+		//	LHR
+			
+			$sql = "SELECT aq.S_ID, s.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
+														  ROUND(AVG(pm025),4) AS 'PM_2.5',
+														  ROUND(AVG(pm100),4) AS 'PM_10'
+					FROM Air_Quality AS aq
+					INNER JOIN Sensor AS s ON aq.S_ID = s.S_ID WHERE s.N_ID = 5 GROUP BY aq.S_ID";
+					
+			$result = mysqli_query($conn, $sql);
+			
+			echo "<table border='1' id='tabled7' align='center' style='display:none;width:447.725px;text-align:center;'>
+			<tr>
+			<th>Sensor ID</th>
+			<th>Network ID</th>
+			<th>Mean PM<sub>1</sub></th>
+			<th>Mean PM<sub>2.5</sub></th>
+			<th>Mean PM<sub>10</sub></th>
+			</tr>";
+			
+			while($row = mysqli_fetch_array($result))
+			{
+			echo "<tr>";
+			echo "<td>" . $row['S_ID'] . "</td>";
+			echo "<td>" . $row['N_ID'] . "</td>";
+			echo "<td>" . $row['PM_1'] . "</td>";
+			echo "<td>" . $row['PM_2.5'] . "</td>";
+			echo "<td>" . $row['PM_10'] . "</td>";
+			echo "</tr>";
+			}
+			echo "</table>";
+			
+		?>
 		
 		</article>
 		<br style="clear:both">
@@ -820,144 +950,10 @@ function doNothing() {}
         
 		<div>
 
-		 <?php 
-			// $servername = "mydb.itap.purdue.edu";
-			// $username = "g1109699";
-			// $password = "MySQL27";
-			// $dbname = "g1109699";
-
-			// // Create connection
-			// $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-			// // Check connection
-			// if ($conn-> connect_error) {
-				// die("Connection failed: " . $conn->connect_error);
-			// }
-			
-		// //	CLT:0
-			// $sql = "SELECT Air_Quality.S_ID, Sensor.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
-														  // ROUND(AVG(pm025),4) AS 'PM_2.5',
-														  // ROUND(AVG(pm100),4) AS 'PM_10'
-					// FROM Air_Quality INNER JOIN Sensor ON Air_Quality.S_ID = Sensor.S_ID GROUP BY Air_Quality.S_ID";
-					
-			// $result = mysqli_query($conn, $sql);
-			
-			// echo "<table border='1' id='tabled0' align='center' style='display:block;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// while($row = mysqli_fetch_array($result))
-			// {
-			// echo "<tr>";
-			// echo "<td>" . $row['S_ID'] . "</td>";
-			// echo "<td>" . $row['N_ID'] . "</td>";
-			// echo "<td>" . $row['PM_1'] . "</td>";
-			// echo "<td>" . $row['PM_2.5'] . "</td>";
-			// echo "<td>" . $row['PM_10'] . "</td>";
-			// echo "</tr>";
-			// }
-			// echo "</table>";
-			
-		// //	IND:1
-			// $sql = "SELECT Air_Quality.S_ID, Sensor.N_ID, ROUND(AVG(pm010),4) AS 'PM_1',
-														  // ROUND(AVG(pm025),4) AS 'PM_2.5',
-														  // ROUND(AVG(pm100),4) AS 'PM_10'
-					// FROM Air_Quality INNER JOIN Sensor ON Air_Quality.S_ID = Sensor.S_ID GROUP BY Air_Quality.S_ID";
-					
-			// $result = mysqli_query($conn, $sql);
-			
-			// echo "<table border='1' id='tabled1' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			// while($row = mysqli_fetch_array($result))
-			// {
-			// echo "<tr>";
-			// echo "<td>" . $row['S_ID'] . "</td>";
-			// echo "<td>" . $row['N_ID'] . "</td>";
-			// echo "<td>" . $row['PM_1'] . "</td>";
-			// echo "<td>" . $row['PM_2.5'] . "</td>";
-			// echo "<td>" . $row['PM_10'] . "</td>";
-			// echo "</tr>";
-			// }
-			// echo "</table>";
-			
-			// echo "<table border='1' id='tabled2' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// echo "<table border='1' id='tabled3' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// echo "<table border='1' id='tabled4' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// echo "<table border='1' id='tabled5' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// echo "<table border='1' id='tabled6' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// echo "<table border='1' id='tabled7' align='center' style='display:none;width:447.725px;text-align:center;background-color:#D5D8DB'>
-			// <tr>
-			// <th>Sensor ID</th>
-			// <th>Network ID</th>
-			// <th>Mean PM<sub>1</sub></th>
-			// <th>Mean PM<sub>2.5</sub></th>
-			// <th>Mean PM<sub>10</sub></th>
-			// </tr>";
-			
-			// $conn->close();
-			
-		// ?>
-
 
 		</div>
-		
-    <!-- button 
-		<button id="btn2" onclick="hideTable()" align='center'>New Network</button><br></br>
-	-->
 	<br>
     </div>
-    <!-- /.container -->
 	
 	<footer>
         
