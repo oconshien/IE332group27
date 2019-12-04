@@ -1,33 +1,35 @@
 ##--LOAD PACKAGES--##
 require(dplyr) #data wrangling
 require(lubridate) #date/time
-require(knitr) #quite fond of the kable function for making tables(TEST)
-require(ggplot2) #plotting(TEST)
-require(ggthemes) #plotting(TEST)
-require(gridExtra) #extra space for plots(TEST)
+require(knitr) #table formation
+require(ggplot2) #plotting
+require(ggthemes) #plotting
+require(gridExtra) #extra space for plots
 require(data.table) #data manipulation
-require(RColorBrewer) #plotting(TEST)
-require(stringr) #more data wrangling (TEST)
-require(ggridges) #plotting density ridges (TEST)
-require(readr)  #input/output(TEST)
-require(tibble) #as_tibble, easy to use
-require(plyr)   ###TEST, same as dplyr???
+require(RColorBrewer) #plotting
+require(stringr) #more data wrangling
+require(ggridges) #plotting density ridges
+require(readr)  #input/output
+require(tibble) #easy to use data frames
+require(plyr)   #data wrangling
 require(caret)  #create data partition
-require(e1071)  #naiveBayes
-require(truncnorm)   
-require(lpSolve)                          
-require(RMySQL) 
-require(berryFunctions)
+require(e1071)  #naive Bayes
+require(truncnorm)  #truncated normal distributions
+require(lpSolve)  #solve linear programs                          
+require(RMySQL) #SQL connection
+require(berryFunctions) #plotting
 
 ###--HOW TO RUN CODE--###
 #1) Run 'Super Script.R' in the console
-#2) Set working directory to ?????
-#3) Run the 'start' function
-    #'start' function inputs described inside function below
+#2) Add city csv to sample cities folder in the ?????? folder (pay attention to name of csv)
+#3) Set working directory to the ?????? folder
+#4) Run the 'start_fun' function in console
+    #'start_fun' function inputs described inside function below
 
 ##--START CODE--##
 
-startfun <- function(email, quote_num, city){
+#Run Code
+start_fun <- function(email, quote_num, city){
   #email: string, email from the inputted quote.
   #quote_num: int, the nth quote from the associated email (e.g. second quote for user = 2).
   #city: string, the city being networked (should match name of the inputted city csv).
@@ -100,6 +102,8 @@ startfun <- function(email, quote_num, city){
     pm_data <- NULL
     new_pm_data <- NULL
     i <- 1
+    
+    #Lets user know what hour in the simulation is being calculated.
     print(hour_cnt)
     
     #Generates particulate matter data from simulation.
@@ -124,15 +128,26 @@ startfun <- function(email, quote_num, city){
   
 ##--SEND INFO TO DATABASE--##
 
-#Sensor Formatting
+#Sensor Formatting for Database
 send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, city_long, my_DB, Q_ID, date_from_SQL){
+  #location_sen: data_frame, the current sensor locations
+  #classed_data: data_frame, the particulate matter data for the sensor locations
+  #loop: int, the current iteration/hour count of the network 
+  #last_run: int, inidicates if this is the last hour to be run for this network
+  #city_lat: real, the corresponding latitude of the city
+  #city_long: real, the corresponding longitude of the city
+  #my_DB: database call, the database connection
+  #Q_ID: int, the unique primary key for the quote being networked
+  #date_from_SQL: date, the current time of the network to be recorded
+  
+  #Sensor data frame formatting.
   location_sen <- as.data.frame(location_sen)
   location_sen[, 1] <- location_sen[, 1] / 111111 + city_lat
   location_sen[, 2] <- location_sen[, 2] / (111111 * (cos(location_sen[, 1]))) + city_long
   location_sen[, 3] <- ifelse(location_sen[, 3] == 1, "mobile", "fixed")
   names(location_sen) <- c("lat", "lon", "type")
   
-  #Send to Database
+  #Send to database.
   if(loop == 1){
     dbWriteTable(my_DB, "Sensor", data.frame("N_ID" = Q_ID, location_sen[, 1:3]), append = TRUE, header = TRUE,row.names = FALSE)
   #}else{
@@ -142,8 +157,10 @@ send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, cit
   sensor_query <- dbSendQuery(my_DB, sensor_call)
   sensor_IDs <- dbFetch(sensor_query)
   
+  #Lets user know where in the process of the simulation you are.
   print(date_from_SQL)
   
+  #Send updates to sensors in database.
   for(i in 1:length(sensor_IDs[,1])){
     last_call <- paste0("UPDATE Sensor SET lat =", location_sen[i, 1], ",", "lon =", location_sen[i, 2], "WHERE S_ID=", sensor_IDs[i, 1], ";")
     last_query <- dbSendQuery(my_DB, last_call)
@@ -151,6 +168,8 @@ send_to_DB <- function(location_sen, classed_data, loop, last_run, city_lat, cit
     }
   air_data <- data.frame("time" = date_from_SQL, sensor_IDs, classed_data)
   dbWriteTable(my_DB, "Air_Quality", air_data, append=TRUE, header=TRUE,row.names=FALSE)
+  
+  #No return.
 }
   
   
